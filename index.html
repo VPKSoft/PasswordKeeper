@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+    <link rel="dx-theme" data-theme="generic.carmine.compact" href="/src/assets/css/devextreme/dx.carmine.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.carmine" href="/src/assets/css/devextreme/dx.carmine.css" data-active="false">
+    <link rel="dx-theme" data-theme="common" href="/src/assets/css/devextreme/dx.common.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.contrast.compact" href="/src/assets/css/devextreme/dx.contrast.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.contrast" href="/src/assets/css/devextreme/dx.contrast.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.dark.compact" href="/src/assets/css/devextreme/dx.dark.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.dark" href="/src/assets/css/devextreme/dx.dark.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.darkmoon.compact" href="/src/assets/css/devextreme/dx.darkmoon.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.darkmoon" href="/src/assets/css/devextreme/dx.darkmoon.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.darkviolet.compact" href="/src/assets/css/devextreme/dx.darkviolet.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.darkviolet" href="/src/assets/css/devextreme/dx.darkviolet.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.greenmist.compact" href="/src/assets/css/devextreme/dx.greenmist.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.greenmist" href="/src/assets/css/devextreme/dx.greenmist.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.light.compact" href="/src/assets/css/devextreme/dx.light.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.light" href="/src/assets/css/devextreme/dx.light.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.blue.dark.compact" href="/src/assets/css/devextreme/dx.material.blue.dark.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.blue.dark" href="/src/assets/css/devextreme/dx.material.blue.dark.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.blue.light.compact" href="/src/assets/css/devextreme/dx.material.blue.light.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.blue.light" href="/src/assets/css/devextreme/dx.material.blue.light.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.lime.dark.compact" href="/src/assets/css/devextreme/dx.material.lime.dark.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.lime.dark" href="/src/assets/css/devextreme/dx.material.lime.dark.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.lime.light.compact" href="/src/assets/css/devextreme/dx.material.lime.light.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.lime.light" href="/src/assets/css/devextreme/dx.material.lime.light.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.orange.dark.compact" href="/src/assets/css/devextreme/dx.material.orange.dark.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.orange.dark" href="/src/assets/css/devextreme/dx.material.orange.dark.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.orange.light.compact" href="/src/assets/css/devextreme/dx.material.orange.light.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.orange.light" href="/src/assets/css/devextreme/dx.material.orange.light.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.purple.dark.compact" href="/src/assets/css/devextreme/dx.material.purple.dark.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.purple.dark" href="/src/assets/css/devextreme/dx.material.purple.dark.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.purple.light.compact" href="/src/assets/css/devextreme/dx.material.purple.light.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.purple.light" href="/src/assets/css/devextreme/dx.material.purple.light.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.teal.dark.compact" href="/src/assets/css/devextreme/dx.material.teal.dark.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.teal.dark" href="/src/assets/css/devextreme/dx.material.teal.dark.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.teal.light.compact" href="/src/assets/css/devextreme/dx.material.teal.light.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="material.teal.light" href="/src/assets/css/devextreme/dx.material.teal.light.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.softblue.compact" href="/src/assets/css/devextreme/dx.softblue.compact.css" data-active="false">
+    <link rel="dx-theme" data-theme="generic.softblue" href="/src/assets/css/devextreme/dx.softblue.css" data-active="false">
+    
+    <link href="/src/assets/css/fontawesome-free-6.4.0/css/fontawesome.css" rel="stylesheet">
+    <link href="/src/assets/css/fontawesome-free-6.4.0/css/brands.css" rel="stylesheet">
+    <link href="/src/assets/css/fontawesome-free-6.4.0/css/solid.css" rel="stylesheet">
+  </head>
+  <body class="dx-viewport">
+    <div id="left"></div>
+    <div id="right"></div>
+    <div id="top"></div>
+    <div id="bottom"></div>
+    <div id="title"></div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

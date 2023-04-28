@@ -1,0 +1,158 @@
+import * as React from "react";
+import { useLocalize } from "../../i18n";
+import { DataEntry } from "../../types/PasswordEntry";
+import classNames from "classnames";
+import styled from "styled-components";
+import { TextArea, TextBox } from "devextreme-react";
+import { ValueChangedEvent } from "devextreme/ui/text_area";
+import { ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
+import PasswordTextbox from "./PasswordTextbox";
+
+type Props = {
+    className?: string;
+    entry?: DataEntry;
+    readOnly?: boolean;
+    visible?: boolean;
+    hidePasswordTimeout?: number;
+    showGeneratePassword?: boolean;
+    showCopyButton?: boolean;
+    onEntryChanged?: (entry: DataEntry) => void;
+};
+
+const EntryEditor = ({
+    className, //
+    entry,
+    readOnly = true,
+    visible = true,
+    hidePasswordTimeout,
+    showGeneratePassword,
+    showCopyButton = false,
+    onEntryChanged,
+}: Props) => {
+    const le = useLocalize("entries");
+
+    const onValueChanged = React.useCallback(
+        (e: TextBoxValueChangedEvent, name: keyof DataEntry) => {
+            if (readOnly || entry === undefined) {
+                return;
+            }
+
+            const newValue: DataEntry = { ...entry };
+            newValue[name] = e.value as never;
+            onEntryChanged?.(newValue);
+        },
+        [entry, onEntryChanged, readOnly]
+    );
+
+    const onNameChanged = React.useCallback(
+        (e: TextBoxValueChangedEvent) => {
+            onValueChanged(e, "name");
+        },
+        [onValueChanged]
+    );
+
+    const onDomainChanged = React.useCallback(
+        (e: TextBoxValueChangedEvent) => {
+            onValueChanged(e, "domain");
+        },
+        [onValueChanged]
+    );
+
+    const onUserNameChanged = React.useCallback(
+        (e: TextBoxValueChangedEvent) => {
+            onValueChanged(e, "userName");
+        },
+        [onValueChanged]
+    );
+
+    const onPasswordChanged = React.useCallback(
+        (e: TextBoxValueChangedEvent) => {
+            onValueChanged(e, "password");
+        },
+        [onValueChanged]
+    );
+
+    const onNotesChanged = React.useCallback(
+        (e: ValueChangedEvent) => {
+            onValueChanged(e, "notes");
+        },
+        [onValueChanged]
+    );
+
+    return (
+        <>
+            {visible && (
+                <div className={classNames(EntryEditor.name, className)}>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div className="dx-field-item-label-text">{le("name")}</div>
+                                </td>
+                                <td>
+                                    <TextBox readOnly={readOnly} value={entry?.name} onValueChanged={onNameChanged} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div className="dx-field-item-label-text">{le("domain")}</div>
+                                </td>
+                                <td>
+                                    <TextBox readOnly={readOnly} value={entry?.domain} onValueChanged={onDomainChanged} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div className="dx-field-item-label-text">{le("userName")}</div>
+                                </td>
+                                <td>
+                                    <TextBox readOnly={readOnly} value={entry?.userName} onValueChanged={onUserNameChanged} />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div className="dx-field-item-label-text">{le("password")}</div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <PasswordTextbox
+                                            hidePasswordTimeout={hidePasswordTimeout}
+                                            readonly={readOnly}
+                                            value={entry?.password}
+                                            onValueChanged={onPasswordChanged}
+                                            showGeneratePassword={showGeneratePassword}
+                                            showCopyButton={showCopyButton}
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div className="dx-field-item-label-text">{le("name")}</div>
+                    <TextArea readOnly={readOnly} value={entry?.notes} className="EntryEditor-TextArea" onValueChanged={onNotesChanged} />
+                </div>
+            )}
+        </>
+    );
+};
+
+export default styled(EntryEditor)`
+    display: flex;
+    flex-direction: column;
+    .EntryEditor-editRow {
+        display: flex;
+        flex-direction: row;
+    }
+    .EntryEditor-lables {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+    }
+    .EntryEditor-TextArea {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+    }
+`;

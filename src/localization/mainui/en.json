@@ -1,0 +1,16 @@
+{
+    "password": "Password",
+    "newEntry": "New entry",
+    "modifyEntry": "Modify entry: {{entry.name}}",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "close": "Close",
+    "maximize": "Maximize",
+    "minimize": "Minimize",
+    "copyClipboard": "Copy to clipboard",
+    "clipboardCopySuccess": "Copied to clipboard",
+    "clipboardCopyFailed": "Failed to copy to clipboard",
+    "generatePassword": "Generate password",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password"
+}

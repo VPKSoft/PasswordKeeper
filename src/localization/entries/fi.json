@@ -1,0 +1,8 @@
+{
+    "domain": "Toimialue",
+    "modifyEntry": "Muokkaa merkintää: {{entry.name}}",
+    "name": "Nimi",
+    "newEntry": "Uusi merkintä",
+    "password": "Salasana",
+    "userName": "Käyttäjänimi"
+}
