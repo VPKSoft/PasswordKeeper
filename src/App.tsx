@@ -16,6 +16,8 @@ import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
 import PasswordList from "./components/app/PasswordList";
 import { invoke } from "@tauri-apps/api/tauri";
+import EditCategoryPopup from "./components/software/EditCategoryPopup";
+import { useSecureStorage } from "./utilities/hooks";
 
 type Props = {
     className?: string;
@@ -23,11 +25,18 @@ type Props = {
 
 const App = ({ className }: Props) => {
     const [entry, setEntry] = React.useState<DataEntry | undefined>();
-    const [entryEditVisible, setEntryEditVisible] = React.useState(true);
+    const [entryEditVisible, setEntryEditVisible] = React.useState(false);
+    const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
     const [dataSource, setDataSource] = React.useState(testData);
+    const [currentFile, setCurrentFile] = React.useState<string>();
+    const [fileChanged, setFileChanged] = React.useState(false);
+    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
+
     const la = useLocalize("app");
 
     setTheme("generic.carmine");
+
+    setFilePassword("password");
 
     const saveDialog = React.useCallback(async () => {
         const filePath = await save({
@@ -68,6 +77,21 @@ const App = ({ className }: Props) => {
         setEntryEditVisible(false);
     }, []);
 
+    const onCategoryEditClose = React.useCallback((useAccepted: boolean, entry?: DataEntry | undefined) => {
+        if (useAccepted) {
+            // TODO::Save the data
+        }
+        setCategoryEditVisible(false);
+    }, []);
+
+    const onEditClick = React.useCallback(() => {
+        if (entry?.parentId === -1) {
+            setCategoryEditVisible(true);
+        } else if (entry) {
+            setEntryEditVisible(true);
+        }
+    }, [entry]);
+
     return (
         <div className={classNames(App.name, className)}>
             <Toolbar>
@@ -75,6 +99,13 @@ const App = ({ className }: Props) => {
                     <Button //
                         icon="add"
                         onClick={() => setEntryEditVisible(true)}
+                        disabled={entry === undefined}
+                    />
+                </ToolbarItem>
+                <ToolbarItem location="before">
+                    <Button //
+                        icon="edit"
+                        onClick={onEditClick}
                         disabled={entry === undefined}
                     />
                 </ToolbarItem>
@@ -120,6 +151,14 @@ const App = ({ className }: Props) => {
                 visible={entryEditVisible}
                 onClose={onEditClose}
             />
+            {entry && (
+                <EditCategoryPopup //
+                    entry={entry}
+                    mode={ModifyType.Edit}
+                    visible={categoryEditVisible}
+                    onClose={onCategoryEditClose}
+                />
+            )}
         </div>
     );
 };

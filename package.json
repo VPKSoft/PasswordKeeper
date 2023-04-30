@@ -29,6 +29,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-i18next": "^12.2.2",
+        "react-secure-storage": "^1.2.1",
         "styled-components": "^5.3.10",
         "typescript-eslint": "^0.0.1-alpha.0"
     },
