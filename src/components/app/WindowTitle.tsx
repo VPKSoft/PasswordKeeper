@@ -7,9 +7,13 @@ import { useLocalize } from "../../i18n";
 
 type Props = {
     className?: string;
+    title: string | (() => string);
 };
 
-const WindowTitle = ({ className }: Props) => {
+const WindowTitle = ({
+    className, //
+    title,
+}: Props) => {
     const lu = useLocalize("ui");
 
     const minimizeClick = React.useCallback(() => {
@@ -24,13 +28,18 @@ const WindowTitle = ({ className }: Props) => {
         appWindow.close();
     }, []);
 
+    const displayTitle = React.useMemo(() => {
+        return typeof title === "string" ? title : title();
+    }, [title]);
+
     return (
         <div className={classNames(WindowTitle.name, className)}>
+            <div className="dx-theme-accent-as-text-color"></div>
             <div className="titlebar-icon" id="titlebar-close">
                 <img src="./src/img/app-icon.svg" alt="close" width={32} height={32} />
             </div>
             <div data-tauri-drag-region className="titlebar-title">
-                {"Password Keeper"}
+                {displayTitle}
             </div>
             <div className="titlebar-buttonContainer">
                 <div className="titlebar-button" id="titlebar-minimize" onClick={minimizeClick} title={lu("minimize", "Minimize")}>

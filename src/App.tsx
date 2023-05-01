@@ -1,3 +1,27 @@
+/*
+MIT License
+
+Copyright (c) 2023 Petteri Kautonen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 import * as React from "react";
 import "./App.css";
 import { Button, Toolbar } from "devextreme-react";
@@ -18,6 +42,8 @@ import PasswordList from "./components/app/PasswordList";
 import { invoke } from "@tauri-apps/api/tauri";
 import EditCategoryPopup from "./components/software/EditCategoryPopup";
 import { useSecureStorage } from "./utilities/hooks";
+import StyledTitle from "./components/app/WindowTitle";
+import { loadFile, saveFile } from "./utilities/app/Files";
 
 type Props = {
     className?: string;
@@ -38,37 +64,23 @@ const App = ({ className }: Props) => {
 
     setFilePassword("password");
 
-    const saveDialog = React.useCallback(async () => {
-        const filePath = await save({
-            filters: [
-                {
-                    name: la("passwordKeeperDataFile", "PasswordKeeper data file"),
-                    extensions: ["pkd"],
-                },
-            ],
+    const saveFileCallback = React.useCallback(async () => {
+        saveFile(dataSource, "password", la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {
+            if (f.ok) {
+                setCurrentFile(f.fileName);
+                setFileChanged(false);
+            }
         });
-        console.log(filePath);
-        const saveData = JSON.stringify(dataSource);
-        //TODO::Create new database for the file.
-        void invoke("save_file", { jsonData: saveData, fileName: filePath }).then(result => console.log(result));
     }, [dataSource, la]);
 
-    const loadDialog = React.useCallback(async () => {
-        const filePath = await open({
-            filters: [
-                {
-                    name: la("passwordKeeperDataFile", "PasswordKeeper data file"),
-                    extensions: ["pkd"],
-                },
-            ],
+    const loadFileCallback = React.useCallback(async () => {
+        loadFile("pwd", la("passwordKeeperDataFile", "PasswordKeeper data file")).then(result => {
+            if (result.ok) {
+                setDataSource(result.fileData);
+                setCurrentFile(result.fileName);
+            }
         });
-        console.log(filePath);
-        const saveData = JSON.stringify(dataSource);
-        //TODO::Create new database for the file.
-        void invoke("load_file", { fileName: filePath }).then(v => {
-            console.log(v);
-        });
-    }, [dataSource, la]);
+    }, [la]);
 
     const onEditClose = React.useCallback((useAccepted: boolean, entry?: DataEntry | undefined) => {
         if (useAccepted) {
@@ -92,74 +104,83 @@ const App = ({ className }: Props) => {
         }
     }, [entry]);
 
+    const title = React.useMemo(() => {
+        const fileChangeIndicator = fileChanged ? " *" : "";
+        return currentFile === undefined ? "Password Keeper" : `Password Keeper [${currentFile}${fileChangeIndicator}]`;
+    }, [currentFile, fileChanged]);
+
     return (
-        <div className={classNames(App.name, className)}>
-            <Toolbar>
-                <ToolbarItem location="before">
-                    <Button //
-                        icon="add"
-                        onClick={() => setEntryEditVisible(true)}
-                        disabled={entry === undefined}
+        <>
+            <StyledTitle title={title} />
+
+            <div className={classNames(App.name, className)}>
+                <Toolbar>
+                    <ToolbarItem location="before">
+                        <Button //
+                            icon="add"
+                            onClick={() => setEntryEditVisible(true)}
+                            disabled={entry === undefined}
+                        />
+                    </ToolbarItem>
+                    <ToolbarItem location="before">
+                        <Button //
+                            icon="edit"
+                            onClick={onEditClick}
+                            disabled={entry === undefined}
+                        />
+                    </ToolbarItem>
+                    <ToolbarItem location="before">
+                        <Button //
+                            icon="save"
+                            onClick={saveFileCallback}
+                        />
+                    </ToolbarItem>
+                    <ToolbarItem location="before">
+                        <Button //
+                            icon="folder"
+                            onClick={loadFileCallback}
+                        />
+                    </ToolbarItem>
+                    <ToolbarItem location="before">
+                        <Button //
+                            icon="help"
+                            //onClick={() => console.log(newEntry(entry?.parentId === -1 ? entry.id : entry.parentId, dataSource, le("newEntry")))}
+                            //                        onClick={loadDialog}
+                        />
+                    </ToolbarItem>
+                </Toolbar>
+                <div className="App-itemsWiew">
+                    <PasswordList //
+                        dataSource={dataSource}
+                        setDataSource={setDataSource}
+                        className="App-itemsWiew-list"
+                        setEntry={setEntry}
                     />
-                </ToolbarItem>
-                <ToolbarItem location="before">
-                    <Button //
-                        icon="edit"
-                        onClick={onEditClick}
-                        disabled={entry === undefined}
+                    <EntryEditor //
+                        className="App-PasswordEntryEditor"
+                        entry={entry}
+                        readOnly={true}
+                        visible={entry?.parentId !== -1}
+                        hidePasswordTimeout={10}
+                        showCopyButton={true}
                     />
-                </ToolbarItem>
-                <ToolbarItem location="before">
-                    <Button //
-                        icon="save"
-                        onClick={saveDialog}
-                    />
-                </ToolbarItem>
-                <ToolbarItem location="before">
-                    <Button //
-                        icon="folder"
-                        onClick={loadDialog}
-                    />
-                </ToolbarItem>
-                <ToolbarItem location="before">
-                    <Button //
-                        icon="help"
-                        //onClick={() => console.log(newEntry(entry?.parentId === -1 ? entry.id : entry.parentId, dataSource, le("newEntry")))}
-                        //                        onClick={loadDialog}
-                    />
-                </ToolbarItem>
-            </Toolbar>
-            <div className="App-itemsWiew">
-                <PasswordList //
-                    dataSource={dataSource}
-                    setDataSource={setDataSource}
-                    className="App-itemsWiew-list"
-                    setEntry={setEntry}
-                />
-                <EntryEditor //
-                    className="App-PasswordEntryEditor"
-                    entry={entry}
-                    readOnly={true}
-                    visible={entry?.parentId !== -1}
-                    hidePasswordTimeout={10}
-                    showCopyButton={true}
-                />
-            </div>
-            <EditEntryPopup //
-                entry={entry}
-                mode={ModifyType.Edit}
-                visible={entryEditVisible}
-                onClose={onEditClose}
-            />
-            {entry && (
-                <EditCategoryPopup //
+                </div>
+                <EditEntryPopup //
                     entry={entry}
                     mode={ModifyType.Edit}
-                    visible={categoryEditVisible}
-                    onClose={onCategoryEditClose}
+                    visible={entryEditVisible}
+                    onClose={onEditClose}
                 />
-            )}
-        </div>
+                {entry && (
+                    <EditCategoryPopup //
+                        entry={entry}
+                        mode={ModifyType.Edit}
+                        visible={categoryEditVisible}
+                        onClose={onCategoryEditClose}
+                    />
+                )}
+            </div>
+        </>
     );
 };
 
