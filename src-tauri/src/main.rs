@@ -31,7 +31,6 @@ use encryption::{decrypt_small_file, encrypt_small_file};
 use serde::{Deserialize, Serialize};
 
 mod encryption;
-mod utils;
 
 #[tokio::main]
 async fn main() {
