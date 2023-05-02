@@ -27,7 +27,6 @@ import "./App.css";
 import { Button, Toolbar } from "devextreme-react";
 import styled from "styled-components";
 import "./i18n";
-import "@fluentui/react-icons";
 import { save, open } from "@tauri-apps/api/dialog";
 import EditEntryPopup from "./components/software/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
@@ -150,11 +149,11 @@ const App = ({ className }: Props) => {
                         />
                     </ToolbarItem>
                 </Toolbar>
-                <div className="App-itemsWiew">
+                <div className="App-itemsView">
                     <PasswordList //
                         dataSource={dataSource}
                         setDataSource={setDataSource}
-                        className="App-itemsWiew-list"
+                        className="App-itemsView-list"
                         setEntry={setEntry}
                     />
                     <EntryEditor //
@@ -200,7 +199,7 @@ export default styled(App)`
     width: 100%;
     display: flex;
     flex-direction column;
-    .App-itemsWiew {
+    .App-itemsView {
         display: flex;
         height: 100%;
         width: 100%;
@@ -211,7 +210,7 @@ export default styled(App)`
         width: 60%;
         margin: 10px;
     }
-    .App-itemsWiew-list {
+    .App-itemsView-list {
         width: 40%;
     }
 `;

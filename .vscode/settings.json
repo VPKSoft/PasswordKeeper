@@ -8,5 +8,10 @@
         "plaintext",
         "rust",
         "typescript"
+    ],
+    "cSpell.words": [
+        "devextreme",
+        "Kautonen",
+        "Petteri"
     ]
 }
