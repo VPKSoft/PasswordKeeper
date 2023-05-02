@@ -28,7 +28,7 @@ const EditCategoryPopup = ({
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
 
-    const title = React.useMemo(() => "RENAME CATEGORY", []);
+    const title = React.useMemo(() => (mode === ModifyType.Edit ? lu("renameCategory") : lu("addCategory")), [lu, mode]);
 
     React.useEffect(() => {
         setCategoryInternal(entry);
@@ -56,6 +56,10 @@ const EditCategoryPopup = ({
         },
         [categoryInternal]
     );
+
+    const validCategoryName = React.useMemo(() => {
+        return categoryInternal.name.length > 0 && !categoryInternal.name.endsWith(" ") && !categoryInternal.name.startsWith(" ");
+    }, [categoryInternal.name]);
 
     return (
         <Popup //
@@ -90,6 +94,7 @@ const EditCategoryPopup = ({
                             setUserAccepted(true);
                             onClose(true, categoryInternal);
                         }}
+                        disabled={!validCategoryName}
                     />
                     <Button //
                         text={lu("cancel")}

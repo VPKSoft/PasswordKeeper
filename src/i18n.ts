@@ -35,16 +35,21 @@ import localizationFiEntries from "./localization/entries/fi.json";
 import localizationEnApp from "./localization/app/en.json";
 import localizationFiApp from "./localization/app/fi.json";
 
+import localizationEnCommon from "./localization/common/en.json";
+import localizationFiCommon from "./localization/common/fi.json";
+
 const resources = {
     en: {
         ui: localizationEnMainUI,
         entries: localizationEnEntries,
         app: localizationEnApp,
+        common: localizationEnCommon,
     },
     fi: {
         ui: localizationFiMainUI,
         entries: localizationFiEntries,
         app: localizationFiApp,
+        common: localizationFiCommon,
     },
 };
 
@@ -60,7 +65,7 @@ const setLocale = (locale: Locales) => {
 
 setLocale("en");
 
-const ComponentValues = ["ui", "entries", "app"] as const;
+const ComponentValues = ["ui", "entries", "app", "common"] as const;
 
 type TranslationComponents = (typeof ComponentValues)[number];
 

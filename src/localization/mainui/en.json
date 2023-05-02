@@ -12,5 +12,7 @@
     "clipboardCopyFailed": "Failed to copy to clipboard",
     "generatePassword": "Generate password",
     "hidePassword": "Hide password",
-    "showPassword": "Show password"
+    "showPassword": "Show password",
+    "renameCategory": "Rename category",
+    "addCategory": "Add category"
 }

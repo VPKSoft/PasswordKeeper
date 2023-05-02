@@ -47,7 +47,5 @@ const PasswordInput = ({
 };
 
 export default styled(PasswordInput)`
-    // width: 100%;
-    // display: flex;
-    // flex-direction: row;
+    // Add style(s)
 `;

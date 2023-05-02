@@ -12,5 +12,7 @@
     "clipboardCopyFailed": "Kopiointi leikepöydälle epäonnistui",
     "generatePassword": "Muodosta salasana",
     "hidePassword": "Piilota salasana",
-    "showPassword": "Näytä salasana"
+    "showPassword": "Näytä salasana",
+    "renameCategory": "Nimeä kategoria",
+    "addCategory": "Lisää kategoria"
 }

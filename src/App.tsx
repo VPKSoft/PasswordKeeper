@@ -44,6 +44,7 @@ import EditCategoryPopup from "./components/software/EditCategoryPopup";
 import { useSecureStorage } from "./utilities/hooks";
 import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
+import QueryPasswordPopup from "./components/software/QueryPasswordPopup";
 
 type Props = {
     className?: string;
@@ -57,6 +58,7 @@ const App = ({ className }: Props) => {
     const [currentFile, setCurrentFile] = React.useState<string>();
     const [fileChanged, setFileChanged] = React.useState(false);
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
+    const [queryPasswordVisible, setQueryPasswordVisible] = React.useState(false);
 
     const la = useLocalize("app");
 
@@ -144,8 +146,7 @@ const App = ({ className }: Props) => {
                     <ToolbarItem location="before">
                         <Button //
                             icon="help"
-                            //onClick={() => console.log(newEntry(entry?.parentId === -1 ? entry.id : entry.parentId, dataSource, le("newEntry")))}
-                            //                        onClick={loadDialog}
+                            onClick={() => setQueryPasswordVisible(value => !value)}
                         />
                     </ToolbarItem>
                 </Toolbar>
@@ -179,9 +180,19 @@ const App = ({ className }: Props) => {
                         onClose={onCategoryEditClose}
                     />
                 )}
+                <QueryPasswordPopup //
+                    visible={queryPasswordVisible}
+                    onClose={queryPasswordClose}
+                    verifyMode={true}
+                    initialShowPassword={false}
+                />
             </div>
         </>
     );
+};
+
+const queryPasswordClose = (useAccepted: boolean, password?: string) => {
+    console.log(useAccepted, password);
 };
 
 export default styled(App)`

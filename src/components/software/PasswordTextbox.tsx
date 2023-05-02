@@ -14,6 +14,7 @@ type Props = {
     hidePasswordTimeout?: number;
     showGeneratePassword?: boolean;
     showCopyButton?: boolean;
+    initialShowPassword?: boolean;
     onValueChanged?: (e: ValueChangedEvent) => void;
 };
 
@@ -24,9 +25,11 @@ const PasswordTextbox = ({
     showGeneratePassword,
     hidePasswordTimeout,
     showCopyButton,
+    initialShowPassword,
     onValueChanged,
 }: Props) => {
-    const [displayPassword, setDisplayPassword] = React.useState(false);
+    const [displayPassword, setDisplayPassword] = React.useState(initialShowPassword ?? false);
+
     const lu = useLocalize("ui");
 
     const textBoxRef = React.useRef<dxTextBox>();
@@ -42,10 +45,10 @@ const PasswordTextbox = ({
     }, [displayPassword, hidePasswordTimeout, readonly]);
 
     React.useEffect(() => {
-        if (!readonly) {
+        if (!readonly && initialShowPassword === undefined) {
             setDisplayPassword(true);
         }
-    }, [readonly]);
+    }, [initialShowPassword, readonly]);
 
     const toggleDisplayPassword = React.useCallback(() => {
         setDisplayPassword(value => !value);
@@ -71,7 +74,7 @@ const PasswordTextbox = ({
                     notify(lu("clipboardCopyFailed"), "error", 2_000);
                 });
         }
-    }, []);
+    }, [lu]);
 
     const toggeShowPasswordHint = React.useMemo(() => {
         return displayPassword ? lu("hidePassword") : lu("showPassword");
@@ -79,7 +82,14 @@ const PasswordTextbox = ({
 
     return (
         <div className={classNames(PasswordTextbox.name, className)}>
-            <TextBox onInitialized={onInitialized} readOnly={readonly} mode={displayPassword ? "text" : "password"} className="PasswordTextbox-textBox" value={value} onValueChange={onValueChanged} />
+            <TextBox //
+                onInitialized={onInitialized}
+                readOnly={readonly}
+                mode={displayPassword ? "text" : "password"}
+                className="PasswordTextbox-textBox"
+                value={value}
+                onValueChanged={onValueChanged}
+            />
             <Button //
                 icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}
                 className="PasswordTextbox-button"
