@@ -41,13 +41,12 @@ type BackendResult = {
 const failed: FileResult = { ok: false, fileData: [], fileName: "" };
 
 /**
- * Loads a file selected by user via open file dialog, decrypts the data and returns the decrypted data.
- * @param password The password used in the encryption.
+ * Displays an open file dialog and returns the user selected file.
  * @param extensionName The name of the file extension to display to the user via the open file dialog.
  * @param extension The file extension used in the open file dialog.
- * @returns A @see FileResult value with the loaded data or indicating failure.
+ * @returns The user selected file name as string or null if the dialog was canceled.
  */
-const loadFile = async (password: string, extensionName: string, extension = "pkd") => {
+const selectFileToOpen = async (extensionName: string, extension = "pkd") => {
     const filePath = await open({
         filters: [
             {
@@ -57,37 +56,16 @@ const loadFile = async (password: string, extensionName: string, extension = "pk
         ],
     });
 
-    if (filePath === null) {
-        return failed;
-    }
-
-    let fileData: BackendResult = { error: false, value: "" };
-    try {
-        fileData = await invoke("load_file", { fileName: filePath, password: password });
-        if (fileData.error) {
-            return { ...failed, errorMessage: fileData.value };
-        }
-    } catch {
-        return failed;
-    }
-
-    return {
-        fileName: filePath,
-        fileData: JSON.parse(fileData.value),
-        ok: true,
-    } as FileResult;
+    return filePath as string | null;
 };
 
 /**
- * Saves the specified data into an encrypted file using the specified password.
- * The file name is indicated by the user by specifying the file name in the displayed save file dialog.
- * @param fileData The data to save to file in encrypted form.
- * @param password The password used in the encryption.
- * @param extensionName The name of the file extension to display to the user via the save file dialog.
- * @param extension The file extension used in the save file dialog.
- * @returns A @see FileResult value with the the file name the data was saved into along with a success flag.
+ * Displays a save file dialog and returns the file name.
+ * @param extensionName The name of the file extension to display to the user via the open file dialog.
+ * @param extension The file extension used in the open file dialog.
+ * @returns The user specified file name as string or null if the dialog was canceled.
  */
-const saveFile = async (fileData: DataEntry[], password: string, extensionName: string, extension = "pkd") => {
+const selectFileToSave = async (extensionName: string, extension = "pkd") => {
     const filePath = await save({
         filters: [
             {
@@ -97,12 +75,46 @@ const saveFile = async (fileData: DataEntry[], password: string, extensionName: 
         ],
     });
 
+    return filePath as string | null;
+};
+
+/**
+ * Loads the specified file, decrypts the data and returns the decrypted data.
+ * @param password The password used in the encryption.
+ * @param fileName The file name to decrypt the data from.
+ * @returns A @see FileResult value with the loaded data or indicating failure.
+ */
+const loadFile = async (password: string, fileName: string) => {
+    let fileData: BackendResult = { error: false, value: "" };
+    try {
+        fileData = await invoke("load_file", { fileName: fileName, password: password });
+        if (fileData.error) {
+            return { ...failed, errorMessage: fileData.value };
+        }
+    } catch {
+        return failed;
+    }
+
+    return {
+        fileName: fileName,
+        fileData: JSON.parse(fileData.value),
+        ok: true,
+    } as FileResult;
+};
+
+/**
+ * Saves the specified data into the specified file encrypted using the specified password.
+ * @param fileData The data to save to file in encrypted form.
+ * @param password The password used in the encryption.
+ * @returns A @see FileResult value with the the file name the data was saved into along with a success flag.
+ */
+const saveFile = async (fileData: DataEntry[], password: string, fileName: string) => {
     const saveData = JSON.stringify(fileData);
 
     try {
-        const saved: boolean = await invoke("save_file", { jsonData: saveData, fileName: filePath, password: password });
+        const saved: boolean = await invoke("save_file", { jsonData: saveData, fileName: fileName, password: password });
         return {
-            fileName: filePath,
+            fileName: fileName,
             fileData: [],
             ok: saved,
         } as FileResult;
@@ -111,4 +123,4 @@ const saveFile = async (fileData: DataEntry[], password: string, extensionName: 
     }
 };
 
-export { loadFile, saveFile };
+export { loadFile, saveFile, selectFileToOpen, selectFileToSave };

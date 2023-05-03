@@ -25,7 +25,7 @@ SOFTWARE.
 import classNames from "classnames";
 import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
-import dxTextBox, { InitializedEvent, ValueChangedEvent } from "devextreme/ui/text_box";
+import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
 import styled from "styled-components";
 import notify from "devextreme/ui/notify";
@@ -40,6 +40,7 @@ type Props = {
     showCopyButton?: boolean;
     initialShowPassword?: boolean;
     onValueChanged?: (e: ValueChangedEvent) => void;
+    onKeyDown?: (e: KeyDownEvent) => void;
 };
 
 const PasswordTextbox = ({
@@ -51,6 +52,7 @@ const PasswordTextbox = ({
     showCopyButton,
     initialShowPassword,
     onValueChanged,
+    onKeyDown,
 }: Props) => {
     const [displayPassword, setDisplayPassword] = React.useState(initialShowPassword ?? false);
 
@@ -113,6 +115,7 @@ const PasswordTextbox = ({
                 className="PasswordTextbox-textBox"
                 value={value}
                 onValueChanged={onValueChanged}
+                onKeyDown={onKeyDown}
             />
             <Button //
                 icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}

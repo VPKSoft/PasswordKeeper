@@ -35,7 +35,7 @@ type Props = {
     visible: boolean;
     verifyMode?: boolean;
     initialShowPassword?: boolean;
-    onClose: (useAccepted: boolean, password?: string) => void;
+    onClose: (userAccepted: boolean, password?: string) => void;
 };
 
 const QueryPasswordPopup = ({
@@ -45,7 +45,7 @@ const QueryPasswordPopup = ({
     initialShowPassword,
     onClose,
 }: Props) => {
-    const [useAccepted, setUserAccepted] = React.useState(false);
+    const [userAccepted, setUserAccepted] = React.useState(false);
     const [password1, setPassword1] = React.useState("");
     const [password2, setPassword2] = React.useState("");
 
@@ -58,17 +58,17 @@ const QueryPasswordPopup = ({
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
-                onClose(useAccepted);
+                onClose(userAccepted);
             }
             setUserAccepted(false);
         },
-        [onClose, useAccepted]
+        [onClose, userAccepted]
     );
 
     const onHiding = React.useCallback(() => {
-        onClose(useAccepted);
+        onClose(userAccepted);
         setUserAccepted(false);
-    }, [onClose, useAccepted]);
+    }, [onClose, userAccepted]);
 
     const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
         setPassword1(e.value);

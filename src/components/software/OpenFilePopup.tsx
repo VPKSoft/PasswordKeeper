@@ -23,40 +23,34 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup, TextBox } from "devextreme-react";
-import { ModifyType } from "../../types/Enums";
+import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { useLocalize } from "../../i18n";
-import { DataEntry } from "../../types/PasswordEntry";
-import { ValueChangedEvent } from "devextreme/ui/text_box";
+import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
+import PasswordTextbox from "./PasswordTextbox";
+import FileQueryTextbox from "./FileQueryTextbox";
 
 type Props = {
     className?: string;
-    entry: DataEntry;
-    mode: ModifyType;
     visible: boolean;
-    onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
+    onClose: (userAccepted: boolean, fileName?: string, password?: string) => void;
 };
 
-const EditCategoryPopup = ({
+const OpenFilePopup = ({
     className, //
-    entry,
-    mode,
     visible,
     onClose,
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
-    const [categoryInternal, setCategoryInternal] = React.useState<DataEntry>(entry);
+    const [password, setPassword] = React.useState("");
+    const [fileName, setFileName] = React.useState<string | undefined>();
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
+    const lc = useLocalize("common");
 
-    const title = React.useMemo(() => (mode === ModifyType.Edit ? lu("renameCategory") : lu("addCategory")), [lu, mode]);
-
-    React.useEffect(() => {
-        setCategoryInternal(entry);
-    }, [entry]);
+    const title = React.useMemo(() => lc("openFile"), [lc]);
 
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
@@ -73,17 +67,17 @@ const EditCategoryPopup = ({
         setUserAccepted(false);
     }, [onClose, userAccepted]);
 
-    const onNameChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
-            const value: string = typeof e.value === "string" ? e.value : "";
-            setCategoryInternal({ ...categoryInternal, name: value });
-        },
-        [categoryInternal]
-    );
+    const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
+        setPassword(e.value);
+    }, []);
 
-    const validCategoryName = React.useMemo(() => {
-        return categoryInternal.name.length > 0 && !categoryInternal.name.endsWith(" ") && !categoryInternal.name.startsWith(" ");
-    }, [categoryInternal.name]);
+    const canAccept = React.useMemo(() => {
+        return password !== "" && (fileName ?? "") !== "";
+    }, [fileName, password]);
+
+    const onKeyDown = React.useCallback((e: KeyDownEvent) => {
+        console.log(e.event?.key);
+    }, []);
 
     return (
         <Popup //
@@ -94,19 +88,41 @@ const EditCategoryPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={200}
+            height={240}
             width={600}
             showTitle={true}
         >
-            <div className={classNames(EditCategoryPopup.name, className)}>
+            <div className={classNames(OpenFilePopup.name, className)}>
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{le("name")}</div>
+                                <div className="dx-field-item-label-text">{lc("fileName")}</div>
                             </td>
                             <td>
-                                <TextBox value={entry?.name} onValueChanged={onNameChanged} />
+                                <div>
+                                    <FileQueryTextbox //
+                                        value={fileName}
+                                        onValueChanged={setFileName}
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div className="dx-field-item-label-text">{le("password")}</div>
+                            </td>
+                            <td>
+                                <div>
+                                    <PasswordTextbox //
+                                        value={password}
+                                        onValueChanged={onPassword1Changed}
+                                        showGeneratePassword={false}
+                                        showCopyButton={true}
+                                        initialShowPassword={false}
+                                        onKeyDown={onKeyDown}
+                                    />
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -116,9 +132,9 @@ const EditCategoryPopup = ({
                         text={lu("ok")}
                         onClick={() => {
                             setUserAccepted(true);
-                            onClose(true, categoryInternal);
+                            onClose(true, fileName, password);
                         }}
-                        disabled={!validCategoryName}
+                        disabled={!canAccept}
                     />
                     <Button //
                         text={lu("cancel")}
@@ -133,7 +149,7 @@ const EditCategoryPopup = ({
     );
 };
 
-export default styled(EditCategoryPopup)`
+export default styled(OpenFilePopup)`
     display: flex;
     flex-direction: column;
     height: 100%;

@@ -44,6 +44,10 @@ import { useSecureStorage } from "./utilities/hooks";
 import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
 import QueryPasswordPopup from "./components/software/QueryPasswordPopup";
+import AppToolbar from "./components/app/AppToolbar";
+import FileQueryTextbox from "./components/software/FileQueryTextbox";
+import OpenFilePopup from "./components/software/OpenFilePopup";
+import notify from "devextreme/ui/notify";
 
 type Props = {
     className?: string;
@@ -58,8 +62,10 @@ const App = ({ className }: Props) => {
     const [fileChanged, setFileChanged] = React.useState(false);
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
     const [queryPasswordVisible, setQueryPasswordVisible] = React.useState(false);
+    const [openFile, setOpenFile] = React.useState(false);
 
     const la = useLocalize("app");
+    const lm = useLocalize("messages");
 
     setTheme("generic.carmine");
 
@@ -75,23 +81,18 @@ const App = ({ className }: Props) => {
     }, [dataSource, la]);
 
     const loadFileCallback = React.useCallback(async () => {
-        loadFile("pwd", la("passwordKeeperDataFile", "PasswordKeeper data file")).then(result => {
-            if (result.ok) {
-                setDataSource(result.fileData);
-                setCurrentFile(result.fileName);
-            }
-        });
-    }, [la]);
+        setOpenFile(true);
+    }, []);
 
-    const onEditClose = React.useCallback((useAccepted: boolean, entry?: DataEntry | undefined) => {
-        if (useAccepted) {
+    const onEditClose = React.useCallback((userAccepted: boolean, entry?: DataEntry | undefined) => {
+        if (userAccepted) {
             // TODO::Save the data
         }
         setEntryEditVisible(false);
     }, []);
 
-    const onCategoryEditClose = React.useCallback((useAccepted: boolean, entry?: DataEntry | undefined) => {
-        if (useAccepted) {
+    const onCategoryEditClose = React.useCallback((userAccepted: boolean, entry?: DataEntry | undefined) => {
+        if (userAccepted) {
             // TODO::Save the data
         }
         setCategoryEditVisible(false);
@@ -110,45 +111,37 @@ const App = ({ className }: Props) => {
         return currentFile === undefined ? "Password Keeper" : `Password Keeper [${currentFile}${fileChangeIndicator}]`;
     }, [currentFile, fileChanged]);
 
+    const filePopupClose = React.useCallback(
+        (userAccepted: boolean, fileName?: string, password?: string) => {
+            if (userAccepted === true && fileName !== undefined && password !== undefined) {
+                void loadFile(password, fileName).then(f => {
+                    if (f.ok) {
+                        setDataSource(f.fileData);
+                    } else {
+                        setOpenFile(false);
+                        notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                    }
+
+                    setOpenFile(false);
+                });
+            }
+        },
+        [lm]
+    );
+
     return (
         <>
             <StyledTitle title={title} />
 
             <div className={classNames(App.name, className)}>
-                <Toolbar>
-                    <ToolbarItem location="before">
-                        <Button //
-                            icon="add"
-                            onClick={() => setEntryEditVisible(true)}
-                            disabled={entry === undefined}
-                        />
-                    </ToolbarItem>
-                    <ToolbarItem location="before">
-                        <Button //
-                            icon="edit"
-                            onClick={onEditClick}
-                            disabled={entry === undefined}
-                        />
-                    </ToolbarItem>
-                    <ToolbarItem location="before">
-                        <Button //
-                            icon="save"
-                            onClick={saveFileCallback}
-                        />
-                    </ToolbarItem>
-                    <ToolbarItem location="before">
-                        <Button //
-                            icon="folder"
-                            onClick={loadFileCallback}
-                        />
-                    </ToolbarItem>
-                    <ToolbarItem location="before">
-                        <Button //
-                            icon="help"
-                            onClick={() => setQueryPasswordVisible(value => !value)}
-                        />
-                    </ToolbarItem>
-                </Toolbar>
+                <AppToolbar //
+                    entry={entry}
+                    saveFileClick={saveFileCallback}
+                    loadFileClick={loadFileCallback}
+                    editClick={onEditClick}
+                    addClick={() => setEntryEditVisible(true)}
+                    testClick={() => setQueryPasswordVisible(value => !value)}
+                />
                 <div className="App-itemsView">
                     <PasswordList //
                         dataSource={dataSource}
@@ -182,16 +175,20 @@ const App = ({ className }: Props) => {
                 <QueryPasswordPopup //
                     visible={queryPasswordVisible}
                     onClose={queryPasswordClose}
-                    verifyMode={true}
+                    verifyMode={false}
                     initialShowPassword={false}
+                />
+                <OpenFilePopup //
+                    visible={openFile}
+                    onClose={filePopupClose}
                 />
             </div>
         </>
     );
 };
 
-const queryPasswordClose = (useAccepted: boolean, password?: string) => {
-    console.log(useAccepted, password);
+const queryPasswordClose = (userAccepted: boolean, password?: string) => {
+    console.log(userAccepted, password);
 };
 
 export default styled(App)`

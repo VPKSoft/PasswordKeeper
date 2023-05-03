@@ -1,4 +1,7 @@
 {
     "retypePassword": "Syötä salasana uudelleen",
-    "givePassword": "Anna salasana"
+    "givePassword": "Anna salasana",
+    "selectFileOpen": "Valitse avattava tiedosto",
+    "openFile": "Avaa tiedosto…",
+    "fileName": "Tiedostonimi"
 }

@@ -6,12 +6,12 @@
         "markdown",
         "latex",
         "plaintext",
-        "rust",
-        "typescript"
+        "rust"
     ],
     "cSpell.words": [
         "devextreme",
         "Kautonen",
-        "Petteri"
+        "Petteri",
+        "tauri"
     ]
 }

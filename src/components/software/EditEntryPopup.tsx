@@ -36,7 +36,7 @@ type Props = {
     entry: DataEntry | undefined;
     mode: ModifyType;
     visible: boolean;
-    onClose: (useAccepted: boolean, entry?: DataEntry | undefined) => void;
+    onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 };
 
 const EditEntryPopup = ({
@@ -46,7 +46,7 @@ const EditEntryPopup = ({
     visible,
     onClose,
 }: Props) => {
-    const [useAccepted, setUserAccepted] = React.useState(false);
+    const [userAccepted, setUserAccepted] = React.useState(false);
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>(entry);
 
     const le = useLocalize("entries");
@@ -61,17 +61,17 @@ const EditEntryPopup = ({
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
-                onClose(useAccepted);
+                onClose(userAccepted);
             }
             setUserAccepted(false);
         },
-        [onClose, useAccepted]
+        [onClose, userAccepted]
     );
 
     const onHiding = React.useCallback(() => {
-        onClose(useAccepted);
+        onClose(userAccepted);
         setUserAccepted(false);
-    }, [onClose, useAccepted]);
+    }, [onClose, userAccepted]);
 
     return (
         <Popup //
