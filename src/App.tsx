@@ -113,6 +113,8 @@ const App = ({ className }: Props) => {
 
     const filePopupClose = React.useCallback(
         (userAccepted: boolean, fileName?: string, password?: string) => {
+            console.log(userAccepted, fileName, password);
+
             if (userAccepted === true && fileName !== undefined && password !== undefined) {
                 void loadFile(password, fileName).then(f => {
                     if (f.ok) {
@@ -121,10 +123,10 @@ const App = ({ className }: Props) => {
                         setOpenFile(false);
                         notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                     }
-
-                    setOpenFile(false);
                 });
             }
+
+            setOpenFile(false);
         },
         [lm]
     );

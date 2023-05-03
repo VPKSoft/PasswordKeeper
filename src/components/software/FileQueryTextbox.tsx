@@ -29,17 +29,20 @@ import * as React from "react";
 import styled from "styled-components";
 import { useLocalize } from "../../i18n";
 import { selectFileToOpen } from "../../utilities/app/Files";
+import { KeyDownEvent } from "devextreme/ui/text_box";
 
 type Props = {
     className?: string;
     value?: string | undefined;
     onValueChanged: (value: string | undefined) => void;
+    onKeyDown?: (e: KeyDownEvent) => void;
 };
 
 const FileQueryTextbox = ({
     className, //
     value,
     onValueChanged,
+    onKeyDown,
 }: Props) => {
     const lc = useLocalize("common");
     const la = useLocalize("app");
@@ -58,6 +61,7 @@ const FileQueryTextbox = ({
                 readOnly={true}
                 className="FileQueryTextbox-textBox"
                 value={value}
+                onKeyDown={onKeyDown}
             />
             <Button //
                 icon="activefolder"

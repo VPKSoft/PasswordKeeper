@@ -75,9 +75,18 @@ const OpenFilePopup = ({
         return password !== "" && (fileName ?? "") !== "";
     }, [fileName, password]);
 
-    const onKeyDown = React.useCallback((e: KeyDownEvent) => {
-        console.log(e.event?.key);
-    }, []);
+    const onKeyDown = React.useCallback(
+        (e: KeyDownEvent) => {
+            if (e.event?.key === "Escape") {
+                setUserAccepted(false);
+                onClose(false);
+            } else if (e.event?.key === "Enter" && canAccept) {
+                setUserAccepted(true);
+                onClose(true, fileName, password);
+            }
+        },
+        [canAccept, fileName, onClose, password]
+    );
 
     return (
         <Popup //
@@ -104,6 +113,7 @@ const OpenFilePopup = ({
                                     <FileQueryTextbox //
                                         value={fileName}
                                         onValueChanged={setFileName}
+                                        onKeyDown={onKeyDown}
                                     />
                                 </div>
                             </td>

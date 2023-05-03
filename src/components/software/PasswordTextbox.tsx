@@ -102,7 +102,7 @@ const PasswordTextbox = ({
         }
     }, [lu]);
 
-    const toggeShowPasswordHint = React.useMemo(() => {
+    const toggleShowPasswordHint = React.useMemo(() => {
         return displayPassword ? lu("hidePassword") : lu("showPassword");
     }, [displayPassword, lu]);
 
@@ -121,7 +121,7 @@ const PasswordTextbox = ({
                 icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}
                 className="PasswordTextbox-button"
                 onClick={toggleDisplayPassword}
-                hint={toggeShowPasswordHint}
+                hint={toggleShowPasswordHint}
             />
             {showGeneratePassword === true &&
                 readonly === false && ( //
