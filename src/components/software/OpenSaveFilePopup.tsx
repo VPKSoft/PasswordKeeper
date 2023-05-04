@@ -30,17 +30,20 @@ import { useLocalize } from "../../i18n";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import PasswordTextbox from "./PasswordTextbox";
 import FileQueryTextbox from "./FileQueryTextbox";
+import { FileQueryMode } from "../../types/Enums";
 
 type Props = {
     className?: string;
     visible: boolean;
+    mode: FileQueryMode;
     onClose: (userAccepted: boolean, fileName?: string, password?: string) => void;
 };
 
-const OpenFilePopup = ({
+const OpenSaveFilePopup = ({
     className, //
     visible,
     onClose,
+    mode,
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [password, setPassword] = React.useState("");
@@ -50,22 +53,48 @@ const OpenFilePopup = ({
     const lu = useLocalize("ui");
     const lc = useLocalize("common");
 
-    const title = React.useMemo(() => lc("openFile"), [lc]);
+    const title = React.useMemo(() => {
+        switch (mode) {
+            case FileQueryMode.Open: {
+                return lc("openFile");
+            }
+            case FileQueryMode.Save: {
+                return lc("saveFile");
+            }
+            case FileQueryMode.SaveAs: {
+                return lc("saveFileAs");
+            }
+            default: {
+                return lc("openFile");
+            }
+        }
+    }, [lc, mode]);
+
+    const onCloseCallback = React.useCallback(
+        (userAccepted: boolean, fileName?: string, password?: string) => {
+            onClose(userAccepted, fileName, password);
+            setUserAccepted(false);
+            setPassword("");
+            // eslint-disable-next-line unicorn/no-useless-undefined
+            setFileName(undefined);
+        },
+        [onClose]
+    );
 
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
-                onClose(userAccepted);
+                onCloseCallback(userAccepted);
             }
             setUserAccepted(false);
         },
-        [onClose, userAccepted]
+        [onCloseCallback, userAccepted]
     );
 
     const onHiding = React.useCallback(() => {
-        onClose(userAccepted);
+        onCloseCallback(userAccepted);
         setUserAccepted(false);
-    }, [onClose, userAccepted]);
+    }, [onCloseCallback, userAccepted]);
 
     const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
         setPassword(e.value);
@@ -79,13 +108,13 @@ const OpenFilePopup = ({
         (e: KeyDownEvent) => {
             if (e.event?.key === "Escape") {
                 setUserAccepted(false);
-                onClose(false);
+                onCloseCallback(false);
             } else if (e.event?.key === "Enter" && canAccept) {
                 setUserAccepted(true);
-                onClose(true, fileName, password);
+                onCloseCallback(true, fileName, password);
             }
         },
-        [canAccept, fileName, onClose, password]
+        [canAccept, fileName, onCloseCallback, password]
     );
 
     return (
@@ -101,7 +130,7 @@ const OpenFilePopup = ({
             width={600}
             showTitle={true}
         >
-            <div className={classNames(OpenFilePopup.name, className)}>
+            <div className={classNames(OpenSaveFilePopup.name, className)}>
                 <table>
                     <tbody>
                         <tr>
@@ -114,6 +143,7 @@ const OpenFilePopup = ({
                                         value={fileName}
                                         onValueChanged={setFileName}
                                         onKeyDown={onKeyDown}
+                                        mode={mode}
                                     />
                                 </div>
                             </td>
@@ -142,7 +172,7 @@ const OpenFilePopup = ({
                         text={lu("ok")}
                         onClick={() => {
                             setUserAccepted(true);
-                            onClose(true, fileName, password);
+                            onCloseCallback(true, fileName, password);
                         }}
                         disabled={!canAccept}
                     />
@@ -150,7 +180,7 @@ const OpenFilePopup = ({
                         text={lu("cancel")}
                         onClick={() => {
                             setUserAccepted(false);
-                            onClose(false);
+                            onCloseCallback(false);
                         }}
                     />
                 </div>
@@ -159,7 +189,7 @@ const OpenFilePopup = ({
     );
 };
 
-export default styled(OpenFilePopup)`
+export default styled(OpenSaveFilePopup)`
     display: flex;
     flex-direction: column;
     height: 100%;

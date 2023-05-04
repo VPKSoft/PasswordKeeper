@@ -26,3 +26,9 @@ export enum ModifyType {
     New,
     Edit,
 }
+
+export enum FileQueryMode {
+    Open,
+    Save,
+    SaveAs,
+}

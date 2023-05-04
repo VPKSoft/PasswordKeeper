@@ -1,3 +1,4 @@
 {
-    "fileOpenFail": "Tiedoston avaaminen epäonistui viestillä '{{msg}}'."
+    "fileOpenFail": "Tiedoston avaaminen epäonistui viestillä '{{msg}}'.",
+    "fileSaveFail": "Tiedoston tallennus epäonnistui viestillä '{{msg}}'."
 }

@@ -3,5 +3,7 @@
     "givePassword": "Anna salasana",
     "selectFileOpen": "Valitse avattava tiedosto",
     "openFile": "Avaa tiedosto…",
-    "fileName": "Tiedostonimi"
+    "fileName": "Tiedostonimi",
+    "saveFile": "Tallenna tiedosto",
+    "saveFileAs": "Tallenna tiedosto nimellä"
 }

@@ -3,5 +3,7 @@
     "givePassword": "Give a password",
     "selectFileOpen": "Select file to open",
     "openFile": "Open file…",
-    "fileName": "File name"
+    "fileName": "File name",
+    "saveFile": "Save file",
+    "saveFileAs": "Save file as"
 }

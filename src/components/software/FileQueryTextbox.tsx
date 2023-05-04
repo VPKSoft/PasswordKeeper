@@ -28,14 +28,16 @@ import TextBox from "devextreme-react/text-box";
 import * as React from "react";
 import styled from "styled-components";
 import { useLocalize } from "../../i18n";
-import { selectFileToOpen } from "../../utilities/app/Files";
+import { selectFileToOpen, selectFileToSave } from "../../utilities/app/Files";
 import { KeyDownEvent } from "devextreme/ui/text_box";
+import { FileQueryMode } from "../../types/Enums";
 
 type Props = {
     className?: string;
     value?: string | undefined;
     onValueChanged: (value: string | undefined) => void;
     onKeyDown?: (e: KeyDownEvent) => void;
+    mode: FileQueryMode;
 };
 
 const FileQueryTextbox = ({
@@ -43,17 +45,26 @@ const FileQueryTextbox = ({
     value,
     onValueChanged,
     onKeyDown,
+    mode,
 }: Props) => {
     const lc = useLocalize("common");
     const la = useLocalize("app");
 
     const selectFileClick = React.useCallback(() => {
-        void selectFileToOpen(la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {
-            if (f !== null) {
-                onValueChanged(f);
-            }
-        });
-    }, [la, onValueChanged]);
+        if (mode === FileQueryMode.Open) {
+            void selectFileToOpen(la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {
+                if (f !== null) {
+                    onValueChanged(f);
+                }
+            });
+        } else {
+            void selectFileToSave(la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {
+                if (f !== null) {
+                    onValueChanged(f);
+                }
+            });
+        }
+    }, [la, mode, onValueChanged]);
 
     return (
         <div className={classNames(FileQueryTextbox.name, className)}>

@@ -1,0 +1,1 @@
+save-as-icon.svg: https://uxwing.com/save-as-icon/, "License: All icons are free to use any personal and commercial projects without any attribution or credit.", More Info: https://uxwing.com/license/

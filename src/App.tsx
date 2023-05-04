@@ -24,17 +24,14 @@ SOFTWARE.
 
 import * as React from "react";
 import "./App.css";
-import { Button, Toolbar } from "devextreme-react";
 import styled from "styled-components";
 import "./i18n";
-import { save, open } from "@tauri-apps/api/dialog";
 import EditEntryPopup from "./components/software/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
-import { ModifyType } from "./types/Enums";
+import { FileQueryMode, ModifyType } from "./types/Enums";
 import { useLocalize } from "./i18n";
-import { Item as ToolbarItem } from "devextreme-react/toolbar";
 import classNames from "classnames";
-import { newEntry, testData } from "./misc/TestData";
+import { newEntry, testData } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
 import PasswordList from "./components/app/PasswordList";
@@ -45,9 +42,8 @@ import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
 import QueryPasswordPopup from "./components/software/QueryPasswordPopup";
 import AppToolbar from "./components/app/AppToolbar";
-import FileQueryTextbox from "./components/software/FileQueryTextbox";
-import OpenFilePopup from "./components/software/OpenFilePopup";
 import notify from "devextreme/ui/notify";
+import OpenSaveFilePopup from "./components/software/OpenSaveFilePopup";
 
 type Props = {
     className?: string;
@@ -55,16 +51,19 @@ type Props = {
 
 const App = ({ className }: Props) => {
     const [entry, setEntry] = React.useState<DataEntry | undefined>();
+    const [editEntry, setEditEntry] = React.useState<DataEntry | undefined>();
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
     const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
     const [dataSource, setDataSource] = React.useState(testData);
     const [currentFile, setCurrentFile] = React.useState<string>();
     const [fileChanged, setFileChanged] = React.useState(false);
-    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
     const [queryPasswordVisible, setQueryPasswordVisible] = React.useState(false);
-    const [openFile, setOpenFile] = React.useState(false);
+    const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
+    const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
+    const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
 
-    const la = useLocalize("app");
+    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
+
     const lm = useLocalize("messages");
 
     setTheme("generic.carmine");
@@ -72,16 +71,27 @@ const App = ({ className }: Props) => {
     setFilePassword("password");
 
     const saveFileCallback = React.useCallback(async () => {
-        saveFile(dataSource, "password", la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {
-            if (f.ok) {
-                setCurrentFile(f.fileName);
-                setFileChanged(false);
-            }
-        });
-    }, [dataSource, la]);
+        const password = getFilePassword();
+        if (currentFile && password) {
+            saveFile(dataSource, password, currentFile).then(f => {
+                if (f.ok) {
+                    setCurrentFile(f.fileName);
+                    setFileChanged(false);
+                } else {
+                    notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                }
+            });
+        }
+    }, [currentFile, dataSource, getFilePassword, lm]);
+
+    const saveFileAsCallback = React.useCallback(async () => {
+        setFilePopupMode(FileQueryMode.SaveAs);
+        setFileSaveOpenQueryOpen(true);
+    }, []);
 
     const loadFileCallback = React.useCallback(async () => {
-        setOpenFile(true);
+        setFilePopupMode(FileQueryMode.Open);
+        setFileSaveOpenQueryOpen(true);
     }, []);
 
     const onEditClose = React.useCallback((userAccepted: boolean, entry?: DataEntry | undefined) => {
@@ -91,12 +101,15 @@ const App = ({ className }: Props) => {
         setEntryEditVisible(false);
     }, []);
 
-    const onCategoryEditClose = React.useCallback((userAccepted: boolean, entry?: DataEntry | undefined) => {
-        if (userAccepted) {
-            // TODO::Save the data
-        }
-        setCategoryEditVisible(false);
-    }, []);
+    const onCategoryEditClose = React.useCallback(
+        (userAccepted: boolean, entry?: DataEntry | undefined) => {
+            if (userAccepted && categoryPopupMode === ModifyType.New && userAccepted && entry !== undefined) {
+                setDataSource([...dataSource, entry]);
+            }
+            setCategoryEditVisible(false);
+        },
+        [categoryPopupMode, dataSource]
+    );
 
     const onEditClick = React.useCallback(() => {
         if (entry?.parentId === -1) {
@@ -113,23 +126,43 @@ const App = ({ className }: Props) => {
 
     const filePopupClose = React.useCallback(
         (userAccepted: boolean, fileName?: string, password?: string) => {
-            console.log(userAccepted, fileName, password);
-
             if (userAccepted === true && fileName !== undefined && password !== undefined) {
-                void loadFile(password, fileName).then(f => {
-                    if (f.ok) {
-                        setDataSource(f.fileData);
-                    } else {
-                        setOpenFile(false);
-                        notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
-                    }
-                });
+                if (filePopupMode === FileQueryMode.Open) {
+                    void loadFile(password, fileName).then(f => {
+                        if (f.ok) {
+                            setFilePassword(password);
+                            setDataSource(f.fileData);
+                            setCurrentFile(fileName);
+                            setFileSaveOpenQueryOpen(false);
+                        } else {
+                            notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            setFileSaveOpenQueryOpen(false);
+                        }
+                    });
+                } else if (filePopupMode === FileQueryMode.SaveAs) {
+                    void saveFile(dataSource, password, fileName).then(f => {
+                        if (f.ok) {
+                            setFilePassword(password);
+                            setCurrentFile(fileName);
+                            setFileSaveOpenQueryOpen(false);
+                        } else {
+                            notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            setFileSaveOpenQueryOpen(false);
+                        }
+                    });
+                }
+            } else {
+                setFileSaveOpenQueryOpen(false);
             }
-
-            setOpenFile(false);
         },
-        [lm]
+        [dataSource, filePopupMode, lm, setFilePassword]
     );
+
+    const addCategoryClick = React.useCallback(() => {
+        setCategoryPopupMode(ModifyType.New);
+        setEditEntry(newEntry(-1, dataSource, ""));
+        setCategoryEditVisible(true);
+    }, [dataSource]);
 
     return (
         <>
@@ -139,10 +172,13 @@ const App = ({ className }: Props) => {
                 <AppToolbar //
                     entry={entry}
                     saveFileClick={saveFileCallback}
+                    saveFileAsClick={saveFileAsCallback}
                     loadFileClick={loadFileCallback}
                     editClick={onEditClick}
                     addClick={() => setEntryEditVisible(true)}
+                    addCategoryClick={addCategoryClick}
                     testClick={() => setQueryPasswordVisible(value => !value)}
+                    canEdit={true}
                 />
                 <div className="App-itemsView">
                     <PasswordList //
@@ -161,15 +197,15 @@ const App = ({ className }: Props) => {
                     />
                 </div>
                 <EditEntryPopup //
-                    entry={entry}
+                    entry={editEntry}
                     mode={ModifyType.Edit}
                     visible={entryEditVisible}
                     onClose={onEditClose}
                 />
-                {entry && (
+                {editEntry !== undefined && (
                     <EditCategoryPopup //
-                        entry={entry}
-                        mode={ModifyType.Edit}
+                        entry={editEntry}
+                        mode={categoryPopupMode}
                         visible={categoryEditVisible}
                         onClose={onCategoryEditClose}
                     />
@@ -180,9 +216,10 @@ const App = ({ className }: Props) => {
                     verifyMode={false}
                     initialShowPassword={false}
                 />
-                <OpenFilePopup //
-                    visible={openFile}
+                <OpenSaveFilePopup //
+                    visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
+                    mode={filePopupMode}
                 />
             </div>
         </>

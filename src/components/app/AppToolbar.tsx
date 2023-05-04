@@ -32,20 +32,26 @@ import classNames from "classnames";
 type Props = {
     className?: string;
     entry: DataEntry | undefined;
+    canEdit?: boolean | undefined;
     saveFileClick: () => void;
+    saveFileAsClick: () => void;
     loadFileClick: () => void;
     editClick: () => void;
     addClick: () => void;
+    addCategoryClick: () => void;
     testClick: () => void;
 };
 
 const AppToolbar = ({
     className, //
     entry,
+    canEdit,
     loadFileClick,
     saveFileClick,
+    saveFileAsClick,
     editClick,
     addClick,
+    addCategoryClick,
     testClick,
 }: Props) => {
     return (
@@ -54,7 +60,14 @@ const AppToolbar = ({
                 <Button //
                     icon="add"
                     onClick={addClick}
-                    disabled={entry === undefined}
+                    disabled={canEdit !== true}
+                />
+            </ToolbarItem>
+            <ToolbarItem location="before">
+                <Button //
+                    icon="newfolder"
+                    onClick={addCategoryClick}
+                    disabled={canEdit !== true}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
@@ -68,6 +81,12 @@ const AppToolbar = ({
                 <Button //
                     icon="save"
                     onClick={saveFileClick}
+                />
+            </ToolbarItem>
+            <ToolbarItem location="before">
+                <Button //
+                    icon="./src/img/save-as-icon.svg"
+                    onClick={saveFileAsClick}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">

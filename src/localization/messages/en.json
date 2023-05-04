@@ -1,3 +1,4 @@
 {
-    "fileOpenFail": "File open failed with message '{{msg}}'."
+    "fileOpenFail": "File open failed with message '{{msg}}'.",
+    "fileSaveFail": "File save failed with message '{{msg}}'."
 }
