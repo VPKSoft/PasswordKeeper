@@ -78,6 +78,14 @@ const QueryPasswordPopup = ({
         setPassword2(e.value);
     }, []);
 
+    const allowAccept = React.useMemo(() => {
+        if (verifyMode) {
+            return password1 !== "" && password2 !== "" && password1 === password2;
+        }
+
+        return password1 !== "";
+    }, [password1, password2, verifyMode]);
+
     return (
         <Popup //
             title={title}
@@ -137,6 +145,7 @@ const QueryPasswordPopup = ({
                             setUserAccepted(true);
                             onClose(true, password1);
                         }}
+                        disabled={!allowAccept}
                     />
                     <Button //
                         text={lu("cancel")}

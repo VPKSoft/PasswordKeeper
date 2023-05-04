@@ -1,3 +1,4 @@
 {
-    "passwordKeeperDataFile": "Password Keeper Data File"
+    "passwordKeeperDataFile": "Password Keeper Data File",
+    "newFileName": "new_database.pkd"
 }

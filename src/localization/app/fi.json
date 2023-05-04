@@ -1,3 +1,4 @@
 {
-    "passwordKeeperDataFile": "Password Keeper datatiedosto"
+    "passwordKeeperDataFile": "Password Keeper datatiedosto",
+    "newFileName": "uusi_tietokanta.pkd"
 }

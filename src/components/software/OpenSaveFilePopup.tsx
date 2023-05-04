@@ -36,18 +36,26 @@ type Props = {
     className?: string;
     visible: boolean;
     mode: FileQueryMode;
+    currentFile: string | undefined;
     onClose: (userAccepted: boolean, fileName?: string, password?: string) => void;
 };
 
 const OpenSaveFilePopup = ({
     className, //
     visible,
-    onClose,
     mode,
+    currentFile,
+    onClose,
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [password, setPassword] = React.useState("");
     const [fileName, setFileName] = React.useState<string | undefined>();
+
+    React.useEffect(() => {
+        if (mode === FileQueryMode.SaveAs && currentFile !== undefined) {
+            setFileName(currentFile);
+        }
+    }, [currentFile, mode]);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");

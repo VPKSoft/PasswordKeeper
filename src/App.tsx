@@ -41,26 +41,29 @@ import { useSecureStorage } from "./utilities/hooks";
 import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
 import QueryPasswordPopup from "./components/software/QueryPasswordPopup";
-import AppToolbar from "./components/app/AppToolbar";
 import notify from "devextreme/ui/notify";
 import OpenSaveFilePopup from "./components/software/OpenSaveFilePopup";
+import AppMenuToolbar from "./components/app/AppMenuToolbar";
 
 type Props = {
     className?: string;
 };
 
 const App = ({ className }: Props) => {
+    const la = useLocalize("app");
+
     const [entry, setEntry] = React.useState<DataEntry | undefined>();
     const [editEntry, setEditEntry] = React.useState<DataEntry | undefined>();
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
     const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
-    const [dataSource, setDataSource] = React.useState(testData);
-    const [currentFile, setCurrentFile] = React.useState<string>();
+    const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
+    const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
     const [fileChanged, setFileChanged] = React.useState(false);
     const [queryPasswordVisible, setQueryPasswordVisible] = React.useState(false);
     const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
     const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
+    const [isNewFile, setIsNewFile] = React.useState(true);
 
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
 
@@ -70,26 +73,30 @@ const App = ({ className }: Props) => {
 
     setFilePassword("password");
 
-    const saveFileCallback = React.useCallback(async () => {
-        const password = getFilePassword();
-        if (currentFile && password) {
-            saveFile(dataSource, password, currentFile).then(f => {
-                if (f.ok) {
-                    setCurrentFile(f.fileName);
-                    setFileChanged(false);
-                } else {
-                    notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
-                }
-            });
-        }
-    }, [currentFile, dataSource, getFilePassword, lm]);
-
-    const saveFileAsCallback = React.useCallback(async () => {
+    const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
         setFileSaveOpenQueryOpen(true);
     }, []);
 
-    const loadFileCallback = React.useCallback(async () => {
+    const saveFileCallback = React.useCallback(async () => {
+        if (isNewFile) {
+            saveFileAsCallback();
+        } else {
+            const password = getFilePassword();
+            if (currentFile && password) {
+                saveFile(dataSource, password, currentFile).then(f => {
+                    if (f.ok) {
+                        setCurrentFile(f.fileName);
+                        setFileChanged(false);
+                    } else {
+                        notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                    }
+                });
+            }
+        }
+    }, [currentFile, dataSource, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+
+    const loadFileCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.Open);
         setFileSaveOpenQueryOpen(true);
     }, []);
@@ -133,7 +140,10 @@ const App = ({ className }: Props) => {
                             setFilePassword(password);
                             setDataSource(f.fileData);
                             setCurrentFile(fileName);
+                            console.log(fileName);
+
                             setFileSaveOpenQueryOpen(false);
+                            setIsNewFile(false);
                         } else {
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                             setFileSaveOpenQueryOpen(false);
@@ -158,6 +168,17 @@ const App = ({ className }: Props) => {
         [dataSource, filePopupMode, lm, setFilePassword]
     );
 
+    const newClick = React.useCallback(() => {
+        setDataSource([]);
+        setCurrentFile(la("newFileName"));
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        setEditEntry(undefined);
+        // eslint-disable-next-line unicorn/no-useless-undefined
+        setEntry(undefined);
+        setIsNewFile(true);
+        clearFilePassword();
+    }, [clearFilePassword, la]);
+
     const addCategoryClick = React.useCallback(() => {
         setCategoryPopupMode(ModifyType.New);
         setEditEntry(newEntry(-1, dataSource, ""));
@@ -169,7 +190,7 @@ const App = ({ className }: Props) => {
             <StyledTitle title={title} />
 
             <div className={classNames(App.name, className)}>
-                <AppToolbar //
+                <AppMenuToolbar //
                     entry={entry}
                     saveFileClick={saveFileCallback}
                     saveFileAsClick={saveFileAsCallback}
@@ -177,7 +198,9 @@ const App = ({ className }: Props) => {
                     editClick={onEditClick}
                     addClick={() => setEntryEditVisible(true)}
                     addCategoryClick={addCategoryClick}
+                    newFileClick={newClick}
                     testClick={() => setQueryPasswordVisible(value => !value)}
+                    settingsClick={() => {}}
                     canEdit={true}
                 />
                 <div className="App-itemsView">
@@ -213,13 +236,14 @@ const App = ({ className }: Props) => {
                 <QueryPasswordPopup //
                     visible={queryPasswordVisible}
                     onClose={queryPasswordClose}
-                    verifyMode={false}
+                    verifyMode={true}
                     initialShowPassword={false}
                 />
                 <OpenSaveFilePopup //
                     visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
                     mode={filePopupMode}
+                    currentFile={currentFile}
                 />
             </div>
         </>

@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { Button, Toolbar } from "devextreme-react";
 import * as React from "react";
+import { Button, Toolbar } from "devextreme-react";
 import { Item as ToolbarItem } from "devextreme-react/toolbar";
 import { DataEntry } from "../../types/PasswordEntry";
 import styled from "styled-components";
 import classNames from "classnames";
 
-type Props = {
+export type ToolBarProps = {
     className?: string;
     entry: DataEntry | undefined;
     canEdit?: boolean | undefined;
@@ -39,6 +39,7 @@ type Props = {
     editClick: () => void;
     addClick: () => void;
     addCategoryClick: () => void;
+    deleteClick: () => void;
     testClick: () => void;
 };
 
@@ -52,8 +53,9 @@ const AppToolbar = ({
     editClick,
     addClick,
     addCategoryClick,
+    deleteClick,
     testClick,
-}: Props) => {
+}: ToolBarProps) => {
     return (
         <Toolbar className={classNames(AppToolbar.name, className)}>
             <ToolbarItem location="before">
@@ -74,6 +76,13 @@ const AppToolbar = ({
                 <Button //
                     icon="edit"
                     onClick={editClick}
+                    disabled={entry === undefined}
+                />
+            </ToolbarItem>
+            <ToolbarItem location="before">
+                <Button //
+                    icon="trash"
+                    onClick={deleteClick}
                     disabled={entry === undefined}
                 />
             </ToolbarItem>
