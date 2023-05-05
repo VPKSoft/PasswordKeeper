@@ -50,12 +50,13 @@ const OpenSaveFilePopup = ({
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [password, setPassword] = React.useState("");
     const [fileName, setFileName] = React.useState<string | undefined>();
+    const [password2, setPassword2] = React.useState("");
 
     React.useEffect(() => {
         if (mode === FileQueryMode.SaveAs && currentFile !== undefined) {
             setFileName(currentFile);
         }
-    }, [currentFile, mode]);
+    }, [currentFile, mode, visible]);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -109,8 +110,12 @@ const OpenSaveFilePopup = ({
     }, []);
 
     const canAccept = React.useMemo(() => {
+        if (mode === FileQueryMode.SaveAs) {
+            return password !== "" && password === password2 && (fileName ?? "") !== "";
+        }
+
         return password !== "" && (fileName ?? "") !== "";
-    }, [fileName, password]);
+    }, [fileName, mode, password, password2]);
 
     const onKeyDown = React.useCallback(
         (e: KeyDownEvent) => {
@@ -125,6 +130,14 @@ const OpenSaveFilePopup = ({
         [canAccept, fileName, onCloseCallback, password]
     );
 
+    const onPassword2Changed = React.useCallback((e: ValueChangedEvent) => {
+        setPassword2(e.value);
+    }, []);
+
+    const height = React.useMemo(() => {
+        return mode === FileQueryMode.SaveAs ? 280 : 240;
+    }, [mode]);
+
     return (
         <Popup //
             title={title}
@@ -134,7 +147,7 @@ const OpenSaveFilePopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={240}
+            height={height}
             width={600}
             showTitle={true}
         >
@@ -173,6 +186,24 @@ const OpenSaveFilePopup = ({
                                 </div>
                             </td>
                         </tr>
+                        {mode === FileQueryMode.SaveAs && (
+                            <tr>
+                                <td>
+                                    <div className="dx-field-item-label-text">{lc("retypePassword")}</div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <PasswordTextbox //
+                                            value={password2}
+                                            onValueChanged={onPassword2Changed}
+                                            showGeneratePassword={false}
+                                            showCopyButton={true}
+                                            initialShowPassword={false}
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
                 <div className="Popup-ButtonRow">

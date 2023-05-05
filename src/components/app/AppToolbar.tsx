@@ -40,7 +40,7 @@ export type ToolBarProps = {
     addClick: () => void;
     addCategoryClick: () => void;
     deleteClick: () => void;
-    testClick: () => void;
+    testClick?: () => void;
 };
 
 const AppToolbar = ({

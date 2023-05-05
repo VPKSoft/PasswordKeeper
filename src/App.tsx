@@ -31,19 +31,18 @@ import { DataEntry } from "./types/PasswordEntry";
 import { FileQueryMode, ModifyType } from "./types/Enums";
 import { useLocalize } from "./i18n";
 import classNames from "classnames";
-import { newEntry, testData } from "./misc/DataUtils";
+import { newEntry } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
 import PasswordList from "./components/app/PasswordList";
-import { invoke } from "@tauri-apps/api/tauri";
 import EditCategoryPopup from "./components/software/EditCategoryPopup";
 import { useSecureStorage } from "./utilities/hooks";
 import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
-import QueryPasswordPopup from "./components/software/QueryPasswordPopup";
 import notify from "devextreme/ui/notify";
 import OpenSaveFilePopup from "./components/software/OpenSaveFilePopup";
 import AppMenuToolbar from "./components/app/AppMenuToolbar";
+import { exit } from "@tauri-apps/api/process";
 
 type Props = {
     className?: string;
@@ -59,19 +58,16 @@ const App = ({ className }: Props) => {
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
     const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
     const [fileChanged, setFileChanged] = React.useState(false);
-    const [queryPasswordVisible, setQueryPasswordVisible] = React.useState(false);
     const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
     const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
     const [isNewFile, setIsNewFile] = React.useState(true);
 
-    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword");
+    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
 
     const lm = useLocalize("messages");
 
     setTheme("generic.carmine");
-
-    setFilePassword("password");
 
     const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
@@ -101,12 +97,20 @@ const App = ({ className }: Props) => {
         setFileSaveOpenQueryOpen(true);
     }, []);
 
-    const onEditClose = React.useCallback((userAccepted: boolean, entry?: DataEntry | undefined) => {
-        if (userAccepted) {
-            // TODO::Save the data
-        }
-        setEntryEditVisible(false);
-    }, []);
+    const onEditClose = React.useCallback(
+        (userAccepted: boolean, entry?: DataEntry | undefined) => {
+            if (userAccepted && entry) {
+                let newDataSource = [...dataSource];
+                const index = newDataSource.findIndex(f => f.id === entry?.id);
+                if (index !== -1) {
+                    newDataSource = newDataSource.splice(index, 1);
+                }
+                setDataSource(newDataSource);
+            }
+            setEntryEditVisible(false);
+        },
+        [dataSource]
+    );
 
     const onCategoryEditClose = React.useCallback(
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
@@ -140,7 +144,6 @@ const App = ({ className }: Props) => {
                             setFilePassword(password);
                             setDataSource(f.fileData);
                             setCurrentFile(fileName);
-                            console.log(fileName);
 
                             setFileSaveOpenQueryOpen(false);
                             setIsNewFile(false);
@@ -168,6 +171,18 @@ const App = ({ className }: Props) => {
         [dataSource, filePopupMode, lm, setFilePassword]
     );
 
+    const exitClick = React.useCallback(() => {
+        exit(0);
+    }, []);
+
+    const deleteClick = React.useCallback(() => {
+        // TODO::Implement item / category deletion.
+    }, []);
+
+    const settingsClick = React.useCallback(() => {
+        // TODO::Implement preferences popup.
+    }, []);
+
     const newClick = React.useCallback(() => {
         setDataSource([]);
         setCurrentFile(la("newFileName"));
@@ -185,6 +200,17 @@ const App = ({ className }: Props) => {
         setCategoryEditVisible(true);
     }, [dataSource]);
 
+    const canEdit = React.useMemo(() => {
+        return editEntry !== undefined && currentFile !== "";
+    }, [currentFile, editEntry]);
+
+    React.useEffect(() => {
+        if (entry) {
+            setEditEntry({ ...entry });
+            setCategoryPopupMode(ModifyType.Edit);
+        }
+    }, [entry]);
+
     return (
         <>
             <StyledTitle title={title} />
@@ -199,9 +225,10 @@ const App = ({ className }: Props) => {
                     addClick={() => setEntryEditVisible(true)}
                     addCategoryClick={addCategoryClick}
                     newFileClick={newClick}
-                    testClick={() => setQueryPasswordVisible(value => !value)}
-                    settingsClick={() => {}}
-                    canEdit={true}
+                    settingsClick={settingsClick}
+                    exitClick={exitClick}
+                    deleteClick={deleteClick}
+                    canEdit={canEdit}
                 />
                 <div className="App-itemsView">
                     <PasswordList //
@@ -233,12 +260,6 @@ const App = ({ className }: Props) => {
                         onClose={onCategoryEditClose}
                     />
                 )}
-                <QueryPasswordPopup //
-                    visible={queryPasswordVisible}
-                    onClose={queryPasswordClose}
-                    verifyMode={true}
-                    initialShowPassword={false}
-                />
                 <OpenSaveFilePopup //
                     visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
@@ -248,10 +269,6 @@ const App = ({ className }: Props) => {
             </div>
         </>
     );
-};
-
-const queryPasswordClose = (userAccepted: boolean, password?: string) => {
-    console.log(userAccepted, password);
 };
 
 export default styled(App)`

@@ -27,15 +27,18 @@ import secureLocalStorage from "react-secure-storage";
 /**
  * A custom hook to get, set and clear a secure value from the secureLocalStorage.
  * @param valueName The value name in question.
+ * @param emptyValue An optional empty value used as a fallback in case the store value doesn't exist.
  * @returns Functions to set, get and clear the value in question.
  */
-const useSecureStorage = <T extends string | number | boolean | object>(valueName: string): [(value: T) => void, () => T, () => void] => {
+const useSecureStorage = <T extends string | number | boolean | object>(valueName: string, emptyValue?: T): [(value: T) => void, () => T | null, () => void] => {
     const setValue = (value: T) => {
         secureLocalStorage.setItem(valueName, value);
     };
 
     const getValue = () => {
-        return secureLocalStorage.getItem(valueName) as T;
+        const result = secureLocalStorage.getItem(valueName) as T | null;
+
+        return result ?? emptyValue ?? null;
     };
 
     const clear = () => {
