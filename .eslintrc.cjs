@@ -6,11 +6,12 @@ module.exports = {
         "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
         "plugin:prettier/recommended", // Enables eslint-plugin-prettier and eslint-config-prettier. This will display prettier errors as ESLint errors.
         "plugin:unicorn/recommended",
+        "plugin:import/warnings",
     ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
         sourceType: "module",
-        ecmaVersion: 2020,
+        ecmaVersion: 2_020,
         ecmaFeatures: {
             jsx: true, // Allows for the parsing of JSX
         },
@@ -37,6 +38,7 @@ module.exports = {
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
         "unicorn/no-null": "off",
+        "import/order": "warn",
         "unicorn/numeric-separators-style": ["error", { number: { minimumDigits: 0, groupLength: 3 } }],
         "unicorn/filename-case": [
             "error",

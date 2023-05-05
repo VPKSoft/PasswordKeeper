@@ -25,9 +25,9 @@ SOFTWARE.
 import * as React from "react";
 import { Button, Toolbar } from "devextreme-react";
 import { Item as ToolbarItem } from "devextreme-react/toolbar";
-import { DataEntry } from "../../types/PasswordEntry";
 import styled from "styled-components";
 import classNames from "classnames";
+import { DataEntry } from "../../types/PasswordEntry";
 
 export type ToolBarProps = {
     className?: string;

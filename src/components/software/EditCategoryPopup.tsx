@@ -24,12 +24,12 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup, TextBox } from "devextreme-react";
-import { ModifyType } from "../../types/Enums";
 import styled from "styled-components";
 import classNames from "classnames";
+import { ValueChangedEvent } from "devextreme/ui/text_box";
+import { ModifyType } from "../../types/Enums";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
-import { ValueChangedEvent } from "devextreme/ui/text_box";
 
 type Props = {
     className?: string;

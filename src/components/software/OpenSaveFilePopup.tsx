@@ -26,11 +26,11 @@ import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
-import { useLocalize } from "../../i18n";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
+import { useLocalize } from "../../i18n";
+import { FileQueryMode } from "../../types/Enums";
 import PasswordTextbox from "./PasswordTextbox";
 import FileQueryTextbox from "./FileQueryTextbox";
-import { FileQueryMode } from "../../types/Enums";
 
 type Props = {
     className?: string;

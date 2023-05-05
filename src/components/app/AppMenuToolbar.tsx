@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import AppMenu, { AppMenuProps, MenuData } from "./AppMenu";
-import AppToolbar, { ToolBarProps } from "./AppToolbar";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
+import AppToolbar, { ToolBarProps } from "./AppToolbar";
+import AppMenu, { AppMenuProps, MenuData } from "./AppMenu";
 
 type Props = Omit<AppMenuProps, "onItemClick"> &
     ToolBarProps & {

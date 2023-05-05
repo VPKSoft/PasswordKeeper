@@ -25,12 +25,13 @@ SOFTWARE.
 import * as React from "react";
 import "./App.css";
 import styled from "styled-components";
-import "./i18n";
+import classNames from "classnames";
+import notify from "devextreme/ui/notify";
+import { exit } from "@tauri-apps/api/process";
+import { useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
 import { FileQueryMode, ModifyType } from "./types/Enums";
-import { useLocalize } from "./i18n";
-import classNames from "classnames";
 import { newEntry } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
@@ -39,10 +40,8 @@ import EditCategoryPopup from "./components/software/EditCategoryPopup";
 import { useSecureStorage } from "./utilities/hooks";
 import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
-import notify from "devextreme/ui/notify";
 import OpenSaveFilePopup from "./components/software/OpenSaveFilePopup";
 import AppMenuToolbar from "./components/app/AppMenuToolbar";
-import { exit } from "@tauri-apps/api/process";
 
 type Props = {
     className?: string;

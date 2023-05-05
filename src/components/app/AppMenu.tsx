@@ -26,8 +26,8 @@ import * as React from "react";
 import Menu from "devextreme-react/menu";
 import classNames from "classnames";
 import styled from "styled-components";
-import { useLocalize } from "../../i18n";
 import { ItemClickEvent } from "devextreme/ui/menu";
+import { useLocalize } from "../../i18n";
 
 const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings"] as const;
 type ActionNames = (typeof ActionValues)[number];
