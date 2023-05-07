@@ -24,9 +24,9 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
-import { ModifyType } from "../../types/Enums";
 import styled from "styled-components";
 import classNames from "classnames";
+import { ModifyType } from "../../types/Enums";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 import EntryEditor from "./EntryEditor";
@@ -47,7 +47,7 @@ const EditEntryPopup = ({
     onClose,
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
-    const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>(entry);
+    const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");

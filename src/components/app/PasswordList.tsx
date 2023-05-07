@@ -1,19 +1,19 @@
 import * as React from "react";
 import applyChanges from "devextreme/data/apply_changes";
-import { DataEntry } from "../../types/PasswordEntry";
 import { TreeList } from "devextreme-react";
 import { Column, FilterRow, RowDragging, Selection } from "devextreme-react/tree-list";
-import { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent } from "devextreme/ui/tree_list";
+import { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent } from "devextreme/ui/tree_list";
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
-import { SavingEvent } from "devextreme/ui/tree_list";
-import { useLocalize } from "../../i18n";
+
 import styled from "styled-components";
+import { useLocalize } from "../../i18n";
+import { DataEntry } from "../../types/PasswordEntry";
 
 type Props = {
     className?: string;
     dataSource: DataEntry[];
-    setEntry: (value: DataEntry | undefined) => void;
+    setEntry: (value: DataEntry | null) => void;
     setDataSource: (datasource: DataEntry[]) => void;
 };
 
@@ -37,13 +37,7 @@ const PasswordList = ({
 
     const onSelectionChanged = React.useCallback(
         (e: SelectionChangedEvent<DataEntry>) => {
-            // const disabledKeys = e.selectedRowsData.filter(i => i.parentId === -1).map(p => p.id);
-
-            // if (disabledKeys.length > 0) {
-            //     e.component.deselectRows(disabledKeys);
-            // }
-
-            const selected = e.selectedRowsData.length > 0 ? e.selectedRowsData[0] : undefined;
+            const selected = e.selectedRowsData.length > 0 ? e.selectedRowsData[0] : null;
             setEntry(selected);
         },
         [setEntry]
@@ -91,12 +85,12 @@ const PasswordList = ({
                 caption={le("name")}
                 dataType="string"
             />
-            <Template name="columnTypeTemplate" render={renderColunnType} />
+            <Template name="columnTypeTemplate" render={renderColumnType} />
         </TreeList>
     );
 };
 
-const renderColunnType = (e: { row: { data: DataEntry } }) => {
+const renderColumnType = (e: { row: { data: DataEntry } }) => {
     return e.row.data.parentId === -1 ? <div className="fas fa-folder PasswordList-imageCell" /> : <div className="fas fa-tag App-itemsWiew-list-imageCell" />;
 };
 

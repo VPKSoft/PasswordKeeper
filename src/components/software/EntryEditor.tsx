@@ -23,18 +23,18 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { useLocalize } from "../../i18n";
-import { DataEntry } from "../../types/PasswordEntry";
 import classNames from "classnames";
 import styled from "styled-components";
 import { TextArea, TextBox } from "devextreme-react";
 import { ValueChangedEvent } from "devextreme/ui/text_area";
 import { ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
+import { DataEntry } from "../../types/PasswordEntry";
+import { useLocalize } from "../../i18n";
 import PasswordTextbox from "./PasswordTextbox";
 
 type Props = {
     className?: string;
-    entry?: DataEntry;
+    entry?: DataEntry | null;
     readOnly?: boolean;
     visible?: boolean;
     hidePasswordTimeout?: number;
@@ -57,13 +57,15 @@ const EntryEditor = ({
 
     const onValueChanged = React.useCallback(
         (e: TextBoxValueChangedEvent, name: keyof DataEntry) => {
-            if (readOnly || entry === undefined) {
+            if (readOnly || (entry ?? null) === null) {
                 return;
             }
 
-            const newValue: DataEntry = { ...entry };
-            newValue[name] = e.value as never;
-            onEntryChanged?.(newValue);
+            if (entry) {
+                const newValue: DataEntry = { ...entry };
+                newValue[name] = e.value as never;
+                onEntryChanged?.(newValue);
+            }
         },
         [entry, onEntryChanged, readOnly]
     );
@@ -166,11 +168,6 @@ export default styled(EntryEditor)`
     .EntryEditor-editRow {
         display: flex;
         flex-direction: row;
-    }
-    .EntryEditor-lables {
-        width: 50%;
-        display: flex;
-        flex-direction: column;
     }
     .EntryEditor-TextArea {
         margin-top: 10px;

@@ -26,6 +26,9 @@ import { DataEntry } from "../types/PasswordEntry";
 
 const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string) => {
     let id = Math.max(...dataSource.map(f => f.id));
+    if (id === Number.NEGATIVE_INFINITY) {
+        id = 0;
+    }
     id++;
 
     const result: DataEntry = {
@@ -38,6 +41,17 @@ const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string
     };
 
     return result;
+};
+
+const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
+    const newDataSource = [...dataSource];
+    const index = newDataSource.findIndex(f => f.id === entry.id);
+    if (index === -1) {
+        newDataSource.push(entry);
+    } else {
+        newDataSource[index] = entry;
+    }
+    return newDataSource;
 };
 
 const testData: DataEntry[] = [
@@ -77,4 +91,4 @@ const testData: DataEntry[] = [
     },
 ];
 
-export { newEntry, testData };
+export { newEntry, updateDataSource, testData };

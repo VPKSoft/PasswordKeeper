@@ -32,7 +32,7 @@ import { useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
 import { FileQueryMode, ModifyType } from "./types/Enums";
-import { newEntry } from "./misc/DataUtils";
+import { newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
 import PasswordList from "./components/app/PasswordList";
@@ -50,8 +50,8 @@ type Props = {
 const App = ({ className }: Props) => {
     const la = useLocalize("app");
 
-    const [entry, setEntry] = React.useState<DataEntry | undefined>();
-    const [editEntry, setEditEntry] = React.useState<DataEntry | undefined>();
+    const [entry, setEntry] = React.useState<DataEntry | null>(null);
+    const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
     const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
@@ -60,6 +60,8 @@ const App = ({ className }: Props) => {
     const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
     const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
+    const [entryEditMode, setEntryEditMode] = React.useState<ModifyType>(ModifyType.New);
+
     const [isNewFile, setIsNewFile] = React.useState(true);
 
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -99,12 +101,8 @@ const App = ({ className }: Props) => {
     const onEditClose = React.useCallback(
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
             if (userAccepted && entry) {
-                let newDataSource = [...dataSource];
-                const index = newDataSource.findIndex(f => f.id === entry?.id);
-                if (index !== -1) {
-                    newDataSource = newDataSource.splice(index, 1);
-                }
-                setDataSource(newDataSource);
+                setDataSource(updateDataSource(dataSource, entry));
+                setEditEntry(null);
             }
             setEntryEditVisible(false);
         },
@@ -113,19 +111,25 @@ const App = ({ className }: Props) => {
 
     const onCategoryEditClose = React.useCallback(
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
-            if (userAccepted && categoryPopupMode === ModifyType.New && userAccepted && entry !== undefined) {
-                setDataSource([...dataSource, entry]);
+            if (userAccepted && entry !== undefined) {
+                setDataSource(updateDataSource(dataSource, entry));
             }
             setCategoryEditVisible(false);
+            setEditEntry(null);
         },
-        [categoryPopupMode, dataSource]
+        [dataSource]
     );
 
     const onEditClick = React.useCallback(() => {
-        if (entry?.parentId === -1) {
-            setCategoryEditVisible(true);
-        } else if (entry) {
-            setEntryEditVisible(true);
+        if (entry) {
+            setEditEntry({ ...entry });
+            if (entry?.parentId === -1) {
+                setCategoryPopupMode(ModifyType.Edit);
+                setCategoryEditVisible(true);
+            } else if (entry) {
+                setEntryEditMode(ModifyType.Edit);
+                setEntryEditVisible(true);
+            }
         }
     }, [entry]);
 
@@ -185,10 +189,8 @@ const App = ({ className }: Props) => {
     const newClick = React.useCallback(() => {
         setDataSource([]);
         setCurrentFile(la("newFileName"));
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        setEditEntry(undefined);
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        setEntry(undefined);
+        setEditEntry(null);
+        setEntry(null);
         setIsNewFile(true);
         clearFilePassword();
     }, [clearFilePassword, la]);
@@ -199,16 +201,19 @@ const App = ({ className }: Props) => {
         setCategoryEditVisible(true);
     }, [dataSource]);
 
+    const addItem = React.useCallback(() => {
+        if (entry) {
+            setEntryEditMode(ModifyType.New);
+            const parentId = entry.parentId === -1 ? entry.id : entry.parentId;
+            const editEntry = newEntry(parentId, dataSource, "");
+            setEditEntry(editEntry);
+            setEntryEditVisible(true);
+        }
+    }, [dataSource, entry]);
+
     const canEdit = React.useMemo(() => {
         return editEntry !== undefined && currentFile !== "";
     }, [currentFile, editEntry]);
-
-    React.useEffect(() => {
-        if (entry) {
-            setEditEntry({ ...entry });
-            setCategoryPopupMode(ModifyType.Edit);
-        }
-    }, [entry]);
 
     return (
         <>
@@ -216,12 +221,12 @@ const App = ({ className }: Props) => {
 
             <div className={classNames(App.name, className)}>
                 <AppMenuToolbar //
-                    entry={entry}
+                    entry={entry ?? undefined}
                     saveFileClick={saveFileCallback}
                     saveFileAsClick={saveFileAsCallback}
                     loadFileClick={loadFileCallback}
                     editClick={onEditClick}
-                    addClick={() => setEntryEditVisible(true)}
+                    addClick={addItem}
                     addCategoryClick={addCategoryClick}
                     newFileClick={newClick}
                     settingsClick={settingsClick}
@@ -245,13 +250,15 @@ const App = ({ className }: Props) => {
                         showCopyButton={true}
                     />
                 </div>
-                <EditEntryPopup //
-                    entry={editEntry}
-                    mode={ModifyType.Edit}
-                    visible={entryEditVisible}
-                    onClose={onEditClose}
-                />
-                {editEntry !== undefined && (
+                {editEntry !== null && (
+                    <EditEntryPopup //
+                        entry={editEntry}
+                        mode={entryEditMode}
+                        visible={entryEditVisible}
+                        onClose={onEditClose}
+                    />
+                )}
+                {editEntry !== null && (
                     <EditCategoryPopup //
                         entry={editEntry}
                         mode={categoryPopupMode}

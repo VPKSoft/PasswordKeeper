@@ -30,5 +30,5 @@ export type DataEntry = {
     password?: string | undefined;
     notes?: string | undefined;
     id: number;
-    parentId?: number;
+    parentId: number;
 };

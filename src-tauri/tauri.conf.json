@@ -28,6 +28,11 @@
                 "all": true,
                 "open": true,
                 "save": true
+            },
+            "process": {
+                "exit": true,
+                "relaunch": false,
+                "relaunchDangerousAllowSymlinkMacos": false
             }
         },
         "bundle": {

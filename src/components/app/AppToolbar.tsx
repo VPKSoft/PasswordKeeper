@@ -104,12 +104,14 @@ const AppToolbar = ({
                     onClick={loadFileClick}
                 />
             </ToolbarItem>
-            <ToolbarItem location="before">
-                <Button //
-                    icon="help"
-                    onClick={testClick}
-                />
-            </ToolbarItem>
+            {testClick && (
+                <ToolbarItem location="before">
+                    <Button //
+                        icon="help"
+                        onClick={testClick}
+                    />
+                </ToolbarItem>
+            )}
         </Toolbar>
     );
 };
