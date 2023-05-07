@@ -5,5 +5,11 @@
     "openFile": "Open file…",
     "fileName": "File name",
     "saveFile": "Save file",
-    "saveFileAs": "Save file as"
+    "saveFileAs": "Save file as",
+    "confirm": "Confirm",
+    "information": "Information",
+    "warning": "Warning",
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel"
 }

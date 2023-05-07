@@ -29,19 +29,20 @@ import classNames from "classnames";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import { useLocalize } from "./i18n";
-import EditEntryPopup from "./components/software/EditEntryPopup";
+import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
-import { FileQueryMode, ModifyType } from "./types/Enums";
+import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
-import PasswordList from "./components/app/PasswordList";
-import EditCategoryPopup from "./components/software/EditCategoryPopup";
+import EditCategoryPopup from "./components/software/popups/EditCategoryPopup";
 import { useSecureStorage } from "./utilities/hooks";
 import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
-import OpenSaveFilePopup from "./components/software/OpenSaveFilePopup";
 import AppMenuToolbar from "./components/app/AppMenuToolbar";
+import PasswordList from "./components/reusable/PasswordList";
+import OpenSaveFilePopup from "./components/software/popups/OpenSaveFilePopup";
+import ConfirmPopup from "./components/software/popups/ConfirmPopup";
 
 type Props = {
     className?: string;
@@ -61,6 +62,7 @@ const App = ({ className }: Props) => {
     const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
     const [entryEditMode, setEntryEditMode] = React.useState<ModifyType>(ModifyType.New);
+    const [dialogVisible, setDialogVisible] = React.useState(false);
 
     const [isNewFile, setIsNewFile] = React.useState(true);
 
@@ -179,7 +181,7 @@ const App = ({ className }: Props) => {
     }, []);
 
     const deleteClick = React.useCallback(() => {
-        // TODO::Implement item / category deletion.
+        setDialogVisible(true);
     }, []);
 
     const settingsClick = React.useCallback(() => {
@@ -214,6 +216,25 @@ const App = ({ className }: Props) => {
     const canEdit = React.useMemo(() => {
         return editEntry !== undefined && currentFile !== "";
     }, [currentFile, editEntry]);
+
+    const deleteQueryMessage = React.useMemo(() => {
+        const message = entry?.parentId === -1 ? lm("queryDeleteCategory", undefined, { category: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
+        return message;
+    }, [entry, lm]);
+
+    const deleteCategoryOrEntry = React.useCallback(
+        (e: DialogResult) => {
+            if (e === DialogResult.Yes && entry) {
+                if (entry?.parentId === -1) {
+                    // TODO::Delete category
+                } else {
+                    // TODO::Delete entry
+                }
+            }
+            setDialogVisible(false);
+        },
+        [entry]
+    );
 
     return (
         <>
@@ -271,6 +292,13 @@ const App = ({ className }: Props) => {
                     onClose={filePopupClose}
                     mode={filePopupMode}
                     currentFile={currentFile}
+                />
+                <ConfirmPopup //
+                    visible={dialogVisible}
+                    mode={PopupType.Confirm}
+                    message={deleteQueryMessage}
+                    buttons={DialogButtons.Yes | DialogButtons.No}
+                    onClose={deleteCategoryOrEntry}
                 />
             </div>
         </>

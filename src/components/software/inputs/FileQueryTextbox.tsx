@@ -27,10 +27,10 @@ import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
 import * as React from "react";
 import styled from "styled-components";
-import { useLocalize } from "../../i18n";
-import { selectFileToOpen, selectFileToSave } from "../../utilities/app/Files";
 import { KeyDownEvent } from "devextreme/ui/text_box";
-import { FileQueryMode } from "../../types/Enums";
+import { useLocalize } from "../../../i18n";
+import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
+import { FileQueryMode } from "../../../types/Enums";
 
 type Props = {
     className?: string;

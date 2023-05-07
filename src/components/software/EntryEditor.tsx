@@ -30,7 +30,7 @@ import { ValueChangedEvent } from "devextreme/ui/text_area";
 import { ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
-import PasswordTextbox from "./PasswordTextbox";
+import PasswordTextbox from "../reusable/inputs/PasswordTextbox";
 
 type Props = {
     className?: string;

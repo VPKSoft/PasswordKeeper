@@ -26,10 +26,10 @@ import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
-import { ModifyType } from "../../types/Enums";
-import { useLocalize } from "../../i18n";
-import { DataEntry } from "../../types/PasswordEntry";
-import EntryEditor from "./EntryEditor";
+import { ModifyType } from "../../../types/Enums";
+import { useLocalize } from "../../../i18n";
+import { DataEntry } from "../../../types/PasswordEntry";
+import EntryEditor from "../EntryEditor";
 
 type Props = {
     className?: string;

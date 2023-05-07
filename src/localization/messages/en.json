@@ -1,4 +1,6 @@
 {
     "fileOpenFail": "File open failed with message '{{msg}}'.",
-    "fileSaveFail": "File save failed with message '{{msg}}'."
+    "fileSaveFail": "File save failed with message '{{msg}}'.",
+    "queryDeleteCategory": "Delete category '{{category}}'? All the contained entries will be deleted as well.",
+    "queryDeleteEntry": "Delete entry '{{entry}}'?"
 }

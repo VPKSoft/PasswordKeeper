@@ -27,9 +27,9 @@ import { Button, Popup, TextBox } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/text_box";
-import { ModifyType } from "../../types/Enums";
-import { useLocalize } from "../../i18n";
-import { DataEntry } from "../../types/PasswordEntry";
+import { ModifyType } from "../../../types/Enums";
+import { useLocalize } from "../../../i18n";
+import { DataEntry } from "../../../types/PasswordEntry";
 
 type Props = {
     className?: string;

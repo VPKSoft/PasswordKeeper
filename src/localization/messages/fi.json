@@ -1,4 +1,6 @@
 {
     "fileOpenFail": "Tiedoston avaaminen epäonistui viestillä '{{msg}}'.",
-    "fileSaveFail": "Tiedoston tallennus epäonnistui viestillä '{{msg}}'."
+    "fileSaveFail": "Tiedoston tallennus epäonnistui viestillä '{{msg}}'.",
+    "queryDeleteEntry": "Poistetaanko merkintä '{{entry}}'?",
+    "queryDeleteCategory": "Poistetaanko kategoria '{{category}}'? Kaikki sen sisältämät merkinnät poistetaan myös."
 }

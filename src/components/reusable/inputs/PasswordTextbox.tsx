@@ -29,7 +29,7 @@ import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "de
 import * as React from "react";
 import styled from "styled-components";
 import notify from "devextreme/ui/notify";
-import { useLocalize } from "../../i18n";
+import { useLocalize } from "../../../i18n";
 
 type Props = {
     className?: string;

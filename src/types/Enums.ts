@@ -32,3 +32,21 @@ export enum FileQueryMode {
     Save,
     SaveAs,
 }
+
+export enum DialogResult {
+    Yes,
+    No,
+    Cancel,
+}
+
+export enum DialogButtons {
+    Yes = DialogResult.Yes,
+    No = DialogResult.No,
+    Cancel = DialogResult.Cancel,
+}
+
+export enum PopupType {
+    Confirm,
+    Information,
+    Warning,
+}

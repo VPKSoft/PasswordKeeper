@@ -26,117 +26,65 @@ import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
-import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
-import { useLocalize } from "../../i18n";
-import { FileQueryMode } from "../../types/Enums";
-import PasswordTextbox from "./PasswordTextbox";
-import FileQueryTextbox from "./FileQueryTextbox";
+import { ValueChangedEvent } from "devextreme/ui/text_box";
+import { useLocalize } from "../../../i18n";
+import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
 
 type Props = {
     className?: string;
     visible: boolean;
-    mode: FileQueryMode;
-    currentFile: string | undefined;
-    onClose: (userAccepted: boolean, fileName?: string, password?: string) => void;
+    verifyMode?: boolean;
+    initialShowPassword?: boolean;
+    onClose: (userAccepted: boolean, password?: string) => void;
 };
 
-const OpenSaveFilePopup = ({
+const QueryPasswordPopup = ({
     className, //
     visible,
-    mode,
-    currentFile,
+    verifyMode = false,
+    initialShowPassword,
     onClose,
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
-    const [password, setPassword] = React.useState("");
-    const [fileName, setFileName] = React.useState<string | undefined>();
+    const [password1, setPassword1] = React.useState("");
     const [password2, setPassword2] = React.useState("");
-
-    React.useEffect(() => {
-        if (mode === FileQueryMode.SaveAs && currentFile !== undefined) {
-            setFileName(currentFile);
-        }
-    }, [currentFile, mode, visible]);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
     const lc = useLocalize("common");
 
-    const title = React.useMemo(() => {
-        switch (mode) {
-            case FileQueryMode.Open: {
-                return lc("openFile");
-            }
-            case FileQueryMode.Save: {
-                return lc("saveFile");
-            }
-            case FileQueryMode.SaveAs: {
-                return lc("saveFileAs");
-            }
-            default: {
-                return lc("openFile");
-            }
-        }
-    }, [lc, mode]);
-
-    const onCloseCallback = React.useCallback(
-        (userAccepted: boolean, fileName?: string, password?: string) => {
-            onClose(userAccepted, fileName, password);
-            setUserAccepted(false);
-            setPassword("");
-            // eslint-disable-next-line unicorn/no-useless-undefined
-            setFileName(undefined);
-        },
-        [onClose]
-    );
+    const title = React.useMemo(() => lc("givePassword"), [lc]);
 
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
-                onCloseCallback(userAccepted);
+                onClose(userAccepted);
             }
             setUserAccepted(false);
         },
-        [onCloseCallback, userAccepted]
+        [onClose, userAccepted]
     );
 
     const onHiding = React.useCallback(() => {
-        onCloseCallback(userAccepted);
+        onClose(userAccepted);
         setUserAccepted(false);
-    }, [onCloseCallback, userAccepted]);
+    }, [onClose, userAccepted]);
 
     const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
-        setPassword(e.value);
+        setPassword1(e.value);
     }, []);
-
-    const canAccept = React.useMemo(() => {
-        if (mode === FileQueryMode.SaveAs) {
-            return password !== "" && password === password2 && (fileName ?? "") !== "";
-        }
-
-        return password !== "" && (fileName ?? "") !== "";
-    }, [fileName, mode, password, password2]);
-
-    const onKeyDown = React.useCallback(
-        (e: KeyDownEvent) => {
-            if (e.event?.key === "Escape") {
-                setUserAccepted(false);
-                onCloseCallback(false);
-            } else if (e.event?.key === "Enter" && canAccept) {
-                setUserAccepted(true);
-                onCloseCallback(true, fileName, password);
-            }
-        },
-        [canAccept, fileName, onCloseCallback, password]
-    );
 
     const onPassword2Changed = React.useCallback((e: ValueChangedEvent) => {
         setPassword2(e.value);
     }, []);
 
-    const height = React.useMemo(() => {
-        return mode === FileQueryMode.SaveAs ? 280 : 240;
-    }, [mode]);
+    const allowAccept = React.useMemo(() => {
+        if (verifyMode) {
+            return password1 !== "" && password2 !== "" && password1 === password2;
+        }
+
+        return password1 !== "";
+    }, [password1, password2, verifyMode]);
 
     return (
         <Popup //
@@ -147,28 +95,13 @@ const OpenSaveFilePopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={height}
+            height={verifyMode ? 240 : 200}
             width={600}
             showTitle={true}
         >
-            <div className={classNames(OpenSaveFilePopup.name, className)}>
+            <div className={classNames(QueryPasswordPopup.name, className)}>
                 <table>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div className="dx-field-item-label-text">{lc("fileName")}</div>
-                            </td>
-                            <td>
-                                <div>
-                                    <FileQueryTextbox //
-                                        value={fileName}
-                                        onValueChanged={setFileName}
-                                        onKeyDown={onKeyDown}
-                                        mode={mode}
-                                    />
-                                </div>
-                            </td>
-                        </tr>
                         <tr>
                             <td>
                                 <div className="dx-field-item-label-text">{le("password")}</div>
@@ -176,17 +109,16 @@ const OpenSaveFilePopup = ({
                             <td>
                                 <div>
                                     <PasswordTextbox //
-                                        value={password}
+                                        value={password1}
                                         onValueChanged={onPassword1Changed}
                                         showGeneratePassword={false}
                                         showCopyButton={true}
-                                        initialShowPassword={false}
-                                        onKeyDown={onKeyDown}
+                                        initialShowPassword={initialShowPassword}
                                     />
                                 </div>
                             </td>
                         </tr>
-                        {mode === FileQueryMode.SaveAs && (
+                        {verifyMode && (
                             <tr>
                                 <td>
                                     <div className="dx-field-item-label-text">{lc("retypePassword")}</div>
@@ -198,7 +130,7 @@ const OpenSaveFilePopup = ({
                                             onValueChanged={onPassword2Changed}
                                             showGeneratePassword={false}
                                             showCopyButton={true}
-                                            initialShowPassword={false}
+                                            initialShowPassword={initialShowPassword}
                                         />
                                     </div>
                                 </td>
@@ -211,15 +143,15 @@ const OpenSaveFilePopup = ({
                         text={lu("ok")}
                         onClick={() => {
                             setUserAccepted(true);
-                            onCloseCallback(true, fileName, password);
+                            onClose(true, password1);
                         }}
-                        disabled={!canAccept}
+                        disabled={!allowAccept}
                     />
                     <Button //
                         text={lu("cancel")}
                         onClick={() => {
                             setUserAccepted(false);
-                            onCloseCallback(false);
+                            onClose(false);
                         }}
                     />
                 </div>
@@ -228,7 +160,7 @@ const OpenSaveFilePopup = ({
     );
 };
 
-export default styled(OpenSaveFilePopup)`
+export default styled(QueryPasswordPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
