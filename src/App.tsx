@@ -28,6 +28,7 @@ import styled from "styled-components";
 import classNames from "classnames";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
+import themes from "devextreme/ui/themes";
 import { useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
@@ -43,6 +44,8 @@ import AppMenuToolbar from "./components/app/AppMenuToolbar";
 import PasswordList from "./components/reusable/PasswordList";
 import OpenSaveFilePopup from "./components/software/popups/OpenSaveFilePopup";
 import ConfirmPopup from "./components/software/popups/ConfirmPopup";
+import PreferencesPopup from "./components/software/popups/PreferencesPopup";
+import { Settings, loadSettings, saveSettings } from "./types/Settings";
 
 type Props = {
     className?: string;
@@ -63,14 +66,25 @@ const App = ({ className }: Props) => {
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
     const [entryEditMode, setEntryEditMode] = React.useState<ModifyType>(ModifyType.New);
     const [dialogVisible, setDialogVisible] = React.useState(false);
+    const [preferencesVisible, setPreferencesVisible] = React.useState(false);
+
+    const settingsRef = React.useRef<Settings>();
 
     const [isNewFile, setIsNewFile] = React.useState(true);
 
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
 
-    const lm = useLocalize("messages");
+    React.useEffect(() => {
+        void loadSettings().then(f => {
+            if (f) {
+                settingsRef.current = f;
+                setTheme(f.dx_theme);
+            }
+        });
+    }, []);
 
-    setTheme("generic.carmine");
+    const lm = useLocalize("messages");
+    const ls = useLocalize("settings");
 
     const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
@@ -185,7 +199,7 @@ const App = ({ className }: Props) => {
     }, []);
 
     const settingsClick = React.useCallback(() => {
-        // TODO::Implement preferences popup.
+        setPreferencesVisible(true);
     }, []);
 
     const newClick = React.useCallback(() => {
@@ -230,6 +244,24 @@ const App = ({ className }: Props) => {
             setDialogVisible(false);
         },
         [dataSource, entry]
+    );
+
+    const preferencesClose = React.useCallback(
+        (userAccepted: boolean, settings?: Settings) => {
+            if (userAccepted && settings) {
+                saveSettings(settings).then(f => {
+                    if (f) {
+                        settingsRef.current = settings;
+                        themes.current(settings.dx_theme);
+                        notify(ls("saveSuccess"), "success", 5_000);
+                    } else {
+                        notify(ls("saveFailed"), "error", 5_000);
+                    }
+                });
+                setPreferencesVisible(false);
+            }
+        },
+        [ls]
     );
 
     return (
@@ -296,6 +328,13 @@ const App = ({ className }: Props) => {
                     buttons={DialogButtons.Yes | DialogButtons.No}
                     onClose={deleteCategoryOrEntry}
                 />
+                {settingsRef.current && (
+                    <PreferencesPopup //
+                        visible={preferencesVisible}
+                        settings={settingsRef.current}
+                        onClose={preferencesClose}
+                    />
+                )}
             </div>
         </>
     );

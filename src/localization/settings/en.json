@@ -1,0 +1,6 @@
+{
+    "settings": "Settings",
+    "theme": "Theme",
+    "saveFailed": "Failed to save the settings.",
+    "saveSuccess": "Settings were saved successfully."
+}

@@ -27,9 +27,11 @@ SOFTWARE.
     windows_subsystem = "windows"
 )]
 
+use config::{get_app_config, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
 use serde::{Deserialize, Serialize};
 
+mod config;
 mod encryption;
 
 #[tokio::main]
@@ -39,7 +41,9 @@ async fn main() {
             my_custom_command,
             create_window,
             save_file,
-            load_file
+            load_file,
+            load_settings,
+            save_settings
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -67,6 +71,16 @@ async fn save_file(json_data: String, file_name: String, password: String) -> bo
 struct StringResult {
     value: String,
     error: bool,
+}
+
+#[tauri::command]
+async fn load_settings() -> AppConfig {
+    get_app_config()
+}
+
+#[tauri::command]
+async fn save_settings(config: AppConfig) -> bool {
+    set_app_config(config)
 }
 
 #[tauri::command]

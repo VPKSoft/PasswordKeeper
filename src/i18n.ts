@@ -44,6 +44,9 @@ import localizationFiMessages from "./localization/messages/fi.json";
 import localizationEnMenu from "./localization/menu/en.json";
 import localizationFiMenu from "./localization/menu/fi.json";
 
+import localizationEnSettings from "./localization/settings/en.json";
+import localizationFiSettings from "./localization/settings/fi.json";
+
 const resources = {
     en: {
         ui: localizationEnMainUI,
@@ -52,6 +55,7 @@ const resources = {
         common: localizationEnCommon,
         messages: localizationEnMessages,
         menu: localizationEnMenu,
+        settings: localizationEnSettings,
     },
     fi: {
         ui: localizationFiMainUI,
@@ -60,6 +64,7 @@ const resources = {
         common: localizationFiCommon,
         messages: localizationFiMessages,
         menu: localizationFiMenu,
+        settings: localizationFiSettings,
     },
 };
 
@@ -75,7 +80,7 @@ const setLocale = (locale: Locales) => {
 
 setLocale("en");
 
-const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu"] as const;
+const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu", "settings"] as const;
 
 type TranslationComponents = (typeof ComponentValues)[number];
 
