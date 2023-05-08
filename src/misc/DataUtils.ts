@@ -43,6 +43,21 @@ const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string
     return result;
 };
 
+const deleteEntryOrCategory = (dataSource: DataEntry[], entry: DataEntry) => {
+    let newDataSource = [...dataSource];
+    // The item being deleted is a category.
+    if (entry.parentId === -1) {
+        newDataSource = newDataSource.filter(f => f.parentId !== entry.id);
+        const parentIndex = newDataSource.findIndex(f => f.id === entry.id);
+        newDataSource.splice(parentIndex, 1);
+    } else {
+        const index = newDataSource.findIndex(f => f.id === entry.id);
+        newDataSource.splice(index, 1);
+    }
+
+    return newDataSource;
+};
+
 const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
     const newDataSource = [...dataSource];
     const index = newDataSource.findIndex(f => f.id === entry.id);
@@ -91,4 +106,4 @@ const testData: DataEntry[] = [
     },
 ];
 
-export { newEntry, updateDataSource, testData };
+export { newEntry, updateDataSource, deleteEntryOrCategory, testData };

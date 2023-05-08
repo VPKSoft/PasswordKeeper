@@ -32,7 +32,7 @@ import { useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
-import { newEntry, updateDataSource } from "./misc/DataUtils";
+import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import EntryEditor from "./components/software/EntryEditor";
 import EditCategoryPopup from "./components/software/popups/EditCategoryPopup";
@@ -225,15 +225,11 @@ const App = ({ className }: Props) => {
     const deleteCategoryOrEntry = React.useCallback(
         (e: DialogResult) => {
             if (e === DialogResult.Yes && entry) {
-                if (entry?.parentId === -1) {
-                    // TODO::Delete category
-                } else {
-                    // TODO::Delete entry
-                }
+                setDataSource(deleteEntryOrCategory(dataSource, entry));
             }
             setDialogVisible(false);
         },
-        [entry]
+        [dataSource, entry]
     );
 
     return (
