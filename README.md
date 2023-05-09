@@ -7,8 +7,8 @@ The encryption algorithm used is [AES-GCM-SIV](https://en.wikipedia.org/wiki/AES
 # The file structure
 |Entry|Length|
 |---|---|
-|Random salt|32 bytes|
-|Random nonce|12 bytes|
+|Random [salt](https://en.wikipedia.org/wiki/Salt_(cryptography))|32 bytes|
+|Random [nonce](https://en.wikipedia.org/wiki/Cryptographic_nonce)|12 bytes|
 |The length of the encrypted data|8 bytes (64-bit) unsigned integer|
 |The encrypted data|N bytes|
 
