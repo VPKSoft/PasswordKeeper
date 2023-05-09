@@ -2,8 +2,8 @@ import * as React from "react";
 import styled from "styled-components";
 import { appWindow } from "@tauri-apps/api/window";
 import classNames from "classnames";
-import { styleRuleValue } from "../../utilities/DomCssUtils";
 import { useLocalize } from "../../i18n";
+import { Settings } from "../../types/Settings";
 
 type Props = {
     className?: string;
@@ -55,9 +55,93 @@ const WindowTitle = ({
     );
 };
 
+// A dirty and easy solution for the title colors "fitting" the selected theme.
+const titleColor = (type: "background" | "foreground", fallback: string) => {
+    if (window) {
+        const value = window.localStorage.getItem("settings") ?? "";
+        const settings = JSON.parse(value) as Settings;
+        switch (settings.dx_theme) {
+            case "generic.carmine":
+            case "generic.carmine.compact": {
+                return type === "foreground" ? "#f05b41" : "#dee1e3";
+            }
+            case "generic.contrast":
+            case "generic.contrast.compact": {
+                return type === "foreground" ? "#cf00d7" : "#fff";
+            }
+            case "generic.dark":
+            case "generic.dark.compact": {
+                return type === "foreground" ? "#1ca8dd" : "#4d4d4d";
+            }
+            case "generic.darkmoon":
+            case "generic.darkmoon.compact": {
+                return type === "foreground" ? "#1ca8dd" : "#4d4d4d";
+            }
+            case "generic.darkviolet":
+            case "generic.darkviolet.compact": {
+                return type === "foreground" ? "#9c63ff" : "#343840";
+            }
+            case "generic.greenmist":
+            case "generic.greenmist.compact": {
+                return type === "foreground" ? "#3cbab2" : "#dedede";
+            }
+            case "generic.light":
+            case "generic.light.compact": {
+                return type === "foreground" ? "#337ab7" : "#ddd";
+            }
+            case "material.blue.dark":
+            case "material.blue.dark.compact": {
+                return type === "foreground" ? "#03a9f4" : "#515159";
+            }
+            case "material.blue.light":
+            case "material.blue.light.compact": {
+                return type === "foreground" ? "#03a9f4" : "#e0e0e0";
+            }
+            case "material.lime.dark":
+            case "material.lime.dark.compact": {
+                return type === "foreground" ? "#cddc39" : "#515159";
+            }
+            case "material.orange.dark":
+            case "material.orange.dark.compact": {
+                return type === "foreground" ? "#ff5722" : "#515159";
+            }
+            case "material.orange.light":
+            case "material.orange.light.compact": {
+                return type === "foreground" ? "#ff5722" : "#e0e0e0";
+            }
+            case "material.purple.dark":
+            case "material.purple.dark.compact": {
+                return type === "foreground" ? "#9c27b0" : "#515159";
+            }
+            case "material.purple.light":
+            case "material.purple.light.compact": {
+                return type === "foreground" ? "#9c27b0" : "#e0e0e0";
+            }
+            case "material.teal.dark":
+            case "material.teal.dark.compact": {
+                return type === "foreground" ? "#009688" : "#515159";
+            }
+            case "generic.softblue":
+            case "generic.softblue.compact": {
+                return type === "foreground" ? "#7ab8eb" : "#e8eaeb";
+            }
+            case "material.lime.light":
+            case "material.lime.light.compact": {
+                return type === "foreground" ? "#cddc39" : "#e0e0e0";
+            }
+            case "material.teal.light":
+            case "material.teal.light.compact": {
+                return type === "foreground" ? "#009688" : "#e0e0e0";
+            }
+        }
+    }
+
+    return fallback;
+};
+
 const StyledTitle = styled(WindowTitle)`
     height: 32px;
-    background: ${styleRuleValue(".dx-theme-accent-as-text-color", "color", "#329ea3")};
+    background: ${titleColor("foreground", "#329ea3")};
     user-select: none;
     display: flex;
     flex-direction: row;
@@ -82,7 +166,7 @@ const StyledTitle = styled(WindowTitle)`
         align-items: center;
         width: 32px;
         height: 32px;
-        background: ${styleRuleValue(".dx-theme-border-color-as-text-color", "color", "#5bbec3")};
+        background: ${titleColor("background", "#5bbec3")};
     }
     .titlebar-button {
         display: inline-flex;
@@ -92,7 +176,7 @@ const StyledTitle = styled(WindowTitle)`
         height: 32px;
     }
     .titlebar-button:hover {
-        background: ${styleRuleValue(".dx-theme-border-color-as-text-color", "color", "#5bbec3")};
+        background: ${titleColor("background", "#5bbec3")};
     }
 `;
 

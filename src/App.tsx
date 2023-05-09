@@ -53,6 +53,8 @@ type Props = {
 
 const App = ({ className }: Props) => {
     const la = useLocalize("app");
+    const lm = useLocalize("messages");
+    const ls = useLocalize("settings");
 
     const [entry, setEntry] = React.useState<DataEntry | null>(null);
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
@@ -82,9 +84,6 @@ const App = ({ className }: Props) => {
             }
         });
     }, []);
-
-    const lm = useLocalize("messages");
-    const ls = useLocalize("settings");
 
     const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
