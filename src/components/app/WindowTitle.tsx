@@ -58,8 +58,12 @@ const WindowTitle = ({
 // A dirty and easy solution for the title colors "fitting" the selected theme.
 const titleColor = (type: "background" | "foreground", fallback: string) => {
     if (window) {
-        const value = window.localStorage.getItem("settings") ?? "";
+        const value = window.localStorage.getItem("settings");
+        if (value === null) {
+            return fallback;
+        }
         const settings = JSON.parse(value) as Settings;
+
         switch (settings.dx_theme) {
             case "generic.carmine":
             case "generic.carmine.compact": {
