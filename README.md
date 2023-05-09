@@ -12,6 +12,23 @@ The encryption algorithm used is [AES-GCM-SIV](https://en.wikipedia.org/wiki/AES
 |The length of the encrypted data|8 bytes (64-bit) unsigned integer|
 |The encrypted data|N bytes|
 
+# Getting started
+* Install [rust](https://www.rust-lang.org) & cargo.
+* Install [Node.js](https://nodejs.org)
+* Run the init script, `init.ps1` for Windows, `init.sh` for Linux. *TODO: Mac*.
+For linux Minut I needed to install the following packages for the rust build:
+```sh
+sudo apt-get install webkit2gtk-4.0
+sudo apt-get install libjavascriptcoregtk4.0
+sudo apt-get install libsoup2.4
+```
+* Install [VS Code](https://code.visualstudio.com)
+* Add plugins to [VS Code](https://code.visualstudio.com)
+  - [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
+  - [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+  - [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode)
+
+* Debug with <kbd>F5</kbd>
 
 ### Todo
 * Add keyboard listener to dialogs
