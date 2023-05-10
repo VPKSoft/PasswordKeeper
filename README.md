@@ -50,5 +50,7 @@ sudo apt-get install libsoup2.4
 * [Node.js](https://nodejs.org)
 * [React](https://react.dev)
 * [Font Awesome *Free*](https://fontawesome.com/search?o=r&m=free)
+* [Weblate](https://weblate.org)
+* [i18next](https://www.i18next.com)
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
 
