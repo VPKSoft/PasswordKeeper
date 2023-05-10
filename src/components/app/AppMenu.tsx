@@ -28,6 +28,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
 import { useLocalize } from "../../i18n";
+import { DataEntry } from "../../types/PasswordEntry";
 
 const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings"] as const;
 type ActionNames = (typeof ActionValues)[number];
@@ -39,9 +40,10 @@ type MenuData = {
     items?: MenuData[];
     icon?: string;
     beginGroup?: boolean;
+    disabled?: boolean;
 };
 
-const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined, params?: unknown) => string): MenuData[] => {
+const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined) => string, entry: DataEntry | undefined): MenuData[] => {
     return [
         {
             id: "1",
@@ -89,6 +91,7 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     name: localize("itemAdd"),
                     actionName: "additem",
                     icon: "add",
+                    disabled: entry === undefined,
                 },
                 {
                     id: "2_2",
@@ -101,12 +104,14 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     name: localize("itemEdit"),
                     actionName: "edit",
                     icon: "edit",
+                    disabled: entry === undefined,
                 },
                 {
                     id: "2_4",
                     name: localize("itemDelete"),
                     actionName: "delete",
                     icon: "trash",
+                    disabled: entry === undefined,
                 },
             ],
         },
@@ -127,17 +132,20 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
 
 export type AppMenuProps = {
     className?: string;
+    entry: DataEntry | undefined;
     onItemClick: (e: ItemClickEvent) => void;
 };
 
 const AppMenu = ({
     className, //
+    entry,
     onItemClick,
 }: AppMenuProps) => {
     const lm = useLocalize("menu");
+
     const menuData = React.useMemo(() => {
-        return appMenuData(lm);
-    }, [lm]);
+        return appMenuData(lm, entry);
+    }, [entry, lm]);
 
     return (
         <Menu //

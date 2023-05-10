@@ -107,7 +107,7 @@ const AppMenuToolbar = ({
 
     return (
         <>
-            <AppMenu onItemClick={onItemClick} />
+            <AppMenu onItemClick={onItemClick} entry={entry} />
             <AppToolbar //
                 className={classNames(AppToolbar.name, className)}
                 entry={entry}

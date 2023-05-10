@@ -117,6 +117,7 @@ const App = ({ className }: Props) => {
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
             if (userAccepted && entry) {
                 setDataSource(updateDataSource(dataSource, entry));
+                setEntry(entry);
                 setEditEntry(null);
             }
             setEntryEditVisible(false);
