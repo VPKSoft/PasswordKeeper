@@ -226,10 +226,6 @@ const App = ({ className }: Props) => {
         }
     }, [dataSource, entry]);
 
-    const canEdit = React.useMemo(() => {
-        return editEntry !== undefined && currentFile !== "";
-    }, [currentFile, editEntry]);
-
     const deleteQueryMessage = React.useMemo(() => {
         const message = entry?.parentId === -1 ? lm("queryDeleteCategory", undefined, { category: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
         return message;
@@ -280,7 +276,6 @@ const App = ({ className }: Props) => {
                     settingsClick={settingsClick}
                     exitClick={exitClick}
                     deleteClick={deleteClick}
-                    canEdit={canEdit}
                 />
                 <div className="App-itemsView">
                     <PasswordList //

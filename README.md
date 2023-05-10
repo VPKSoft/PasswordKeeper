@@ -41,11 +41,13 @@ sudo apt-get install libsoup2.4
 * Add window positioning
 * Add about popup with license
 * ~~Adjust the theming of the window title based on the selected DevExtreme theme~~
+* Add tool tips to toolbar
 * Remember windows size & position (See: https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/window-state)
 
 ### Thanks to
 * [Tauri](https://tauri.app)
 * [Node.js](https://nodejs.org)
 * [React](https://react.dev)
+* [Font Awesome *Free*](https://fontawesome.com/search?o=r&m=free)
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
 

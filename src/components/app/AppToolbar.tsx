@@ -32,7 +32,6 @@ import { DataEntry } from "../../types/PasswordEntry";
 export type ToolBarProps = {
     className?: string;
     entry: DataEntry | undefined;
-    canEdit?: boolean | undefined;
     saveFileClick: () => void;
     saveFileAsClick: () => void;
     loadFileClick: () => void;
@@ -46,7 +45,6 @@ export type ToolBarProps = {
 const AppToolbar = ({
     className, //
     entry,
-    canEdit,
     loadFileClick,
     saveFileClick,
     saveFileAsClick,
@@ -62,14 +60,13 @@ const AppToolbar = ({
                 <Button //
                     icon="add"
                     onClick={addClick}
-                    disabled={canEdit !== true}
+                    disabled={entry === undefined}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
                 <Button //
                     icon="newfolder"
                     onClick={addCategoryClick}
-                    disabled={canEdit !== true}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">

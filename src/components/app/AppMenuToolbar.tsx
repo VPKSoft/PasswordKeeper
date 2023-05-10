@@ -39,7 +39,6 @@ type Props = Omit<AppMenuProps, "onItemClick"> &
 const AppMenuToolbar = ({
     className, //
     entry,
-    canEdit,
     loadFileClick,
     saveFileClick,
     saveFileAsClick,
@@ -119,7 +118,6 @@ const AppMenuToolbar = ({
                 addClick={addClick}
                 addCategoryClick={addCategoryClick}
                 deleteClick={deleteClick}
-                canEdit={canEdit}
                 testClick={testClick}
             />
         </>
