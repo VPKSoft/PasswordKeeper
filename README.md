@@ -16,7 +16,7 @@ The encryption algorithm used is [AES-GCM-SIV](https://en.wikipedia.org/wiki/AES
 * Install [rust](https://www.rust-lang.org) & cargo.
 * Install [Node.js](https://nodejs.org)
 * Run the init script, `init.ps1` for Windows, `init.sh` for Linux. *TODO: Mac*.
-For linux Minut I needed to install the following packages for the rust build:
+For linux Mint I needed to install the following packages for the rust build:
 ```sh
 sudo apt-get install webkit2gtk-4.0
 sudo apt-get install libjavascriptcoregtk4.0
