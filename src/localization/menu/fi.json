@@ -11,5 +11,6 @@
     "menuSettings": "Asetukset",
     "menuFile": "Tiedosto",
     "menuItems": "Merkinnät",
-    "fileSave": "Tallenna"
+    "fileSave": "Tallenna",
+    "about": "Tietoja"
 }

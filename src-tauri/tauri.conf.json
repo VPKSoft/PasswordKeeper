@@ -7,7 +7,7 @@
         "distDir": "../dist"
     },
     "package": {
-        "productName": "password-keeper",
+        "productName": "PasswordKeeper",
         "version": "0.1.0"
     },
     "tauri": {

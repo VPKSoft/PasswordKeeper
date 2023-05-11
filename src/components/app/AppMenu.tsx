@@ -30,7 +30,7 @@ import { ItemClickEvent } from "devextreme/ui/menu";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 
-const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings"] as const;
+const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about"] as const;
 type ActionNames = (typeof ActionValues)[number];
 
 type MenuData = {
@@ -124,6 +124,12 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     name: localize("menuSettings"),
                     actionName: "settings",
                     icon: "preferences",
+                },
+                {
+                    id: "3_2",
+                    name: localize("about"),
+                    actionName: "about",
+                    icon: "info",
                 },
             ],
         },

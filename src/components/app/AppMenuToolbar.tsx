@@ -34,6 +34,7 @@ type Props = Omit<AppMenuProps, "onItemClick"> &
         exitClick: () => void;
         newFileClick: () => void;
         settingsClick: () => void;
+        aboutShowClick: () => void;
     };
 
 const AppMenuToolbar = ({
@@ -48,8 +49,9 @@ const AppMenuToolbar = ({
     exitClick,
     deleteClick,
     newFileClick,
-    testClick,
     settingsClick,
+    aboutShowClick,
+    testClick,
 }: Props) => {
     const onItemClick = React.useCallback(
         (e: ItemClickEvent) => {
@@ -96,13 +98,17 @@ const AppMenuToolbar = ({
                     settingsClick();
                     break;
                 }
+                case "about": {
+                    aboutShowClick();
+                    break;
+                }
 
                 default: {
                     break;
                 }
             }
         },
-        [addCategoryClick, addClick, deleteClick, editClick, exitClick, loadFileClick, newFileClick, saveFileAsClick, saveFileClick, settingsClick]
+        [aboutShowClick, addCategoryClick, addClick, deleteClick, editClick, exitClick, loadFileClick, newFileClick, saveFileAsClick, saveFileClick, settingsClick]
     );
 
     return (

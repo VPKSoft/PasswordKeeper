@@ -46,6 +46,7 @@ import OpenSaveFilePopup from "./components/software/popups/OpenSaveFilePopup";
 import ConfirmPopup from "./components/software/popups/ConfirmPopup";
 import PreferencesPopup from "./components/software/popups/PreferencesPopup";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
+import AboutPopup from "./components/software/popups/AboutPopup";
 
 type Props = {
     className?: string;
@@ -69,6 +70,7 @@ const App = ({ className }: Props) => {
     const [entryEditMode, setEntryEditMode] = React.useState<ModifyType>(ModifyType.New);
     const [dialogVisible, setDialogVisible] = React.useState(false);
     const [preferencesVisible, setPreferencesVisible] = React.useState(false);
+    const [aboutVisible, setAboutVisible] = React.useState(false);
 
     const settingsRef = React.useRef<Settings>();
 
@@ -260,6 +262,14 @@ const App = ({ className }: Props) => {
         [ls]
     );
 
+    const aboutShowClick = React.useCallback(() => {
+        setAboutVisible(true);
+    }, []);
+
+    const aboutClose = React.useCallback(() => {
+        setAboutVisible(false);
+    }, []);
+
     return (
         <>
             <StyledTitle title={title} />
@@ -277,6 +287,7 @@ const App = ({ className }: Props) => {
                     settingsClick={settingsClick}
                     exitClick={exitClick}
                     deleteClick={deleteClick}
+                    aboutShowClick={aboutShowClick}
                 />
                 <div className="App-itemsView">
                     <PasswordList //
@@ -330,6 +341,10 @@ const App = ({ className }: Props) => {
                         onClose={preferencesClose}
                     />
                 )}
+                <AboutPopup //
+                    visible={aboutVisible}
+                    onClose={aboutClose}
+                />
             </div>
         </>
     );

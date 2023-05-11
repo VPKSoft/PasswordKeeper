@@ -11,5 +11,8 @@
     "cancel": "Peruuta",
     "confirm": "Vahvistus",
     "warning": "Varoitus",
-    "no": "Ei"
+    "no": "Ei",
+    "about": "Tietoja",
+    "copyright": "Tekijänoikeus",
+    "license": "Lisenssi"
 }

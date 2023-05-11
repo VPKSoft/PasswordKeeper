@@ -11,5 +11,8 @@
     "warning": "Warning",
     "yes": "Yes",
     "no": "No",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "about": "About",
+    "license": "License",
+    "copyright": "Copyright"
 }
