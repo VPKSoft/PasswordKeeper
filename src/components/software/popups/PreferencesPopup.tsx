@@ -27,7 +27,7 @@ import { Button, Lookup, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/lookup";
-import { useLocalize } from "../../../i18n";
+import { Locales, currentLocales, useLocalize } from "../../../i18n";
 import { Settings } from "../../../types/Settings";
 import { DxThemeNames, dxThemes } from "../../../utilities/ThemeUtils";
 
@@ -53,6 +53,7 @@ const PreferencesPopup = ({
 
     const lu = useLocalize("ui");
     const ls = useLocalize("settings");
+    const lc = useLocalize("common");
 
     const dataSource = React.useMemo(() => {
         const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
@@ -84,6 +85,14 @@ const PreferencesPopup = ({
         [settings]
     );
 
+    const onLocaleValueChanged = React.useCallback(
+        (e: ValueChangedEvent) => {
+            const value = e.value as Locales;
+            setSettingsInternal({ ...settings, locale: value });
+        },
+        [settings]
+    );
+
     return (
         <Popup //
             title={title}
@@ -93,7 +102,7 @@ const PreferencesPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={200}
+            height={240}
             width={600}
             showTitle={true}
         >
@@ -106,6 +115,14 @@ const PreferencesPopup = ({
                             </td>
                             <td>
                                 <Lookup dataSource={dataSource} displayExpr="name" valueExpr="key" value={settingsInternal?.dx_theme} onValueChanged={onValueChanged} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div className="dx-field-item-label-text">{lc("language")}</div>
+                            </td>
+                            <td>
+                                <Lookup dataSource={currentLocales} displayExpr="name" valueExpr="code" value={settingsInternal?.locale} onValueChanged={onLocaleValueChanged} />
                             </td>
                         </tr>
                     </tbody>

@@ -40,6 +40,8 @@ const AboutPopup = ({
     visible,
     onClose,
 }: Props) => {
+    const lc = useLocalize("common");
+
     const [appVersion, setAppVersion] = React.useState("");
     const [appName, setAppName] = React.useState("");
 
@@ -51,8 +53,6 @@ const AboutPopup = ({
             setAppVersion(v);
         });
     }, []);
-
-    const lc = useLocalize("common");
 
     const onHiding = React.useCallback(() => {
         if (visible) {

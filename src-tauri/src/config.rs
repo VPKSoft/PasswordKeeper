@@ -4,6 +4,7 @@ use serde_derive::{Deserialize, Serialize};
 pub struct AppConfig {
     window_pos: (u32, u32),
     dx_theme: String,
+    locale: String,
 }
 
 impl ::std::default::Default for AppConfig {
@@ -11,6 +12,7 @@ impl ::std::default::Default for AppConfig {
         Self {
             window_pos: (320, 280),
             dx_theme: "generic.carmine".to_string(),
+            locale: "en".to_string(),
         }
     }
 }

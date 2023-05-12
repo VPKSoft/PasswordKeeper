@@ -69,7 +69,17 @@ const resources = {
 };
 
 const LocaleValues = ["fi", "en"] as const;
-type Locales = (typeof LocaleValues)[number];
+export type Locales = (typeof LocaleValues)[number];
+
+export type LocaleCodeName = {
+    code: string;
+    name: string;
+};
+
+const currentLocales: LocaleCodeName[] = [
+    { code: "fi", name: "Finnish" },
+    { code: "en", name: "English" },
+];
 
 const setLocale = (locale: Locales) => {
     i18next.use(initReactI18next).init({
@@ -99,5 +109,5 @@ const useLocalize = (component: TranslationComponents) => {
     return localize;
 };
 
-export { useLocalize, setLocale };
+export { currentLocales, useLocalize, setLocale };
 export { default } from "i18next";

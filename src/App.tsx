@@ -29,7 +29,7 @@ import classNames from "classnames";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import themes from "devextreme/ui/themes";
-import { useLocalize } from "./i18n";
+import { Locales, setLocale, useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
@@ -71,6 +71,7 @@ const App = ({ className }: Props) => {
     const [dialogVisible, setDialogVisible] = React.useState(false);
     const [preferencesVisible, setPreferencesVisible] = React.useState(false);
     const [aboutVisible, setAboutVisible] = React.useState(false);
+    const [settingsLoaded, setSettingsLoaded] = React.useState(false);
 
     const settingsRef = React.useRef<Settings>();
 
@@ -83,6 +84,8 @@ const App = ({ className }: Props) => {
             if (f) {
                 settingsRef.current = f;
                 setTheme(f.dx_theme);
+                setLocale((f.locale ?? "en") as Locales);
+                setSettingsLoaded(true);
             }
         });
     }, []);
@@ -251,6 +254,7 @@ const App = ({ className }: Props) => {
                     if (f) {
                         settingsRef.current = settings;
                         themes.current(settings.dx_theme);
+                        setLocale(settings.locale as Locales);
                         notify(ls("saveSuccess"), "success", 5_000);
                     } else {
                         notify(ls("saveFailed"), "error", 5_000);
@@ -269,6 +273,10 @@ const App = ({ className }: Props) => {
     const aboutClose = React.useCallback(() => {
         setAboutVisible(false);
     }, []);
+
+    if (!settingsLoaded) {
+        return null;
+    }
 
     return (
         <>

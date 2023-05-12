@@ -28,6 +28,7 @@ import { DxThemeNames } from "../utilities/ThemeUtils";
 export type Settings = {
     dx_theme: DxThemeNames;
     window_pos: Array<number>;
+    locale: string;
 };
 
 const loadSettings = async () => {

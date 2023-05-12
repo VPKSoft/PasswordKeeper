@@ -45,6 +45,7 @@ sudo apt-get install libsoup2.4
 * Remember windows size & position (See: https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/window-state)
 * Possible locking of the UI after a specific time span.
 * Exit the program after several failed open file attempts.
+* ~~Add setting to select UI language~~
 
 ### Thanks to
 * [Tauri](https://tauri.app)
