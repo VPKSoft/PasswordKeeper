@@ -168,11 +168,9 @@ const App = ({ className }: Props) => {
                             setDataSource(f.fileData);
                             setCurrentFile(fileName);
 
-                            setFileSaveOpenQueryOpen(false);
                             setIsNewFile(false);
                         } else {
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
-                            setFileSaveOpenQueryOpen(false);
                         }
                     });
                 } else if (filePopupMode === FileQueryMode.SaveAs) {
@@ -180,16 +178,13 @@ const App = ({ className }: Props) => {
                         if (f.ok) {
                             setFilePassword(password);
                             setCurrentFile(fileName);
-                            setFileSaveOpenQueryOpen(false);
                         } else {
                             notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
-                            setFileSaveOpenQueryOpen(false);
                         }
                     });
                 }
-            } else {
-                setFileSaveOpenQueryOpen(false);
             }
+            setFileSaveOpenQueryOpen(false);
         },
         [dataSource, filePopupMode, lm, setFilePassword]
     );
@@ -259,8 +254,8 @@ const App = ({ className }: Props) => {
                         notify(ls("saveFailed"), "error", 5_000);
                     }
                 });
-                setPreferencesVisible(false);
             }
+            setPreferencesVisible(false);
         },
         [ls]
     );
