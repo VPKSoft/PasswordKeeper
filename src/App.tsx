@@ -78,7 +78,6 @@ const App = ({ className }: Props) => {
     const [isNewFile, setIsNewFile] = React.useState(true);
 
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
-
     React.useEffect(() => {
         void loadSettings().then(f => {
             if (f) {

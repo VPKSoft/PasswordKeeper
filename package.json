@@ -8,7 +8,7 @@
         "build": "tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
-        "lint": "eslint --max-warnings=0 src"
+        "lint": "eslint --max-warnings=0 --config ./.eslintrc.cjs --ext .tsx,.ts ./src/"
     },
     "dependencies": {
         "@tauri-apps/api": "^1.2.0",

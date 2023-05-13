@@ -38,13 +38,13 @@ sudo apt-get install libsoup2.4
   - ~~File being open~~
   - ~~Item / category selected state~~
 * ~~Add settings popup~~
-* Add window positioning
 * ~~Add about popup with license~~
 * ~~Adjust the theming of the window title based on the selected DevExtreme theme~~
-* Add tool tips to toolbar
+* ~~Add tool tips to toolbar~~
 * Remember windows size & position (See: https://github.com/tauri-apps/plugins-workspace/tree/v1/plugins/window-state)
 * Possible locking of the UI after a specific time span.
 * Exit the program after several failed open file attempts.
+* ~~Fix `npm run lint` command.~~
 * ~~Add setting to select UI language~~
 
 ### Thanks to

@@ -28,6 +28,7 @@ import { Item as ToolbarItem } from "devextreme-react/toolbar";
 import styled from "styled-components";
 import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
+import { useLocalize } from "../../i18n";
 
 export type ToolBarProps = {
     className?: string;
@@ -54,6 +55,7 @@ const AppToolbar = ({
     deleteClick,
     testClick,
 }: ToolBarProps) => {
+    const lm = useLocalize("menu");
     return (
         <Toolbar className={classNames(AppToolbar.name, className)}>
             <ToolbarItem location="before">
@@ -61,12 +63,14 @@ const AppToolbar = ({
                     icon="add"
                     onClick={addClick}
                     disabled={entry === undefined}
+                    hint={lm("itemAdd")}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
                 <Button //
                     icon="newfolder"
                     onClick={addCategoryClick}
+                    hint={lm("itemAddCategory")}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
@@ -74,6 +78,7 @@ const AppToolbar = ({
                     icon="edit"
                     onClick={editClick}
                     disabled={entry === undefined}
+                    hint={lm("itemEdit")}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
@@ -81,24 +86,28 @@ const AppToolbar = ({
                     icon="trash"
                     onClick={deleteClick}
                     disabled={entry === undefined}
+                    hint={lm("itemDelete")}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
                 <Button //
                     icon="save"
                     onClick={saveFileClick}
+                    hint={lm("fileSave")}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
                 <Button //
                     icon="./src/img/save-as-icon.svg"
                     onClick={saveFileAsClick}
+                    hint={lm("fileSaveAs")}
                 />
             </ToolbarItem>
             <ToolbarItem location="before">
                 <Button //
                     icon="folder"
                     onClick={loadFileClick}
+                    hint={lm("fileOpen")}
                 />
             </ToolbarItem>
             {testClick && (
@@ -106,6 +115,7 @@ const AppToolbar = ({
                     <Button //
                         icon="help"
                         onClick={testClick}
+                        hint="Test stuff"
                     />
                 </ToolbarItem>
             )}
