@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import i18next from "i18next";
+import { use } from "i18next";
 import { initReactI18next, useTranslation } from "react-i18next";
 
 //Import all translation files
@@ -82,7 +82,7 @@ const currentLocales: LocaleCodeName[] = [
 ];
 
 const setLocale = (locale: Locales) => {
-    i18next.use(initReactI18next).init({
+    use(initReactI18next).init({
         resources,
         lng: locale, //default language
     });

@@ -67,8 +67,12 @@ export type DxThemeNames = (typeof dxThemes)[number];
 
 export const setTheme = (theme: DxThemeNames) => {
     const settingTheme = window.localStorage.getItem("dx-theme");
+    // the current import is deprecated:
+    // eslint-disable-next-line import/no-named-as-default-member
     const currentTheme = themes.current();
     if (theme !== currentTheme) {
+        // the current import is deprecated:
+        // eslint-disable-next-line import/no-named-as-default-member
         themes.current(theme);
     }
 

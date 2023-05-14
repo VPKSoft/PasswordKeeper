@@ -247,6 +247,8 @@ const App = ({ className }: Props) => {
                 saveSettings(settings).then(f => {
                     if (f) {
                         settingsRef.current = settings;
+                        // the current import is deprecated:
+                        // eslint-disable-next-line import/no-named-as-default-member
                         themes.current(settings.dx_theme);
                         setLocale(settings.locale as Locales);
                         notify(ls("saveSuccess"), "success", 5_000);
