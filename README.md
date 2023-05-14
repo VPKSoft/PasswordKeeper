@@ -31,7 +31,7 @@ sudo apt-get install libsoup2.4
 * Debug with <kbd>F5</kbd>
 
 ### Todo
-* Add keyboard listener to dialogs
+* ~~Add keyboard listener to dialogs~~
 * ~~Add delete possibility~~
 * ~~Add generic confirm dialog with yes/no/cancel~~
 * ~~Sync toolbar and menu item deleted statuses to~~
@@ -46,6 +46,7 @@ sudo apt-get install libsoup2.4
 * Exit the program after several failed open file attempts.
 * ~~Fix `npm run lint` command.~~
 * ~~Add setting to select UI language~~
+* Refresh the title on theme change without a complete reload.
 
 ### Thanks to
 * [Tauri](https://tauri.app)
