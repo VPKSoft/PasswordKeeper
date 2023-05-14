@@ -26,7 +26,7 @@ import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
-import { ValueChangedEvent } from "devextreme/ui/text_box";
+import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { useLocalize } from "../../../i18n";
 import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
 
@@ -86,6 +86,19 @@ const QueryPasswordPopup = ({
         return password1 !== "";
     }, [password1, password2, verifyMode]);
 
+    const onKeyDown = React.useCallback(
+        (e: KeyDownEvent) => {
+            if (e.event?.key === "Escape") {
+                setUserAccepted(false);
+                onClose(false);
+            } else if (e.event?.key === "Enter" && allowAccept) {
+                setUserAccepted(true);
+                onClose(true, password1);
+            }
+        },
+        [allowAccept, onClose, password1]
+    );
+
     return (
         <Popup //
             title={title}
@@ -114,6 +127,7 @@ const QueryPasswordPopup = ({
                                         showGeneratePassword={false}
                                         showCopyButton={true}
                                         initialShowPassword={initialShowPassword}
+                                        onKeyDown={onKeyDown}
                                     />
                                 </div>
                             </td>
@@ -131,6 +145,7 @@ const QueryPasswordPopup = ({
                                             showGeneratePassword={false}
                                             showCopyButton={true}
                                             initialShowPassword={initialShowPassword}
+                                            onKeyDown={onKeyDown}
                                         />
                                     </div>
                                 </td>

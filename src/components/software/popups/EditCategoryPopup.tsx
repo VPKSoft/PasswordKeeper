@@ -26,7 +26,7 @@ import * as React from "react";
 import { Button, Popup, TextBox } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
-import { ValueChangedEvent } from "devextreme/ui/text_box";
+import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
@@ -85,6 +85,19 @@ const EditCategoryPopup = ({
         return categoryInternal.name.length > 0 && !categoryInternal.name.endsWith(" ") && !categoryInternal.name.startsWith(" ");
     }, [categoryInternal.name]);
 
+    const onKeyDown = React.useCallback(
+        (e: KeyDownEvent) => {
+            if (e.event?.key === "Escape") {
+                setUserAccepted(false);
+                onClose(false);
+            } else if (e.event?.key === "Enter" && validCategoryName) {
+                setUserAccepted(true);
+                onClose(true, categoryInternal);
+            }
+        },
+        [categoryInternal, onClose, validCategoryName]
+    );
+
     return (
         <Popup //
             title={title}
@@ -106,7 +119,7 @@ const EditCategoryPopup = ({
                                 <div className="dx-field-item-label-text">{le("name")}</div>
                             </td>
                             <td>
-                                <TextBox value={entry?.name} onValueChanged={onNameChanged} />
+                                <TextBox value={entry?.name} onValueChanged={onNameChanged} onKeyDown={onKeyDown} />
                             </td>
                         </tr>
                     </tbody>
