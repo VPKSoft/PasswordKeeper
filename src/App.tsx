@@ -178,6 +178,7 @@ const App = ({ className }: Props) => {
                         if (f.ok) {
                             setFilePassword(password);
                             setCurrentFile(fileName);
+                            setIsNewFile(false);
                         } else {
                             notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                         }
