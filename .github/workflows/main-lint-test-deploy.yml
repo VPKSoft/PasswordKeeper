@@ -2,7 +2,7 @@ name: Lint & Test deployment package
 on:
   push:
     paths-ignore:
-      - '**/*.md'
+      - '**.md'
   workflow_dispatch:
   
 jobs:
