@@ -8,11 +8,13 @@ import { Settings } from "../../types/Settings";
 type Props = {
     className?: string;
     title: string | (() => string);
+    onClose?: () => Promise<boolean> | boolean;
 };
 
 const WindowTitle = ({
     className, //
     title,
+    onClose,
 }: Props) => {
     const lu = useLocalize("ui");
 
@@ -25,8 +27,14 @@ const WindowTitle = ({
     }, []);
 
     const closeClick = React.useCallback(() => {
-        appWindow.close();
-    }, []);
+        if (onClose) {
+            Promise.resolve(onClose()).then(result => {
+                if (!result) {
+                    appWindow.close();
+                }
+            });
+        }
+    }, [onClose]);
 
     const displayTitle = React.useMemo(() => {
         return typeof title === "string" ? title : title();

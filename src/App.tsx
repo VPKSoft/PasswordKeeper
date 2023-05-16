@@ -26,9 +26,11 @@ import * as React from "react";
 import "./App.css";
 import styled from "styled-components";
 import classNames from "classnames";
+import { appWindow } from "@tauri-apps/api/window";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import themes from "devextreme/ui/themes";
+import { ask } from "@tauri-apps/api/dialog";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
@@ -112,10 +114,39 @@ const App = ({ className }: Props) => {
         }
     }, [currentFile, dataSource, getFilePassword, isNewFile, lm, saveFileAsCallback]);
 
+    const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
+        if (fileChanged) {
+            let result = false;
+            const dialogResult = await ask(lm("fileChangedSaveQuery", undefined, { file: currentFile }), { title: lm("fileChangedTitle") });
+            if (dialogResult) {
+                void saveFileCallback();
+                result = true; // True for abort close
+            }
+
+            return result;
+        } else {
+            return false;
+        }
+    }, [currentFile, fileChanged, lm, saveFileCallback]);
+
     const loadFileCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.Open);
         setFileSaveOpenQueryOpen(true);
     }, []);
+
+    React.useEffect(() => {
+        const unlisten = appWindow.onCloseRequested(async event => {
+            const confirmed = await fileSaveQueryAbortCloseCallback();
+            if (confirmed) {
+                // User did not confirm closing the window; let's prevent it.
+                event.preventDefault();
+            }
+        });
+
+        return () => {
+            unlisten.then(f => f());
+        };
+    }, [fileSaveQueryAbortCloseCallback]);
 
     const onEditClose = React.useCallback(
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
@@ -123,6 +154,7 @@ const App = ({ className }: Props) => {
                 setDataSource(updateDataSource(dataSource, entry));
                 setEntry(entry);
                 setEditEntry(null);
+                setFileChanged(true);
             }
             setEntryEditVisible(false);
         },
@@ -133,6 +165,7 @@ const App = ({ className }: Props) => {
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
             if (userAccepted && entry !== undefined) {
                 setDataSource(updateDataSource(dataSource, entry));
+                setFileChanged(true);
             }
             setCategoryEditVisible(false);
             setEditEntry(null);
@@ -167,7 +200,7 @@ const App = ({ className }: Props) => {
                             setFilePassword(password);
                             setDataSource(f.fileData);
                             setCurrentFile(fileName);
-
+                            setFileChanged(false);
                             setIsNewFile(false);
                         } else {
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
@@ -179,6 +212,7 @@ const App = ({ className }: Props) => {
                             setFilePassword(password);
                             setCurrentFile(fileName);
                             setIsNewFile(false);
+                            setFileChanged(false);
                         } else {
                             notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                         }
@@ -191,8 +225,12 @@ const App = ({ className }: Props) => {
     );
 
     const exitClick = React.useCallback(() => {
-        exit(0);
-    }, []);
+        fileSaveQueryAbortCloseCallback().then(result => {
+            if (!result) {
+                exit(0);
+            }
+        });
+    }, [fileSaveQueryAbortCloseCallback]);
 
     const deleteClick = React.useCallback(() => {
         setDialogVisible(true);
@@ -277,7 +315,7 @@ const App = ({ className }: Props) => {
 
     return (
         <>
-            <StyledTitle title={title} />
+            <StyledTitle title={title} onClose={fileSaveQueryAbortCloseCallback} />
 
             <div className={classNames(App.name, className)}>
                 <AppMenuToolbar //
