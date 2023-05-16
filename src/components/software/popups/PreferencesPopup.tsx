@@ -56,7 +56,7 @@ const PreferencesPopup = ({
     const lc = useLocalize("common");
 
     const dataSource = React.useMemo(() => {
-        const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replace(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
+        const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replaceAll(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
         return result;
     }, []);
 
