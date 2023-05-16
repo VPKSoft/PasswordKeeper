@@ -28,11 +28,11 @@ jobs:
       - name: init install folder (Windows)
 #        run: npm install # change this to npm or pnpm depending on which one you use
         if: matrix.platform == 'windows-latest'
-        run: init.ps1
+        run: ${{ github.workspace }}\init.ps1
       - name: init install folder (Linux & Mac)
 #        run: npm install # change this to npm or pnpm depending on which one you use
         if: matrix.platform == 'ubuntu-20.04' || matrix.platform == 'macos-latest'
-        run: init.sh          
+        run: ${{ github.workspace }}/init.sh          
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
