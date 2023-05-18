@@ -287,10 +287,13 @@ const App = ({ className }: Props) => {
                         settingsRef.current = settings;
                         setTheme(settings.dx_theme);
                         setLocale(settings.locale as Locales);
-                        if (!fileChanged) {
+                        if (fileChanged) {
+                            notify({ message: ls("themeChangeFailFileUnsaved"), width: 300, shading: true, displayTime: 5_000, type: "warning" }, { position: "bottom center", direction: "up-push" });
+                            notify({ message: ls("saveSuccess"), width: 300, shading: true, displayTime: 5_000, type: "success" }, { position: "bottom center", direction: "up-push" });
+                        } else {
                             window.location.reload();
+                            notify(ls("saveSuccess"), "success", 5_000);
                         }
-                        notify(ls("saveSuccess"), "success", 5_000);
                     } else {
                         notify(ls("saveFailed"), "error", 5_000);
                     }
