@@ -29,7 +29,6 @@ import classNames from "classnames";
 import { appWindow } from "@tauri-apps/api/window";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
-import themes from "devextreme/ui/themes";
 import { ask } from "@tauri-apps/api/dialog";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/popups/EditEntryPopup";
@@ -286,9 +285,7 @@ const App = ({ className }: Props) => {
                 saveSettings(settings).then(f => {
                     if (f) {
                         settingsRef.current = settings;
-                        // the current import is deprecated:
-                        // eslint-disable-next-line import/no-named-as-default-member
-                        themes.current(settings.dx_theme);
+                        setTheme(settings.dx_theme);
                         setLocale(settings.locale as Locales);
                         notify(ls("saveSuccess"), "success", 5_000);
                     } else {

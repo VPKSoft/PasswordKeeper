@@ -24,6 +24,43 @@ SOFTWARE.
 
 import themes from "devextreme/ui/themes";
 
+const carmine_compact = () => import("devextreme/dist/css/dx.carmine.compact.css");
+const carmine = () => import("devextreme/dist/css/dx.carmine.css");
+const contrast = () => import("devextreme/dist/css/dx.contrast.css");
+const contrast_compact = () => import("devextreme/dist/css/dx.contrast.compact.css");
+const dark = () => import("devextreme/dist/css/dx.dark.css");
+const dark_compact = () => import("devextreme/dist/css/dx.dark.compact.css");
+const darkmoon = () => import("devextreme/dist/css/dx.darkmoon.css");
+const darkmoon_compact = () => import("devextreme/dist/css/dx.darkmoon.compact.css");
+const darkviolet = () => import("devextreme/dist/css/dx.darkviolet.css");
+const darkviolet_compact = () => import("devextreme/dist/css/dx.darkviolet.compact.css");
+const greenmist = () => import("devextreme/dist/css/dx.greenmist.css");
+const greenmist_compact = () => import("devextreme/dist/css/dx.greenmist.compact.css");
+const light = () => import("devextreme/dist/css/dx.light.css");
+const light_compact = () => import("devextreme/dist/css/dx.light.compact.css");
+const material_blueDark = () => import("devextreme/dist/css/dx.material.blue.dark.css");
+const material_blueDark_compact = () => import("devextreme/dist/css/dx.material.blue.dark.compact.css");
+const material_blueLight = () => import("devextreme/dist/css/dx.material.blue.light.css");
+const material_blueLight_compact = () => import("devextreme/dist/css/dx.material.blue.light.compact.css");
+const material_limeDark = () => import("devextreme/dist/css/dx.material.lime.dark.css");
+const material_limeDark_compact = () => import("devextreme/dist/css/dx.material.lime.dark.compact.css");
+const material_limeLight = () => import("devextreme/dist/css/dx.material.lime.light.css");
+const material_limeLight_compact = () => import("devextreme/dist/css/dx.material.lime.light.compact.css");
+const material_orangeDark = () => import("devextreme/dist/css/dx.material.orange.dark.css");
+const material_orangeDark_compact = () => import("devextreme/dist/css/dx.material.orange.dark.compact.css");
+const material_orangeLight = () => import("devextreme/dist/css/dx.material.orange.light.css");
+const material_orangeLight_compact = () => import("devextreme/dist/css/dx.material.orange.light.compact.css");
+const material_purpleDark = () => import("devextreme/dist/css/dx.material.purple.dark.css");
+const material_purpleDark_compact = () => import("devextreme/dist/css/dx.material.purple.dark.compact.css");
+const material_purpleLight = () => import("devextreme/dist/css/dx.material.purple.light.css");
+const material_purpleLight_compact = () => import("devextreme/dist/css/dx.material.purple.light.compact.css");
+const material_tealDark = () => import("devextreme/dist/css/dx.material.teal.dark.css");
+const material_tealDark_compact = () => import("devextreme/dist/css/dx.material.teal.dark.compact.css");
+const material_tealLight = () => import("devextreme/dist/css/dx.material.teal.light.css");
+const material_tealLight_compact = () => import("devextreme/dist/css/dx.material.teal.light.compact.css");
+const material_softBlue = () => import("devextreme/dist/css/dx.softblue.css");
+const material_softBlue_compact = () => import("devextreme/dist/css/dx.softblue.compact.css");
+
 export const dxThemes = [
     "generic.carmine.compact",
     "generic.carmine",
@@ -71,9 +108,156 @@ export const setTheme = (theme: DxThemeNames) => {
     // eslint-disable-next-line import/no-named-as-default-member
     const currentTheme = themes.current();
     if (theme !== currentTheme) {
-        // the current import is deprecated:
-        // eslint-disable-next-line import/no-named-as-default-member
-        themes.current(theme);
+        switch (theme) {
+            case "generic.carmine": {
+                carmine();
+                break;
+            }
+            case "generic.carmine.compact": {
+                carmine_compact();
+                break;
+            }
+            case "generic.contrast": {
+                contrast();
+                break;
+            }
+            case "generic.contrast.compact": {
+                contrast_compact();
+                break;
+            }
+            case "generic.dark": {
+                dark();
+                break;
+            }
+            case "generic.dark.compact": {
+                dark_compact();
+                break;
+            }
+            case "generic.darkmoon": {
+                darkmoon();
+                break;
+            }
+            case "generic.darkmoon.compact": {
+                darkmoon_compact();
+                break;
+            }
+            case "generic.darkviolet": {
+                darkviolet();
+                break;
+            }
+            case "generic.darkviolet.compact": {
+                darkviolet_compact();
+                break;
+            }
+            case "generic.greenmist": {
+                greenmist();
+                break;
+            }
+            case "generic.greenmist.compact": {
+                greenmist_compact();
+                break;
+            }
+            case "generic.light": {
+                light();
+                break;
+            }
+            case "generic.light.compact": {
+                light_compact();
+                break;
+            }
+            case "generic.softblue": {
+                material_softBlue();
+                break;
+            }
+            case "generic.softblue.compact": {
+                material_softBlue_compact();
+                break;
+            }
+            case "material.blue.dark": {
+                material_blueDark();
+                break;
+            }
+            case "material.blue.dark.compact": {
+                material_blueDark_compact();
+                break;
+            }
+            case "material.blue.light": {
+                material_blueLight();
+                break;
+            }
+            case "material.blue.light.compact": {
+                material_blueLight_compact();
+                break;
+            }
+            case "material.lime.dark": {
+                material_limeDark();
+                break;
+            }
+            case "material.lime.dark.compact": {
+                material_limeDark_compact();
+                break;
+            }
+            case "material.lime.light": {
+                material_limeLight();
+                break;
+            }
+            case "material.lime.light.compact": {
+                material_limeLight_compact();
+                break;
+            }
+            case "material.orange.dark": {
+                material_orangeDark();
+                break;
+            }
+            case "material.orange.dark.compact": {
+                material_orangeDark_compact();
+                break;
+            }
+            case "material.orange.light": {
+                material_orangeLight();
+                break;
+            }
+            case "material.orange.light.compact": {
+                material_orangeLight_compact();
+                break;
+            }
+            case "material.purple.dark": {
+                material_purpleDark();
+                break;
+            }
+            case "material.purple.dark.compact": {
+                material_purpleDark_compact();
+                break;
+            }
+            case "material.purple.light": {
+                material_purpleLight();
+                break;
+            }
+            case "material.purple.light.compact": {
+                material_purpleLight_compact();
+                break;
+            }
+            case "material.teal.dark": {
+                material_tealDark();
+                break;
+            }
+            case "material.teal.dark.compact": {
+                material_tealDark_compact();
+                break;
+            }
+            case "material.teal.light": {
+                material_tealLight();
+                break;
+            }
+            case "material.teal.light.compact": {
+                material_tealLight_compact();
+                break;
+            }
+            default: {
+                carmine_compact();
+                break;
+            }
+        }
     }
 
     if (settingTheme !== theme) {
