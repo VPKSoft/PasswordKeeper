@@ -4,5 +4,6 @@
     "name": "Name",
     "domain": "Domain",
     "userName": "User name",
-    "password": "Password"
+    "password": "Password",
+    "notes": "Notes"
 }

@@ -154,7 +154,7 @@ const EntryEditor = ({
                             </tr>
                         </tbody>
                     </table>
-                    <div className="dx-field-item-label-text">{le("name")}</div>
+                    <div className="dx-field-item-label-text">{le("notes")}</div>
                     <TextArea readOnly={readOnly} value={entry?.notes} className="EntryEditor-TextArea" onValueChanged={onNotesChanged} />
                 </div>
             )}

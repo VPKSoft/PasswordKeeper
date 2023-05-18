@@ -4,5 +4,6 @@
     "name": "Nimi",
     "newEntry": "Uusi merkintä",
     "password": "Salasana",
-    "userName": "Käyttäjänimi"
+    "userName": "Käyttäjänimi",
+    "notes": "Muistiinpanot"
 }
