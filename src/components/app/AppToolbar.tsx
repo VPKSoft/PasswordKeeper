@@ -98,7 +98,7 @@ const AppToolbar = ({
             </ToolbarItem>
             <ToolbarItem location="before">
                 <Button //
-                    icon="./src/img/save-as-icon.svg"
+                    icon="fas fa-floppy-disk"
                     onClick={saveFileAsClick}
                     hint={lm("fileSaveAs")}
                 />

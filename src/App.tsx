@@ -287,6 +287,9 @@ const App = ({ className }: Props) => {
                         settingsRef.current = settings;
                         setTheme(settings.dx_theme);
                         setLocale(settings.locale as Locales);
+                        if (!fileChanged) {
+                            window.location.reload();
+                        }
                         notify(ls("saveSuccess"), "success", 5_000);
                     } else {
                         notify(ls("saveFailed"), "error", 5_000);
@@ -295,7 +298,7 @@ const App = ({ className }: Props) => {
             }
             setPreferencesVisible(false);
         },
-        [ls]
+        [fileChanged, ls]
     );
 
     const aboutShowClick = React.useCallback(() => {

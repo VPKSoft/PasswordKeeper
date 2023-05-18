@@ -13,5 +13,5 @@
 * Exit the program after several failed open file attempts.
 * ~~Fix `npm run lint` command.~~
 * ~~Add setting to select UI language~~
-* Refresh the title on theme change without a complete reload.
+* ~~Refresh the title on theme change without a complete reload.~~ (**NOTE:** If the current file has no changes).
 * ~~Add save file query upon application close~~

@@ -71,7 +71,7 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     id: "1_3",
                     name: localize("fileSaveAs"),
                     actionName: "saveas",
-                    icon: "./src/img/save-as-icon.svg",
+                    icon: "fas fa-floppy-disk",
                 },
                 {
                     beginGroup: true,
