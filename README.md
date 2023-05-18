@@ -1,6 +1,8 @@
 # PasswordKeeper
 A software to store login information into an encrypted file. 
 
+![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/1590e60d-6f37-4c17-bd84-3e5f024e904e)
+
 [![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml)
 
 # The encryption
