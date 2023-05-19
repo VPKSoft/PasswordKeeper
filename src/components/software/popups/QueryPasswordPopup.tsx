@@ -29,6 +29,7 @@ import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { useLocalize } from "../../../i18n";
 import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
+import { useFocus } from "../../../hooks/UseFocus";
 
 type Props = {
     className?: string;
@@ -48,6 +49,7 @@ const QueryPasswordPopup = ({
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [password1, setPassword1] = React.useState("");
     const [password2, setPassword2] = React.useState("");
+    const [setFocus, textBoxInitialized] = useFocus();
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -111,6 +113,7 @@ const QueryPasswordPopup = ({
             height={verifyMode ? 240 : 200}
             width={600}
             showTitle={true}
+            onShown={setFocus}
         >
             <div className={classNames(QueryPasswordPopup.name, className)}>
                 <table>
@@ -128,6 +131,7 @@ const QueryPasswordPopup = ({
                                         showCopyButton={true}
                                         initialShowPassword={initialShowPassword}
                                         onKeyDown={onKeyDown}
+                                        onInitialized={textBoxInitialized}
                                     />
                                 </div>
                             </td>

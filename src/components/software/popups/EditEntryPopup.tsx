@@ -26,6 +26,7 @@ import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
+import dxTextBox from "devextreme/ui/text_box";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
@@ -48,6 +49,7 @@ const EditEntryPopup = ({
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
+    const focusTextBoxRef = React.useRef<dxTextBox>();
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -73,6 +75,10 @@ const EditEntryPopup = ({
         setUserAccepted(false);
     }, [onClose, userAccepted]);
 
+    const popupShown = React.useCallback(() => {
+        focusTextBoxRef.current?.focus();
+    }, []);
+
     return (
         <Popup //
             title={title}
@@ -85,6 +91,7 @@ const EditEntryPopup = ({
             height={500}
             width={600}
             showTitle={true}
+            onShown={popupShown}
         >
             <div className={classNames(EditEntryPopup.name, className)}>
                 <EntryEditor //
@@ -93,6 +100,7 @@ const EditEntryPopup = ({
                     readOnly={false}
                     onEntryChanged={setEntryInternal}
                     showGeneratePassword={true}
+                    nameTextBoxRef={focusTextBoxRef}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //

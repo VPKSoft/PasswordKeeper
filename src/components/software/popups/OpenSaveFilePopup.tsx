@@ -31,6 +31,7 @@ import { FileQueryMode } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import FileQueryTextbox from "../inputs/FileQueryTextbox";
 import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
+import { useFocus } from "../../../hooks/UseFocus";
 
 type Props = {
     className?: string;
@@ -51,6 +52,7 @@ const OpenSaveFilePopup = ({
     const [password, setPassword] = React.useState("");
     const [fileName, setFileName] = React.useState<string | undefined>();
     const [password2, setPassword2] = React.useState("");
+    const [setFocus, textBoxInitialized] = useFocus();
 
     React.useEffect(() => {
         if (mode === FileQueryMode.SaveAs && currentFile !== undefined) {
@@ -150,6 +152,7 @@ const OpenSaveFilePopup = ({
             height={height}
             width={600}
             showTitle={true}
+            onShown={setFocus}
         >
             <div className={classNames(OpenSaveFilePopup.name, className)}>
                 <table>
@@ -182,6 +185,7 @@ const OpenSaveFilePopup = ({
                                         showCopyButton={true}
                                         initialShowPassword={false}
                                         onKeyDown={onKeyDown}
+                                        onInitialized={textBoxInitialized}
                                     />
                                 </div>
                             </td>

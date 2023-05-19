@@ -41,6 +41,7 @@ type Props = {
     initialShowPassword?: boolean;
     onValueChanged?: (e: ValueChangedEvent) => void;
     onKeyDown?: (e: KeyDownEvent) => void;
+    onInitialized?: (e: InitializedEvent) => void;
 };
 
 const PasswordTextbox = ({
@@ -51,6 +52,7 @@ const PasswordTextbox = ({
     hidePasswordTimeout,
     showCopyButton,
     initialShowPassword,
+    onInitialized: onInitializedCallback,
     onValueChanged,
     onKeyDown,
 }: Props) => {
@@ -80,9 +82,13 @@ const PasswordTextbox = ({
         setDisplayPassword(value => !value);
     }, []);
 
-    const onInitialized = React.useCallback((e: InitializedEvent) => {
-        textBoxRef.current = e.component;
-    }, []);
+    const onInitialized = React.useCallback(
+        (e: InitializedEvent) => {
+            onInitializedCallback?.(e);
+            textBoxRef.current = e.component;
+        },
+        [onInitializedCallback]
+    );
 
     const generatePasswordClick = React.useCallback(() => {
         textBoxRef.current?.option("value", generatePassword());

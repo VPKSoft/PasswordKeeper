@@ -27,7 +27,7 @@ import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
 import * as React from "react";
 import styled from "styled-components";
-import { KeyDownEvent } from "devextreme/ui/text_box";
+import { InitializedEvent, KeyDownEvent } from "devextreme/ui/text_box";
 import { useLocalize } from "../../../i18n";
 import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
 import { FileQueryMode } from "../../../types/Enums";
@@ -35,17 +35,19 @@ import { FileQueryMode } from "../../../types/Enums";
 type Props = {
     className?: string;
     value?: string | undefined;
+    mode: FileQueryMode;
     onValueChanged: (value: string | undefined) => void;
     onKeyDown?: (e: KeyDownEvent) => void;
-    mode: FileQueryMode;
+    onInitialized?: (e: InitializedEvent) => void;
 };
 
 const FileQueryTextbox = ({
     className, //
     value,
+    mode,
     onValueChanged,
     onKeyDown,
-    mode,
+    onInitialized,
 }: Props) => {
     const lc = useLocalize("common");
     const la = useLocalize("app");
@@ -73,6 +75,7 @@ const FileQueryTextbox = ({
                 className="FileQueryTextbox-textBox"
                 value={value}
                 onKeyDown={onKeyDown}
+                onInitialized={onInitialized}
             />
             <Button //
                 icon="activefolder"
