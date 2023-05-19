@@ -30,6 +30,7 @@ import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
+import { useFocus } from "../../../hooks/UseFocus";
 
 type Props = {
     className?: string;
@@ -49,6 +50,8 @@ const EditCategoryPopup = ({
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [categoryInternal, setCategoryInternal] = React.useState<DataEntry>(entry);
 
+    const [setFocus, textBoxInitialized] = useFocus();
+
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
 
@@ -57,6 +60,10 @@ const EditCategoryPopup = ({
     React.useEffect(() => {
         setCategoryInternal(entry);
     }, [entry]);
+
+    const onShown = React.useCallback(() => {
+        setFocus();
+    }, [setFocus]);
 
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
@@ -110,6 +117,7 @@ const EditCategoryPopup = ({
             height={200}
             width={600}
             showTitle={true}
+            onShown={onShown}
         >
             <div className={classNames(EditCategoryPopup.name, className)}>
                 <table>
@@ -119,7 +127,12 @@ const EditCategoryPopup = ({
                                 <div className="dx-field-item-label-text">{le("name")}</div>
                             </td>
                             <td>
-                                <TextBox value={entry?.name} onValueChanged={onNameChanged} onKeyDown={onKeyDown} />
+                                <TextBox //
+                                    value={entry?.name}
+                                    onValueChanged={onNameChanged}
+                                    onKeyDown={onKeyDown}
+                                    onInitialized={textBoxInitialized}
+                                />
                             </td>
                         </tr>
                     </tbody>

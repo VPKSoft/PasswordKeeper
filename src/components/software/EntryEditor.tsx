@@ -27,7 +27,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { TextArea, TextBox } from "devextreme-react";
 import { ValueChangedEvent } from "devextreme/ui/text_area";
-import { ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
+import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import PasswordTextbox from "../reusable/inputs/PasswordTextbox";
@@ -40,6 +40,7 @@ type Props = {
     hidePasswordTimeout?: number;
     showGeneratePassword?: boolean;
     showCopyButton?: boolean;
+    nameTextBoxRef?: React.MutableRefObject<dxTextBox | undefined>;
     onEntryChanged?: (entry: DataEntry) => void;
 };
 
@@ -51,6 +52,7 @@ const EntryEditor = ({
     hidePasswordTimeout,
     showGeneratePassword,
     showCopyButton = false,
+    nameTextBoxRef,
     onEntryChanged,
 }: Props) => {
     const le = useLocalize("entries");
@@ -105,6 +107,15 @@ const EntryEditor = ({
         [onValueChanged]
     );
 
+    const onNameTextBoxInitialized = React.useCallback(
+        (e: InitializedEvent) => {
+            if (nameTextBoxRef !== undefined) {
+                nameTextBoxRef.current = e.component;
+            }
+        },
+        [nameTextBoxRef]
+    );
+
     return (
         <>
             {visible && (
@@ -116,7 +127,12 @@ const EntryEditor = ({
                                     <div className="dx-field-item-label-text">{le("name")}</div>
                                 </td>
                                 <td>
-                                    <TextBox readOnly={readOnly} value={entry?.name} onValueChanged={onNameChanged} />
+                                    <TextBox //
+                                        readOnly={readOnly}
+                                        value={entry?.name}
+                                        onValueChanged={onNameChanged}
+                                        onInitialized={onNameTextBoxInitialized}
+                                    />
                                 </td>
                             </tr>
                             <tr>
@@ -124,7 +140,11 @@ const EntryEditor = ({
                                     <div className="dx-field-item-label-text">{le("domain")}</div>
                                 </td>
                                 <td>
-                                    <TextBox readOnly={readOnly} value={entry?.domain} onValueChanged={onDomainChanged} />
+                                    <TextBox //
+                                        readOnly={readOnly}
+                                        value={entry?.domain}
+                                        onValueChanged={onDomainChanged}
+                                    />
                                 </td>
                             </tr>
                             <tr>
@@ -132,7 +152,11 @@ const EntryEditor = ({
                                     <div className="dx-field-item-label-text">{le("userName")}</div>
                                 </td>
                                 <td>
-                                    <TextBox readOnly={readOnly} value={entry?.userName} onValueChanged={onUserNameChanged} />
+                                    <TextBox //
+                                        readOnly={readOnly}
+                                        value={entry?.userName}
+                                        onValueChanged={onUserNameChanged}
+                                    />
                                 </td>
                             </tr>
                             <tr>
