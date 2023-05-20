@@ -22,13 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+/**
+ * The entry / category data format for the program.
+ */
 export type DataEntry = {
+    /** The name of the entry or a category. */
     name: string;
+    /** The optional domain for the login credentials. */
     domain?: string | undefined;
+    /** The host address where the login information is to be used. */
     address?: string | undefined;
+    /** The user name for the credentials. */
     userName?: string | undefined;
+    /** The password for the login credentials. */
     password?: string | undefined;
+    /** Additional notes for the login information. */
     notes?: string | undefined;
+    /** An unique identifier for an entry or a category. */
     id: number;
+    /** In case of an entry the parent category for the entry. Otherwise -1. */
     parentId: number;
 };
