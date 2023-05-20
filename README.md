@@ -16,6 +16,32 @@ The encryption algorithm used is [AES-GCM-SIV](https://en.wikipedia.org/wiki/AES
 |The length of the encrypted data|8 bytes (64-bit) unsigned integer|
 |The encrypted data|N bytes|
 
+## The data structure within the file
+The login information data is stored as an [JSON](https://en.wikipedia.org/wiki/JSON) array to the with the following [TypeScript](https://www.typescriptlang.org) type definition:
+```typescript
+/**
+ * The entry / category data format for the program.
+ */
+export type DataEntry = {
+    /** The name of the entry or a category. */
+    name: string;
+    /** The optional domain for the login credentials. */
+    domain?: string | undefined;
+    /** The host address where the login information is to be used. */
+    address?: string | undefined;
+    /** The user name for the credentials. */
+    userName?: string | undefined;
+    /** The password for the login credentials. */
+    password?: string | undefined;
+    /** Additional notes for the login information. */
+    notes?: string | undefined;
+    /** An unique identifier for an entry or a category. */
+    id: number;
+    /** In case of an entry the parent category for the entry. Otherwise -1. */
+    parentId: number;
+};
+```
+
 # Getting started
 * Install [rust](https://www.rust-lang.org) & cargo.
 * Install [Node.js](https://nodejs.org)
