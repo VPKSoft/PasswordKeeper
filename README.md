@@ -60,10 +60,16 @@ sudo apt-get install libsoup2.4
 
 * Debug with <kbd>F5</kbd>
 
-### Todo
-See: [TODO](docs/TODO.md)
+# Why this software
+I know there are a million password manager available already. The current solution I'm using is [VeraCrypt](https://www.veracrypt.fr/code/VeraCrypt/) virtual disk with an encrypted [LibreOffice](https://www.libreoffice.org) Calc file inside the disk. This is challenging to open for a quick review and I always forget to close the file or unmount the virtual disk - feel free to use the tip though 😄
+Well, that was background noise - the reasons:
+1. Keeping it simple, see: [The KISS Princible](https://en.wikipedia.org/wiki/KISS_principle)
+2. I want to learn rust
+3. To have the code base working fully cross platform
+4. Have a simple structure with strong encryption for the file the data is stored into.
+5. Progamming is a nice hobby 🤓
 
-### Thanks to
+# Thanks to
 * [Tauri](https://tauri.app)
 * [Node.js](https://nodejs.org)
 * [React](https://react.dev)
