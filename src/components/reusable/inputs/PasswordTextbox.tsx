@@ -122,6 +122,7 @@ const PasswordTextbox = ({
                 value={value}
                 onValueChanged={onValueChanged}
                 onKeyDown={onKeyDown}
+                valueChangeEvent="keyup blur change input focusout keydown"
             />
             <Button //
                 icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}
