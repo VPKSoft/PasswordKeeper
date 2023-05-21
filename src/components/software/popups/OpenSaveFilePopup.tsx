@@ -81,6 +81,12 @@ const OpenSaveFilePopup = ({
         }
     }, [lc, mode]);
 
+    React.useEffect(() => {
+        if ((fileName ?? "").trim() !== "") {
+            setFocus();
+        }
+    }, [fileName, setFocus]);
+
     const onCloseCallback = React.useCallback(
         (userAccepted: boolean, fileName?: string, password?: string) => {
             onClose(userAccepted, fileName, password);
