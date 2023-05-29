@@ -9,12 +9,14 @@ type Props = {
     className?: string;
     title: string | (() => string);
     onClose?: () => Promise<boolean> | boolean;
+    onUserInteraction?: () => void;
 };
 
 const WindowTitle = ({
     className, //
     title,
     onClose,
+    onUserInteraction,
 }: Props) => {
     const lu = useLocalize("ui");
 
@@ -41,7 +43,14 @@ const WindowTitle = ({
     }, [title]);
 
     return (
-        <div className={classNames(WindowTitle.name, className)}>
+        <div //
+            className={classNames(WindowTitle.name, className)}
+            onMouseDown={onUserInteraction}
+            onMouseUp={onUserInteraction}
+            onMouseMove={onUserInteraction}
+            onKeyDown={onUserInteraction}
+            onKeyUp={onUserInteraction}
+        >
             <div className="titlebar-icon" id="titlebar-close">
                 <img src="./src/img/app-icon.svg" alt="close" width={32} height={32} />
             </div>

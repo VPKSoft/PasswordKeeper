@@ -27,6 +27,7 @@ import { Button, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
+import { InitializedEvent } from "devextreme/ui/popup";
 import { useLocalize } from "../../../i18n";
 import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
 import { useFocus } from "../../../hooks/UseFocus";
@@ -36,6 +37,8 @@ type Props = {
     visible: boolean;
     verifyMode?: boolean;
     initialShowPassword?: boolean;
+    showCloseButton?: boolean;
+    disableCloseViaKeyboard?: boolean;
     onClose: (userAccepted: boolean, password?: string) => void;
 };
 
@@ -44,6 +47,8 @@ const QueryPasswordPopup = ({
     visible,
     verifyMode = false,
     initialShowPassword,
+    showCloseButton,
+    disableCloseViaKeyboard = false,
     onClose,
 }: Props) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
@@ -60,17 +65,17 @@ const QueryPasswordPopup = ({
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
-                onClose(userAccepted);
+                onClose(userAccepted, userAccepted ? password1 : undefined);
             }
             setUserAccepted(false);
         },
-        [onClose, userAccepted]
+        [onClose, password1, userAccepted]
     );
 
     const onHiding = React.useCallback(() => {
-        onClose(userAccepted);
+        onClose(userAccepted, userAccepted ? password1 : undefined);
         setUserAccepted(false);
-    }, [onClose, userAccepted]);
+    }, [onClose, password1, userAccepted]);
 
     const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
         setPassword1(e.value);
@@ -91,23 +96,35 @@ const QueryPasswordPopup = ({
     const onKeyDown = React.useCallback(
         (e: KeyDownEvent) => {
             if (e.event?.key === "Escape") {
-                setUserAccepted(false);
-                onClose(false);
+                if (!disableCloseViaKeyboard) {
+                    setUserAccepted(false);
+                    onClose(false);
+                }
             } else if (e.event?.key === "Enter" && allowAccept) {
                 setUserAccepted(true);
                 onClose(true, password1);
             }
         },
-        [allowAccept, onClose, password1]
+        [allowAccept, disableCloseViaKeyboard, onClose, password1]
+    );
+
+    const onInitialized = React.useCallback(
+        (e: InitializedEvent) => {
+            if (disableCloseViaKeyboard) {
+                e.component?.registerKeyHandler("escape", () => void 0);
+            }
+        },
+        [disableCloseViaKeyboard]
     );
 
     return (
         <Popup //
             title={title}
-            showCloseButton={true}
+            showCloseButton={showCloseButton ?? true}
             visible={visible}
             onHiding={onHiding}
             onVisibleChange={onVisibleChange}
+            onInitialized={onInitialized}
             dragEnabled={true}
             resizeEnabled={true}
             height={verifyMode ? 240 : 200}

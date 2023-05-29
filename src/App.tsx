@@ -30,6 +30,7 @@ import { appWindow } from "@tauri-apps/api/window";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
+import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
@@ -48,6 +49,9 @@ import ConfirmPopup from "./components/software/popups/ConfirmPopup";
 import PreferencesPopup from "./components/software/popups/PreferencesPopup";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
 import AboutPopup from "./components/software/popups/AboutPopup";
+import LockScreenOverlay from "./components/reusable/LockScreenOverlay";
+import QueryPasswordPopup from "./components/software/popups/QueryPasswordPopup";
+import useTimeout, { TimeInterval } from "./hooks/UseTimeout";
 
 type Props = {
     className?: string;
@@ -73,22 +77,55 @@ const App = ({ className }: Props) => {
     const [preferencesVisible, setPreferencesVisible] = React.useState(false);
     const [aboutVisible, setAboutVisible] = React.useState(false);
     const [settingsLoaded, setSettingsLoaded] = React.useState(false);
+    const [viewLocked, setViewLocked] = React.useState(false);
+    const [lockPasswordQueryVisible, setLockPasswordQueryVisible] = React.useState(false);
+    const [timeOut, setTimeOut] = React.useState(10);
+    const treeListRef = React.useRef<dxTreeList>();
+
+    // A call back to lock the main window and close the popups if any.
+    const onViewLockTimeout = React.useCallback(() => {
+        setViewLocked(true);
+        // Hide the entry editor to hide sensitive data.
+        setEditEntry(null);
+        setEntry(null);
+
+        // Hide the dialogs.
+        setFileSaveOpenQueryOpen(false);
+        setDialogVisible(false);
+        setAboutVisible(false);
+        setLockPasswordQueryVisible(false);
+
+        // Collapse the tree. The categories are allowed to show.
+        collapseTree(treeListRef?.current);
+    }, []);
+
+    const [setTimeoutEnabled, resetTimeOut] = useTimeout(timeOut, onViewLockTimeout, TimeInterval.Minutes);
 
     const settingsRef = React.useRef<Settings>();
 
     const [isNewFile, setIsNewFile] = React.useState(true);
 
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
+
+    const applySettings = React.useCallback(
+        (value: Settings) => {
+            settingsRef.current = value;
+            setTheme(value.dx_theme);
+            setLocale((value.locale ?? "en") as Locales);
+            setTimeoutEnabled(value.lock_timeout > 0);
+            setTimeOut(value.lock_timeout);
+            setSettingsLoaded(true);
+        },
+        [setTimeoutEnabled]
+    );
+
     React.useEffect(() => {
         void loadSettings().then(f => {
             if (f) {
-                settingsRef.current = f;
-                setTheme(f.dx_theme);
-                setLocale((f.locale ?? "en") as Locales);
-                setSettingsLoaded(true);
+                applySettings(f);
             }
         });
-    }, []);
+    }, [applySettings, setTimeoutEnabled]);
 
     const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
@@ -284,9 +321,7 @@ const App = ({ className }: Props) => {
             if (userAccepted && settings) {
                 saveSettings(settings).then(f => {
                     if (f) {
-                        settingsRef.current = settings;
-                        setTheme(settings.dx_theme);
-                        setLocale(settings.locale as Locales);
+                        applySettings(settings);
                         if (fileChanged) {
                             notify({ message: ls("themeChangeFailFileUnsaved"), width: 300, shading: true, displayTime: 5_000, type: "warning" }, { position: "bottom center", direction: "up-push" });
                             notify({ message: ls("saveSuccess"), width: 300, shading: true, displayTime: 5_000, type: "success" }, { position: "bottom center", direction: "up-push" });
@@ -301,7 +336,7 @@ const App = ({ className }: Props) => {
             }
             setPreferencesVisible(false);
         },
-        [fileChanged, ls]
+        [applySettings, fileChanged, ls]
     );
 
     const aboutShowClick = React.useCallback(() => {
@@ -312,31 +347,67 @@ const App = ({ className }: Props) => {
         setAboutVisible(false);
     }, []);
 
+    const lockOverlayClick = React.useCallback(() => {
+        if (isNewFile) {
+            setViewLocked(false);
+        } else {
+            setLockPasswordQueryVisible(true);
+            setViewLocked(false);
+        }
+    }, [isNewFile]);
+
+    const queryUnlockPassword = React.useCallback(
+        (userAccepted: boolean, password?: string) => {
+            setLockPasswordQueryVisible(false);
+            if (userAccepted) {
+                if (password === getFilePassword()) {
+                    setViewLocked(false);
+                } else {
+                    setViewLocked(true);
+                }
+            } else {
+                setViewLocked(true);
+            }
+        },
+        [getFilePassword]
+    );
+
     if (!settingsLoaded) {
         return null;
     }
 
     return (
         <>
-            <StyledTitle title={title} onClose={fileSaveQueryAbortCloseCallback} />
-
-            <div className={classNames(App.name, className)}>
-                <AppMenuToolbar //
-                    entry={entry ?? undefined}
-                    saveFileClick={saveFileCallback}
-                    saveFileAsClick={saveFileAsCallback}
-                    loadFileClick={loadFileCallback}
-                    editClick={onEditClick}
-                    addClick={addItem}
-                    addCategoryClick={addCategoryClick}
-                    newFileClick={newClick}
-                    settingsClick={settingsClick}
-                    exitClick={exitClick}
-                    deleteClick={deleteClick}
-                    aboutShowClick={aboutShowClick}
-                />
-                <div className="App-itemsView">
+            <StyledTitle //
+                title={title}
+                onClose={fileSaveQueryAbortCloseCallback}
+                onUserInteraction={resetTimeOut}
+            />
+            <AppMenuToolbar //
+                entry={entry ?? undefined}
+                saveFileClick={saveFileCallback}
+                saveFileAsClick={saveFileAsCallback}
+                loadFileClick={loadFileCallback}
+                editClick={onEditClick}
+                addClick={addItem}
+                addCategoryClick={addCategoryClick}
+                newFileClick={newClick}
+                settingsClick={settingsClick}
+                exitClick={exitClick}
+                deleteClick={deleteClick}
+                aboutShowClick={aboutShowClick}
+            />
+            <div //
+                className={classNames(App.name, className)}
+                onMouseDown={resetTimeOut}
+                onMouseUp={resetTimeOut}
+                onMouseMove={resetTimeOut}
+                onKeyDown={resetTimeOut}
+                onKeyUp={resetTimeOut}
+            >
+                <div id="mainView" className="App-itemsView">
                     <PasswordList //
+                        treeListRef={treeListRef}
                         dataSource={dataSource}
                         setDataSource={setDataSource}
                         className="App-itemsView-list"
@@ -391,9 +462,34 @@ const App = ({ className }: Props) => {
                     visible={aboutVisible}
                     onClose={aboutClose}
                 />
+                <LockScreenOverlay //
+                    lockText={lm("programLockedClickToUnlock")}
+                    onClick={lockOverlayClick}
+                    visible={viewLocked}
+                />
+                {lockPasswordQueryVisible && (
+                    <QueryPasswordPopup //
+                        showCloseButton={false}
+                        verifyMode={false}
+                        initialShowPassword={false}
+                        onClose={queryUnlockPassword}
+                        visible={lockPasswordQueryVisible}
+                        disableCloseViaKeyboard={true}
+                    />
+                )}
             </div>
         </>
     );
+};
+
+const collapseTree = (tree: dxTreeList | undefined) => {
+    if (tree) {
+        tree.forEachNode((f: Node<DataEntry>) => {
+            if (f.data?.parentId === -1) {
+                tree.collapseRow(f.key);
+            }
+        });
+    }
 };
 
 export default styled(App)`
@@ -406,7 +502,7 @@ export default styled(App)`
         height: 100%;
         width: 100%;
         flex-direction row;
-        min-height: 0;
+        min-height: 0px;
     }
     .App-PasswordEntryEditor {
         width: 60%;
@@ -414,5 +510,5 @@ export default styled(App)`
     }
     .App-itemsView-list {
         width: 40%;
-    }
+    }    
 `;
