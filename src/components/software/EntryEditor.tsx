@@ -198,6 +198,6 @@ export default styled(EntryEditor)`
         margin-bottom: 10px;
         width: 100%;
         height: 100%;
-        min-height: 0;
+        min-height: 0px;
     }
 `;

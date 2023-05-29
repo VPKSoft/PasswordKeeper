@@ -3,5 +3,6 @@
     "theme": "Teema",
     "saveFailed": "Asetusten tallennus epäonnistui.",
     "saveSuccess": "Asetukset tallennettiin onnistuneesti.",
-    "themeChangeFailFileUnsaved": "Teeman vaihto ei onnistunut koska tiedostossa on tallentamattomia muutoksia ja sovelluksen uudelleenlataus olisi kadottanut ne."
+    "themeChangeFailFileUnsaved": "Teeman vaihto ei onnistunut koska tiedostossa on tallentamattomia muutoksia ja sovelluksen uudelleenlataus olisi kadottanut ne.",
+    "lockTimeoutMinutes": "Lukituksen aikakatkaisu (minuuttia)"
 }

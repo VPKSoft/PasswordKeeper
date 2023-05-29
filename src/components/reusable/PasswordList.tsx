@@ -2,7 +2,7 @@ import * as React from "react";
 import applyChanges from "devextreme/data/apply_changes";
 import { TreeList } from "devextreme-react";
 import { Column, FilterRow, RowDragging, Selection } from "devextreme-react/tree-list";
-import { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent } from "devextreme/ui/tree_list";
+import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent, InitializedEvent } from "devextreme/ui/tree_list";
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
 
@@ -13,6 +13,7 @@ import { DataEntry } from "../../types/PasswordEntry";
 type Props = {
     className?: string;
     dataSource: DataEntry[];
+    treeListRef?: React.MutableRefObject<dxTreeList | undefined>;
     setEntry: (value: DataEntry | null) => void;
     setDataSource: (datasource: DataEntry[]) => void;
 };
@@ -20,6 +21,7 @@ type Props = {
 const PasswordList = ({
     className, //
     dataSource,
+    treeListRef,
     setEntry,
     setDataSource,
 }: Props) => {
@@ -52,6 +54,16 @@ const PasswordList = ({
         [dataSource, setDataSource]
     );
 
+    // Save the ref for the tree list.
+    const onInitialized = React.useCallback(
+        (e: InitializedEvent) => {
+            if (treeListRef) {
+                treeListRef.current = e.component;
+            }
+        },
+        [treeListRef]
+    );
+
     return (
         <TreeList //
             className={classNames(PasswordList.name, className)}
@@ -60,6 +72,7 @@ const PasswordList = ({
             keyExpr="id"
             parentIdExpr="parentId"
             rootValue={-1}
+            onInitialized={onInitialized}
             showRowLines={true}
             showBorders={true}
             onSelectionChanged={onSelectionChanged}

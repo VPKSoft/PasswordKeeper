@@ -3,5 +3,6 @@
     "theme": "Theme",
     "saveFailed": "Failed to save the settings.",
     "saveSuccess": "Settings were saved successfully.",
-    "themeChangeFailFileUnsaved": "Theme change didn't succeed as the unsaved changes to the file would have been lost in case of application reload."
+    "themeChangeFailFileUnsaved": "Theme change didn't succeed as the unsaved changes to the file would have been lost in case of application reload.",
+    "lockTimeoutMinutes": "Lock timeout (minutes)"
 }

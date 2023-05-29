@@ -5,6 +5,7 @@ pub struct AppConfig {
     window_pos: (u32, u32),
     dx_theme: String,
     locale: String,
+    lock_timeout: u32,
 }
 
 impl ::std::default::Default for AppConfig {
@@ -13,6 +14,7 @@ impl ::std::default::Default for AppConfig {
             window_pos: (320, 280),
             dx_theme: "generic.carmine".to_string(),
             locale: "en".to_string(),
+            lock_timeout: 10,
         }
     }
 }

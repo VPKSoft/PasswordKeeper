@@ -112,10 +112,9 @@ const AppMenuToolbar = ({
     );
 
     return (
-        <>
+        <div className={classNames(AppMenuToolbar.name, className)}>
             <AppMenu onItemClick={onItemClick} entry={entry} />
             <AppToolbar //
-                className={classNames(AppToolbar.name, className)}
                 entry={entry}
                 saveFileClick={saveFileClick}
                 saveFileAsClick={saveFileAsClick}
@@ -126,10 +125,13 @@ const AppMenuToolbar = ({
                 deleteClick={deleteClick}
                 testClick={testClick}
             />
-        </>
+        </div>
     );
 };
 
 export default styled(AppMenuToolbar)`
-    // Style here
+    display: flex;
+    flex-direction: column;
+    min-height: 0px;
+    margin-bottom: 10px;
 `;

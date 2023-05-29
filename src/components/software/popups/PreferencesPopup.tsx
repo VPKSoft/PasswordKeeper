@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Lookup, Popup } from "devextreme-react";
+import { Button, Lookup, NumberBox, Popup } from "devextreme-react";
 import styled from "styled-components";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/lookup";
@@ -93,6 +93,13 @@ const PreferencesPopup = ({
         [settings]
     );
 
+    const setLockTimeout = React.useCallback(
+        (value: number) => {
+            setSettingsInternal({ ...settings, lock_timeout: value });
+        },
+        [settings]
+    );
+
     return (
         <Popup //
             title={title}
@@ -102,7 +109,7 @@ const PreferencesPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={240}
+            height={280}
             width={600}
             showTitle={true}
         >
@@ -123,6 +130,14 @@ const PreferencesPopup = ({
                             </td>
                             <td>
                                 <Lookup dataSource={currentLocales} displayExpr="name" valueExpr="code" value={settingsInternal?.locale} onValueChanged={onLocaleValueChanged} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div className="dx-field-item-label-text">{ls("lockTimeoutMinutes")}</div>
+                            </td>
+                            <td>
+                                <NumberBox value={settings.lock_timeout} min={0} max={120} onValueChange={setLockTimeout} showSpinButtons={true} />
                             </td>
                         </tr>
                     </tbody>

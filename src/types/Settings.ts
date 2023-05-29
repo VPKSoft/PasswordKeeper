@@ -29,6 +29,7 @@ export type Settings = {
     dx_theme: DxThemeNames;
     window_pos: Array<number>;
     locale: string;
+    lock_timeout: number;
 };
 
 const loadSettings = async () => {

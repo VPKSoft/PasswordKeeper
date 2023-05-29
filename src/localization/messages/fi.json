@@ -4,5 +4,6 @@
     "queryDeleteEntry": "Poistetaanko merkintä '{{entry}}'?",
     "queryDeleteCategory": "Poistetaanko kategoria '{{category}}'? Kaikki sen sisältämät merkinnät poistetaan myös.",
     "fileChangedTitle": "Tiedosto on muuttunut",
-    "fileChangedSaveQuery": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?"
+    "fileChangedSaveQuery": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?",
+    "programLockedClickToUnlock": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus."
 }

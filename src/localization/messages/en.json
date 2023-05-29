@@ -4,5 +4,6 @@
     "queryDeleteCategory": "Delete category '{{category}}'? All the contained entries will be deleted as well.",
     "queryDeleteEntry": "Delete entry '{{entry}}'?",
     "fileChangedSaveQuery": "File '{{file}}'' has been changed. Do you want to save the changes?",
-    "fileChangedTitle": "File has been changed"
+    "fileChangedTitle": "File has been changed",
+    "programLockedClickToUnlock": "The program is locked. Click the view to unlock."
 }
