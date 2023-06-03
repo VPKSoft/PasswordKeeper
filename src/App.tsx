@@ -531,8 +531,7 @@ const collapseTree = (tree: dxTreeList | undefined) => {
 export default styled(App)`
     height: 100%;
     width: 100%;
-    display: flex;
-    flex-direction column;
+    display: contents;    
     .App-itemsView {
         display: flex;
         height: 100%;

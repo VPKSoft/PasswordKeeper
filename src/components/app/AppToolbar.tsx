@@ -132,4 +132,6 @@ const AppToolbar = ({
     );
 };
 
-export default styled(AppToolbar)``;
+export default styled(AppToolbar)`
+    // Add style here
+`;
