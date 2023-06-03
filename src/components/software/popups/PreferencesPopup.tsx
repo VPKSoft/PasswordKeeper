@@ -100,6 +100,13 @@ const PreferencesPopup = ({
         [settings]
     );
 
+    const setFailedUnlockCount = React.useCallback(
+        (value: number) => {
+            setSettingsInternal({ ...settings, failed_unlock_attempts: value });
+        },
+        [settings]
+    );
+
     return (
         <Popup //
             title={title}
@@ -109,7 +116,7 @@ const PreferencesPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={280}
+            height={320}
             width={600}
             showTitle={true}
         >
@@ -138,6 +145,14 @@ const PreferencesPopup = ({
                             </td>
                             <td>
                                 <NumberBox value={settings.lock_timeout} min={0} max={120} onValueChange={setLockTimeout} showSpinButtons={true} />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div className="dx-field-item-label-text">{ls("failedUnlockExitCount")}</div>
+                            </td>
+                            <td>
+                                <NumberBox value={settings.failed_unlock_attempts} min={0} max={20} onValueChange={setFailedUnlockCount} showSpinButtons={true} />
                             </td>
                         </tr>
                     </tbody>

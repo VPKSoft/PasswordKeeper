@@ -66,7 +66,7 @@ const selectFileToOpen = async (extensionName: string, extension = "pkd") => {
  * @returns The user specified file name as string or null if the dialog was canceled.
  */
 const selectFileToSave = async (extensionName: string, extension = "pkd") => {
-    const filePath = await save({
+    let filePath = await save({
         filters: [
             {
                 name: extensionName,
@@ -74,6 +74,12 @@ const selectFileToSave = async (extensionName: string, extension = "pkd") => {
             },
         ],
     });
+
+    // Add the extension to the file name in case the save file dialog didn't add it
+    // automatically.
+    if (filePath && extension.trim() !== "" && !filePath.endsWith(extension)) {
+        filePath = filePath + `.${extension}`;
+    }
 
     return filePath as string | null;
 };

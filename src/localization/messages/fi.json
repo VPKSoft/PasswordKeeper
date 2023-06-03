@@ -5,5 +5,6 @@
     "queryDeleteCategory": "Poistetaanko kategoria '{{category}}'? Kaikki sen sisältämät merkinnät poistetaan myös.",
     "fileChangedTitle": "Tiedosto on muuttunut",
     "fileChangedSaveQuery": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?",
-    "programLockedClickToUnlock": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus."
+    "programLockedClickToUnlock": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus.",
+    "passwordFailLockWarning": "Virheellinen salasana. Ohjelma lopetetaan {{lockAfter}} virheellisen yrityksen jälkeen."
 }

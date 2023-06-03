@@ -6,6 +6,7 @@ pub struct AppConfig {
     dx_theme: String,
     locale: String,
     lock_timeout: u32,
+    failed_unlock_attempts: u32,
 }
 
 impl ::std::default::Default for AppConfig {
@@ -15,6 +16,7 @@ impl ::std::default::Default for AppConfig {
             dx_theme: "generic.carmine".to_string(),
             locale: "en".to_string(),
             lock_timeout: 10,
+            failed_unlock_attempts: 10,
         }
     }
 }

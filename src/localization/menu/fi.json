@@ -12,5 +12,6 @@
     "menuFile": "Tiedosto",
     "menuItems": "Merkinnät",
     "fileSave": "Tallenna",
-    "about": "Tietoja"
+    "about": "Tietoja",
+    "lockView": "Lukitse näkymä"
 }

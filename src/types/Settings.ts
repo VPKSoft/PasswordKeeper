@@ -30,6 +30,7 @@ export type Settings = {
     window_pos: Array<number>;
     locale: string;
     lock_timeout: number;
+    failed_unlock_attempts: number;
 };
 
 const loadSettings = async () => {

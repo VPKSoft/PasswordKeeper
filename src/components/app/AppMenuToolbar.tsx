@@ -51,6 +51,7 @@ const AppMenuToolbar = ({
     newFileClick,
     settingsClick,
     aboutShowClick,
+    lockViewClick,
     testClick,
 }: Props) => {
     const onItemClick = React.useCallback(
@@ -123,6 +124,7 @@ const AppMenuToolbar = ({
                 addClick={addClick}
                 addCategoryClick={addCategoryClick}
                 deleteClick={deleteClick}
+                lockViewClick={lockViewClick}
                 testClick={testClick}
             />
         </div>

@@ -5,5 +5,6 @@
     "queryDeleteEntry": "Delete entry '{{entry}}'?",
     "fileChangedSaveQuery": "File '{{file}}'' has been changed. Do you want to save the changes?",
     "fileChangedTitle": "File has been changed",
-    "programLockedClickToUnlock": "The program is locked. Click the view to unlock."
+    "programLockedClickToUnlock": "The program is locked. Click the view to unlock.",
+    "passwordFailLockWarning": "Invalid password. The software will exit after {{lockAfter}} failed attempts."
 }

@@ -80,6 +80,8 @@ const App = ({ className }: Props) => {
     const [viewLocked, setViewLocked] = React.useState(false);
     const [lockPasswordQueryVisible, setLockPasswordQueryVisible] = React.useState(false);
     const [timeOut, setTimeOut] = React.useState(10);
+    const [passwordFailedCount, setPasswordFailedCount] = React.useState(0);
+
     const treeListRef = React.useRef<dxTreeList>();
 
     // A call back to lock the main window and close the popups if any.
@@ -94,6 +96,7 @@ const App = ({ className }: Props) => {
         setDialogVisible(false);
         setAboutVisible(false);
         setLockPasswordQueryVisible(false);
+        setPreferencesVisible(false);
 
         // Collapse the tree. The categories are allowed to show.
         collapseTree(treeListRef?.current);
@@ -209,6 +212,7 @@ const App = ({ className }: Props) => {
         [dataSource]
     );
 
+    // The user requested to edit a selected entry or category. Set the editor visible.
     const onEditClick = React.useCallback(() => {
         if (entry) {
             setEditEntry({ ...entry });
@@ -222,11 +226,34 @@ const App = ({ className }: Props) => {
         }
     }, [entry]);
 
+    // Memoize the application title based on the current file and whether it is changed.
     const title = React.useMemo(() => {
         const fileChangeIndicator = fileChanged ? " *" : "";
         return currentFile === undefined ? "Password Keeper" : `Password Keeper [${currentFile}${fileChangeIndicator}]`;
     }, [currentFile, fileChanged]);
 
+    // Increase the failed password count, display a warning message and close the program
+    // if the failed password counter reached its predefined limit.
+    const increaseFileLockFail = React.useCallback(() => {
+        // If the setting is disabled, do nothing.
+        if ((settingsRef.current?.failed_unlock_attempts ?? 0) === 0) {
+            return;
+        }
+
+        const failed = passwordFailedCount + 1;
+        setPasswordFailedCount(failed);
+        const lockAfter = (settingsRef.current?.failed_unlock_attempts ?? 0) - failed;
+        if (lockAfter > 0) {
+            // Notify about the erroneous password.
+            notify(lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), "warning", 5_000);
+        } else {
+            // The count exceeded, exit the software.
+            exit(0);
+        }
+    }, [lm, passwordFailedCount]);
+
+    // The file popup was closed. If the user accepted the popup.
+    // Depending on the popup mode and user input either open an existing file or save new file.
     const filePopupClose = React.useCallback(
         (userAccepted: boolean, fileName?: string, password?: string) => {
             if (userAccepted === true && fileName !== undefined && password !== undefined) {
@@ -238,8 +265,10 @@ const App = ({ className }: Props) => {
                             setCurrentFile(fileName);
                             setFileChanged(false);
                             setIsNewFile(false);
+                            setPasswordFailedCount(0);
                         } else {
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            increaseFileLockFail();
                         }
                     });
                 } else if (filePopupMode === FileQueryMode.SaveAs) {
@@ -257,7 +286,7 @@ const App = ({ className }: Props) => {
             }
             setFileSaveOpenQueryOpen(false);
         },
-        [dataSource, filePopupMode, lm, setFilePassword]
+        [dataSource, filePopupMode, increaseFileLockFail, lm, setFilePassword]
     );
 
     const exitClick = React.useCallback(() => {
@@ -356,20 +385,26 @@ const App = ({ className }: Props) => {
         }
     }, [isNewFile]);
 
+    const lockViewClick = React.useCallback(() => {
+        setViewLocked(true);
+    }, []);
+
     const queryUnlockPassword = React.useCallback(
         (userAccepted: boolean, password?: string) => {
             setLockPasswordQueryVisible(false);
             if (userAccepted) {
                 if (password === getFilePassword()) {
                     setViewLocked(false);
+                    setPasswordFailedCount(0);
                 } else {
+                    increaseFileLockFail();
                     setViewLocked(true);
                 }
             } else {
                 setViewLocked(true);
             }
         },
-        [getFilePassword]
+        [getFilePassword, increaseFileLockFail]
     );
 
     if (!settingsLoaded) {
@@ -395,6 +430,7 @@ const App = ({ className }: Props) => {
                 settingsClick={settingsClick}
                 exitClick={exitClick}
                 deleteClick={deleteClick}
+                lockViewClick={lockViewClick}
                 aboutShowClick={aboutShowClick}
             />
             <div //

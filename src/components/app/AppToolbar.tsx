@@ -40,6 +40,7 @@ export type ToolBarProps = {
     addClick: () => void;
     addCategoryClick: () => void;
     deleteClick: () => void;
+    lockViewClick: () => void;
     testClick?: () => void;
 };
 
@@ -53,6 +54,7 @@ const AppToolbar = ({
     addClick,
     addCategoryClick,
     deleteClick,
+    lockViewClick,
     testClick,
 }: ToolBarProps) => {
     const lm = useLocalize("menu");
@@ -108,6 +110,13 @@ const AppToolbar = ({
                     icon="folder"
                     onClick={loadFileClick}
                     hint={lm("fileOpen")}
+                />
+            </ToolbarItem>
+            <ToolbarItem location="before">
+                <Button //
+                    icon="lock"
+                    onClick={lockViewClick}
+                    hint={lm("lockView")}
                 />
             </ToolbarItem>
             {testClick && (
