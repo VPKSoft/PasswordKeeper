@@ -13,5 +13,6 @@
     "menuItems": "Items",
     "fileSave": "Save",
     "about": "About",
-    "lockView": "Lock view"
+    "lockView": "Lock view",
+    "fileClose": "Close file"
 }

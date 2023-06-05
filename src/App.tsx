@@ -58,6 +58,7 @@ type Props = {
 };
 
 const App = ({ className }: Props) => {
+    // The i18next localization hooks.
     const la = useLocalize("app");
     const lm = useLocalize("messages");
     const ls = useLocalize("settings");
@@ -81,8 +82,15 @@ const App = ({ className }: Props) => {
     const [lockPasswordQueryVisible, setLockPasswordQueryVisible] = React.useState(false);
     const [timeOut, setTimeOut] = React.useState(10);
     const [passwordFailedCount, setPasswordFailedCount] = React.useState(0);
+    const [saveChangedFileQueryVisible, setSaveChangedFileQueryVisible] = React.useState(false);
+    const [fileCloseRequested, setFileCloseRequested] = React.useState(false);
+    const [isNewFile, setIsNewFile] = React.useState(true);
 
     const treeListRef = React.useRef<dxTreeList>();
+    const settingsRef = React.useRef<Settings>();
+
+    // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
+    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
 
     // A call back to lock the main window and close the popups if any.
     const onViewLockTimeout = React.useCallback(() => {
@@ -104,12 +112,19 @@ const App = ({ className }: Props) => {
 
     const [setTimeoutEnabled, resetTimeOut] = useTimeout(timeOut, onViewLockTimeout, TimeInterval.Minutes);
 
-    const settingsRef = React.useRef<Settings>();
+    // The file was requested to be closed. If the file has changes display a query popup
+    // for to select the action what to do with the changes, otherwise just reload the view.
+    const closeFile = React.useCallback(() => {
+        setFileCloseRequested(true);
+        if (fileChanged) {
+            setSaveChangedFileQueryVisible(true);
+            return;
+        }
+        // Reloading the window will do the same as re-setting multiple state variables.
+        window.location.reload();
+    }, [fileChanged]);
 
-    const [isNewFile, setIsNewFile] = React.useState(true);
-
-    const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
-
+    // Applies the specified settings for the program to use. E.g. update required state variables.
     const applySettings = React.useCallback(
         (value: Settings) => {
             settingsRef.current = value;
@@ -122,13 +137,15 @@ const App = ({ className }: Props) => {
         [setTimeoutEnabled]
     );
 
+    // Load the settings from the setting file.
     React.useEffect(() => {
         void loadSettings().then(f => {
             if (f) {
+                // Apply the loaded settings.
                 applySettings(f);
             }
         });
-    }, [applySettings, setTimeoutEnabled]);
+    }, [applySettings]);
 
     const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
@@ -145,13 +162,18 @@ const App = ({ className }: Props) => {
                     if (f.ok) {
                         setCurrentFile(f.fileName);
                         setFileChanged(false);
+                        if (fileCloseRequested) {
+                            // File was requested to be closed after saving,
+                            // reloading the window will do the same as re-setting multiple state variables.
+                            window.location.reload();
+                        }
                     } else {
                         notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                     }
                 });
             }
         }
-    }, [currentFile, dataSource, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+    }, [currentFile, dataSource, fileCloseRequested, getFilePassword, isNewFile, lm, saveFileAsCallback]);
 
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
         if (fileChanged) {
@@ -278,6 +300,12 @@ const App = ({ className }: Props) => {
                             setCurrentFile(fileName);
                             setIsNewFile(false);
                             setFileChanged(false);
+
+                            if (fileCloseRequested) {
+                                // File was requested to be closed after saving,
+                                // reloading the window will do the same as re-setting multiple state variables.
+                                window.location.reload();
+                            }
                         } else {
                             notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                         }
@@ -286,7 +314,7 @@ const App = ({ className }: Props) => {
             }
             setFileSaveOpenQueryOpen(false);
         },
-        [dataSource, filePopupMode, increaseFileLockFail, lm, setFilePassword]
+        [dataSource, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, setFilePassword]
     );
 
     const exitClick = React.useCallback(() => {
@@ -345,6 +373,22 @@ const App = ({ className }: Props) => {
         [dataSource, entry]
     );
 
+    const queryFileChangesPopupClosed = React.useCallback(
+        (e: DialogResult) => {
+            setSaveChangedFileQueryVisible(false);
+            if (e === DialogResult.Yes) {
+                saveFileCallback();
+            } else if (e === DialogResult.Cancel) {
+                setSaveChangedFileQueryVisible(false);
+                setFileCloseRequested(false);
+            } else {
+                // Reloading the window will do the same as re-setting multiple state variables.
+                window.location.reload();
+            }
+        },
+        [saveFileCallback]
+    );
+
     const preferencesClose = React.useCallback(
         (userAccepted: boolean, settings?: Settings) => {
             if (userAccepted && settings) {
@@ -355,6 +399,7 @@ const App = ({ className }: Props) => {
                             notify({ message: ls("themeChangeFailFileUnsaved"), width: 300, shading: true, displayTime: 5_000, type: "warning" }, { position: "bottom center", direction: "up-push" });
                             notify({ message: ls("saveSuccess"), width: 300, shading: true, displayTime: 5_000, type: "success" }, { position: "bottom center", direction: "up-push" });
                         } else {
+                            // The theme change requires a window reload.
                             window.location.reload();
                             notify(ls("saveSuccess"), "success", 5_000);
                         }
@@ -432,6 +477,7 @@ const App = ({ className }: Props) => {
                 deleteClick={deleteClick}
                 lockViewClick={lockViewClick}
                 aboutShowClick={aboutShowClick}
+                fileCloseClick={closeFile}
             />
             <div //
                 className={classNames(App.name, className)}
@@ -486,6 +532,13 @@ const App = ({ className }: Props) => {
                     message={deleteQueryMessage}
                     buttons={DialogButtons.Yes | DialogButtons.No}
                     onClose={deleteCategoryOrEntry}
+                />
+                <ConfirmPopup //
+                    visible={saveChangedFileQueryVisible}
+                    mode={PopupType.Confirm}
+                    message={lm("fileChangedSaveQuery", undefined, { file: currentFile })}
+                    buttons={DialogButtons.Yes | DialogButtons.No | DialogButtons.Cancel}
+                    onClose={queryFileChangesPopupClosed}
                 />
                 {settingsRef.current && (
                     <PreferencesPopup //
