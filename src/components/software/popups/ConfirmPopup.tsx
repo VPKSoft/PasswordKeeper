@@ -49,6 +49,7 @@ const ConfirmPopup = ({
     onClose,
 }: Props) => {
     const lc = useLocalize("common");
+    const hideViaButton = React.useRef(false);
 
     const title = React.useMemo(() => {
         if (overrideTitle) {
@@ -71,11 +72,30 @@ const ConfirmPopup = ({
         }
     }, [lc, mode, overrideTitle]);
 
+    // This is called when the popup is closed.
     const onHiding = React.useCallback(() => {
-        if (visible) {
+        if (visible && !hideViaButton.current) {
+            // Only call the onClose callback to indicate cancel if the ref
+            // is not indicating that the dialog was not hidden via a button click.
+            // E.g. the X on the upper right was clicked.
             onClose(DialogResult.Cancel);
         }
+        hideViaButton.current = false;
     }, [onClose, visible]);
+
+    // Close the dialog with the specified result.
+    const onCloseCallback = React.useCallback(
+        (result: DialogResult) => {
+            // Set the ref to indicate that the
+            // dialog was closed via a button to avoid double-callback
+            // from the hiding event.
+            hideViaButton.current = true;
+
+            // Call the actual close callback.
+            onClose(result);
+        },
+        [onClose]
+    );
 
     return (
         <Popup //
@@ -95,19 +115,19 @@ const ConfirmPopup = ({
                     {(buttons & DialogButtons.Yes) === DialogButtons.Yes && (
                         <Button //
                             text={lc("yes")}
-                            onClick={() => onClose(DialogResult.Yes)}
+                            onClick={() => onCloseCallback(DialogResult.Yes)}
                         />
                     )}
                     {(buttons & DialogButtons.No) === DialogButtons.No && (
                         <Button //
                             text={lc("no")}
-                            onClick={() => onClose(DialogResult.No)}
+                            onClick={() => onCloseCallback(DialogResult.No)}
                         />
                     )}
                     {(buttons & DialogButtons.Cancel) === DialogButtons.Cancel && (
                         <Button //
                             text={lc("cancel")}
-                            onClick={() => onClose(DialogResult.Cancel)}
+                            onClick={() => onCloseCallback(DialogResult.Cancel)}
                         />
                     )}
                 </div>
@@ -128,5 +148,6 @@ export default styled(ConfirmPopup)`
         width: 100%;
         flex-direction: row;
         justify-content: flex-end;
+        gap: 10px;
     }
 `;

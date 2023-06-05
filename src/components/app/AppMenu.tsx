@@ -30,7 +30,7 @@ import { ItemClickEvent } from "devextreme/ui/menu";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 
-const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about"] as const;
+const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close"] as const;
 type ActionNames = (typeof ActionValues)[number];
 
 type MenuData = {
@@ -63,19 +63,25 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                 },
                 {
                     id: "1_3",
+                    name: localize("fileClose"),
+                    actionName: "close",
+                    icon: "fas fa-file-circle-xmark",
+                },
+                {
+                    id: "1_4",
                     name: localize("fileSave"),
                     actionName: "save",
                     icon: "save",
                 },
                 {
-                    id: "1_3",
+                    id: "1_5",
                     name: localize("fileSaveAs"),
                     actionName: "saveas",
                     icon: "fas fa-floppy-disk",
                 },
                 {
                     beginGroup: true,
-                    id: "1_5",
+                    id: "1_6",
                     name: localize("appExit"),
                     actionName: "exit",
                     icon: "fas fa-door-open",

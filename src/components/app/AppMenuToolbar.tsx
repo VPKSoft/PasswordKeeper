@@ -35,6 +35,7 @@ type Props = Omit<AppMenuProps, "onItemClick"> &
         newFileClick: () => void;
         settingsClick: () => void;
         aboutShowClick: () => void;
+        fileCloseClick: () => void;
     };
 
 const AppMenuToolbar = ({
@@ -52,6 +53,7 @@ const AppMenuToolbar = ({
     settingsClick,
     aboutShowClick,
     lockViewClick,
+    fileCloseClick,
     testClick,
 }: Props) => {
     const onItemClick = React.useCallback(
@@ -103,13 +105,30 @@ const AppMenuToolbar = ({
                     aboutShowClick();
                     break;
                 }
+                case "close": {
+                    fileCloseClick();
+                    break;
+                }
 
                 default: {
                     break;
                 }
             }
         },
-        [aboutShowClick, addCategoryClick, addClick, deleteClick, editClick, exitClick, loadFileClick, newFileClick, saveFileAsClick, saveFileClick, settingsClick]
+        [
+            aboutShowClick, //
+            addCategoryClick,
+            addClick,
+            deleteClick,
+            editClick,
+            exitClick,
+            fileCloseClick,
+            loadFileClick,
+            newFileClick,
+            saveFileAsClick,
+            saveFileClick,
+            settingsClick,
+        ]
     );
 
     return (
