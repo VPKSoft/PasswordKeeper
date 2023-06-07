@@ -147,17 +147,22 @@ const App = ({ className }: Props) => {
         });
     }, [applySettings]);
 
+    // Save the file "as new".
     const saveFileAsCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.SaveAs);
         setFileSaveOpenQueryOpen(true);
     }, []);
 
+    // A file save was requested. Either save the file as new or override existing file.
     const saveFileCallback = React.useCallback(async () => {
         if (isNewFile) {
+            // The file is a new one. It must be saved as.
             saveFileAsCallback();
         } else {
+            // Retrieve the file password from the secure store so the file can be saved.
             const password = getFilePassword();
             if (currentFile && password) {
+                // Save the file with the current file name and the current password.
                 saveFile(dataSource, password, currentFile).then(f => {
                     if (f.ok) {
                         setCurrentFile(f.fileName);
@@ -168,6 +173,7 @@ const App = ({ className }: Props) => {
                             window.location.reload();
                         }
                     } else {
+                        // Something went wrong with the file save. Display the error message.
                         notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                     }
                 });
@@ -175,6 +181,7 @@ const App = ({ className }: Props) => {
         }
     }, [currentFile, dataSource, fileCloseRequested, getFilePassword, isNewFile, lm, saveFileAsCallback]);
 
+    // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
         if (fileChanged) {
             let result = false;
