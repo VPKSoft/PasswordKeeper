@@ -93,7 +93,6 @@ const QueryPasswordPopup = ({
         return password1 !== "";
     }, [password1, password2, verifyMode]);
 
-    // Listen to the text box key event to react to Escape and Return keys.
     const onKeyDown = React.useCallback(
         (e: KeyDownEvent) => {
             if (e.event?.key === "Escape") {
