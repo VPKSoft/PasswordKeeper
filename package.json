@@ -29,7 +29,6 @@
         "react-i18next": "^12.3.1",
         "react-secure-storage": "^1.2.1",
         "styled-components": "^5.3.11",
-        "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state",
         "typescript-eslint": "^0.0.1-alpha.0"
     },
     "devDependencies": {
