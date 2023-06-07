@@ -92,6 +92,7 @@ const EditCategoryPopup = ({
         return categoryInternal.name.length > 0 && !categoryInternal.name.endsWith(" ") && !categoryInternal.name.startsWith(" ");
     }, [categoryInternal.name]);
 
+    // Listen to the text box key event to react to Escape and Return keys.
     const onKeyDown = React.useCallback(
         (e: KeyDownEvent) => {
             if (e.event?.key === "Escape") {
@@ -132,6 +133,7 @@ const EditCategoryPopup = ({
                                     onValueChanged={onNameChanged}
                                     onKeyDown={onKeyDown}
                                     onInitialized={textBoxInitialized}
+                                    valueChangeEvent="keyup blur change input focusout keydown"
                                 />
                             </td>
                         </tr>
