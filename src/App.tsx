@@ -93,7 +93,7 @@ const App = ({ className }: Props) => {
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
 
     // A call back to lock the main window and close the popups if any.
-    const onViewLockTimeout = React.useCallback(() => {
+    const lockView = React.useCallback(() => {
         setViewLocked(true);
         // Hide the entry editor to hide sensitive data.
         setEditEntry(null);
@@ -110,6 +110,11 @@ const App = ({ className }: Props) => {
         collapseTree(treeListRef?.current);
     }, []);
 
+    // A callback to lock the view after a time interval has elapsed.
+    const onViewLockTimeout = React.useCallback(() => {
+        lockView();
+    }, [lockView]);
+
     const [setTimeoutEnabled, resetTimeOut] = useTimeout(timeOut, onViewLockTimeout, TimeInterval.Minutes);
 
     // The file was requested to be closed. If the file has changes display a query popup
@@ -120,11 +125,14 @@ const App = ({ className }: Props) => {
             setSaveChangedFileQueryVisible(true);
             return;
         }
+
+        clearFilePassword();
         // Reloading the window will do the same as re-setting multiple state variables.
         window.location.reload();
-    }, [fileChanged]);
+    }, [clearFilePassword, fileChanged]);
 
     // Applies the specified settings for the program to use. E.g. update required state variables.
+    // NOTE::For a successful theme change the window needs to be reloaded.
     const applySettings = React.useCallback(
         (value: Settings) => {
             settingsRef.current = value;
@@ -197,11 +205,13 @@ const App = ({ className }: Props) => {
         }
     }, [currentFile, fileChanged, lm, saveFileCallback]);
 
+    // Open an existing file. E.g. set the file open popup to visible.
     const loadFileCallback = React.useCallback(() => {
         setFilePopupMode(FileQueryMode.Open);
         setFileSaveOpenQueryOpen(true);
     }, []);
 
+    // Use an effect to listen the Tauri application close request.
     React.useEffect(() => {
         const unlisten = appWindow.onCloseRequested(async event => {
             const confirmed = await fileSaveQueryAbortCloseCallback();
@@ -211,32 +221,41 @@ const App = ({ className }: Props) => {
             }
         });
 
+        // Stop the event listening.
         return () => {
             unlisten.then(f => f());
         };
     }, [fileSaveQueryAbortCloseCallback]);
 
+    // The entry editor popup was closed. Handle the possible changes.
     const onEditClose = React.useCallback(
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
+            // If the popup was accepted and there is something set in the entry...
             if (userAccepted && entry) {
+                // ...update the data source and re-set the state variables.
                 setDataSource(updateDataSource(dataSource, entry));
                 setEntry(entry);
                 setEditEntry(null);
                 setFileChanged(true);
             }
+            // Hide the popup.
             setEntryEditVisible(false);
         },
         [dataSource]
     );
 
+    // The category editor popup was closed. Handle the possible changes.
     const onCategoryEditClose = React.useCallback(
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
+            // If the popup was accepted and there is something set in the entry...
             if (userAccepted && entry !== undefined) {
+                // ...update the data source and re-set the state variables.
                 setDataSource(updateDataSource(dataSource, entry));
                 setFileChanged(true);
+                setEditEntry(null);
             }
+            // Hide the popup.
             setCategoryEditVisible(false);
-            setEditEntry(null);
         },
         [dataSource]
     );
@@ -286,9 +305,11 @@ const App = ({ className }: Props) => {
     const filePopupClose = React.useCallback(
         (userAccepted: boolean, fileName?: string, password?: string) => {
             if (userAccepted === true && fileName !== undefined && password !== undefined) {
+                // The file mode is open, so open the file.
                 if (filePopupMode === FileQueryMode.Open) {
                     void loadFile(password, fileName).then(f => {
                         if (f.ok) {
+                            // Set the state data from the successfully loaded file.
                             setFilePassword(password);
                             setDataSource(f.fileData);
                             setCurrentFile(fileName);
@@ -296,13 +317,17 @@ const App = ({ className }: Props) => {
                             setIsNewFile(false);
                             setPasswordFailedCount(0);
                         } else {
+                            // The file load failed with most probable reason being an invalid password.
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            // Increase the failed password count, whatever the failure reason is.
                             increaseFileLockFail();
                         }
                     });
+                    // The file mode is save as, so save the file.
                 } else if (filePopupMode === FileQueryMode.SaveAs) {
                     void saveFile(dataSource, password, fileName).then(f => {
                         if (f.ok) {
+                            // Set the state data for the successfully saved file.
                             setFilePassword(password);
                             setCurrentFile(fileName);
                             setIsNewFile(false);
@@ -314,6 +339,7 @@ const App = ({ className }: Props) => {
                                 window.location.reload();
                             }
                         } else {
+                            // Some error occurred saving the file, report the save failure.
                             notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
                         }
                     });
@@ -324,37 +350,45 @@ const App = ({ className }: Props) => {
         [dataSource, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, setFilePassword]
     );
 
+    // The exit application menu was chosen.
     const exitClick = React.useCallback(() => {
+        // First make sure the application exit doesn't discard any changes that were wished to be saved.
         fileSaveQueryAbortCloseCallback().then(result => {
             if (!result) {
+                // If the exit is authorized or there are no changes to the current file,
+                // exit the application.
                 exit(0);
             }
         });
     }, [fileSaveQueryAbortCloseCallback]);
 
+    // The delete item was selected either for a category or an entry.
     const deleteClick = React.useCallback(() => {
+        // Display the delete verification popup.
         setDialogVisible(true);
     }, []);
 
+    // The preferences was selected.
     const settingsClick = React.useCallback(() => {
+        // Display the preferences popup.
         setPreferencesVisible(true);
     }, []);
 
+    // Create a new file. This is exactly same as closing an existing one.
     const newClick = React.useCallback(() => {
-        setDataSource([]);
-        setCurrentFile(la("newFileName"));
-        setEditEntry(null);
-        setEntry(null);
-        setIsNewFile(true);
-        clearFilePassword();
-    }, [clearFilePassword, la]);
+        closeFile();
+    }, [closeFile]);
 
+    // A category was selected to be added. Set the editing type to new and
+    // set the edit category popup visible.
     const addCategoryClick = React.useCallback(() => {
         setCategoryPopupMode(ModifyType.New);
         setEditEntry(newEntry(-1, dataSource, ""));
         setCategoryEditVisible(true);
     }, [dataSource]);
 
+    // An entry was selected to be added. Set the editing type to new and
+    // set the edit entry popup visible.
     const addItem = React.useCallback(() => {
         if (entry) {
             setEntryEditMode(ModifyType.New);
@@ -365,21 +399,27 @@ const App = ({ className }: Props) => {
         }
     }, [dataSource, entry]);
 
+    // Memoize the delete query message based on the selected entry.
     const deleteQueryMessage = React.useMemo(() => {
         const message = entry?.parentId === -1 ? lm("queryDeleteCategory", undefined, { category: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
         return message;
     }, [entry, lm]);
 
+    // A callback for the ConfirmPopup after querying about deleting a selected category or entry.
     const deleteCategoryOrEntry = React.useCallback(
         (e: DialogResult) => {
+            // If the popup was accepted, delete the selected category or entry.
             if (e === DialogResult.Yes && entry) {
                 setDataSource(deleteEntryOrCategory(dataSource, entry));
             }
+            // Hide the ConfirmPopup.
             setDialogVisible(false);
         },
         [dataSource, entry]
     );
 
+    // A callback for the ConfirmPopup after querying whether to save changes to the
+    // current file before closing it.
     const queryFileChangesPopupClosed = React.useCallback(
         (e: DialogResult) => {
             setSaveChangedFileQueryVisible(false);
@@ -396,13 +436,18 @@ const App = ({ className }: Props) => {
         [saveFileCallback]
     );
 
+    // A callback for the preferences popup close whether to changes were accepted or rejected.
     const preferencesClose = React.useCallback(
         (userAccepted: boolean, settings?: Settings) => {
             if (userAccepted && settings) {
+                // Save the settings as the changes were accepted.
                 saveSettings(settings).then(f => {
                     if (f) {
+                        // Apply the setting changes.
                         applySettings(settings);
                         if (fileChanged) {
+                            // If the file is changed, notify the user that the theme change
+                            // failed as it requires the window to be refreshed.
                             notify({ message: ls("themeChangeFailFileUnsaved"), width: 300, shading: true, displayTime: 5_000, type: "warning" }, { position: "bottom center", direction: "up-push" });
                             notify({ message: ls("saveSuccess"), width: 300, shading: true, displayTime: 5_000, type: "success" }, { position: "bottom center", direction: "up-push" });
                         } else {
@@ -411,6 +456,7 @@ const App = ({ className }: Props) => {
                             notify(ls("saveSuccess"), "success", 5_000);
                         }
                     } else {
+                        // Notify of an error while trying to save the changes.
                         notify(ls("saveFailed"), "error", 5_000);
                     }
                 });
@@ -420,14 +466,18 @@ const App = ({ className }: Props) => {
         [applySettings, fileChanged, ls]
     );
 
+    // Display the about popup.
     const aboutShowClick = React.useCallback(() => {
         setAboutVisible(true);
     }, []);
 
+    // Close the about popup.
     const aboutClose = React.useCallback(() => {
         setAboutVisible(false);
     }, []);
 
+    // A callback to unlock the view locked with an overlay.
+    // If an existing file is opened a password dialog is displayed instead to unlock the view.
     const lockOverlayClick = React.useCallback(() => {
         if (isNewFile) {
             setViewLocked(false);
@@ -437,32 +487,41 @@ const App = ({ className }: Props) => {
         }
     }, [isNewFile]);
 
+    // Locks the view via user interaction.
     const lockViewClick = React.useCallback(() => {
-        setViewLocked(true);
-    }, []);
+        lockView();
+    }, [lockView]);
 
+    // A callback to try to unlock the view when a password protected file is opened.
     const queryUnlockPassword = React.useCallback(
         (userAccepted: boolean, password?: string) => {
             setLockPasswordQueryVisible(false);
             if (userAccepted) {
+                // Validate the unlock password against the given password.
                 if (password === getFilePassword()) {
+                    // The password validation was successful, unlock the view.
                     setViewLocked(false);
                     setPasswordFailedCount(0);
                 } else {
+                    // The password validation failed, keep the view locked and update the
+                    // invalid password counter.
                     increaseFileLockFail();
                     setViewLocked(true);
                 }
             } else {
+                // The popup querying the password was not accepted, keep the view locked.
                 setViewLocked(true);
             }
         },
         [getFilePassword, increaseFileLockFail]
     );
 
+    // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded) {
         return null;
     }
 
+    // Render the main view.
     return (
         <>
             <StyledTitle //
@@ -578,9 +637,14 @@ const App = ({ className }: Props) => {
     );
 };
 
+/**
+ * Collapses a @see dxTreeList using array of @see DataEntry items as a data source.
+ * @param tree The tree list to collapse.
+ */
 const collapseTree = (tree: dxTreeList | undefined) => {
     if (tree) {
         tree.forEachNode((f: Node<DataEntry>) => {
+            // Only collapse the parent nodes.
             if (f.data?.parentId === -1) {
                 tree.collapseRow(f.key);
             }
