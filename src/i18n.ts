@@ -25,7 +25,7 @@ SOFTWARE.
 import { use } from "i18next";
 import { initReactI18next, useTranslation } from "react-i18next";
 
-//Import all translation files
+// Import all translation files
 import localizationEnMainUI from "./localization/mainui/en.json";
 import localizationFiMainUI from "./localization/mainui/fi.json";
 
@@ -47,6 +47,7 @@ import localizationFiMenu from "./localization/menu/fi.json";
 import localizationEnSettings from "./localization/settings/en.json";
 import localizationFiSettings from "./localization/settings/fi.json";
 
+// Create a structure for the localization data: LocaleCode.CategoryName.
 const resources = {
     en: {
         ui: localizationEnMainUI,
@@ -68,19 +69,26 @@ const resources = {
     },
 };
 
+// Create a type of the supported locales.
 const LocaleValues = ["fi", "en"] as const;
 export type Locales = (typeof LocaleValues)[number];
 
+// A type for a single locale with an English name.
 export type LocaleCodeName = {
-    code: string;
+    code: Locales;
     name: string;
 };
 
+// Create an array of the supported locales with their English names.
 const currentLocales: LocaleCodeName[] = [
     { code: "fi", name: "Finnish" },
     { code: "en", name: "English" },
 ];
 
+/**
+ * Initializes the i18next locale with the specified locale code.
+ * @param locale The locale code to initialize the i18next with.
+ */
 const setLocale = (locale: Locales) => {
     use(initReactI18next).init({
         resources,
@@ -88,10 +96,11 @@ const setLocale = (locale: Locales) => {
     });
 };
 
+// Use English as the default locale.
 setLocale("en");
 
+// Create a type of the supported locale categories.
 const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu", "settings"] as const;
-
 type TranslationComponents = (typeof ComponentValues)[number];
 
 /**
