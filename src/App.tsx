@@ -544,6 +544,8 @@ const App = ({ className }: Props) => {
                 lockViewClick={lockViewClick}
                 aboutShowClick={aboutShowClick}
                 fileCloseClick={closeFile}
+                isNewFile={isNewFile}
+                isfileChanged={fileChanged}
             />
             <div //
                 className={classNames(App.name, className)}

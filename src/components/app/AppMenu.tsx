@@ -33,17 +33,35 @@ import { DataEntry } from "../../types/PasswordEntry";
 const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close"] as const;
 type ActionNames = (typeof ActionValues)[number];
 
+/**
+ * A type for menu items used by the @see AppMenu component.
+ */
 type MenuData = {
+    /** A pseudo-identifier for the menu item. */
     id: string;
+    /** A display name for the menu item. */
     name: string;
+    /** An action name the menu item is going to be performing upon click. */
     actionName?: ActionNames;
+    /** Optional submenu items for the current item. */
     items?: MenuData[];
+    /** Optional icon for the menu item. */
     icon?: string;
+    /** A value indicating whether a menu group separator should be placed before this menu item. */
     beginGroup?: boolean;
+    /** A value indicating if the menu item is disabled. */
     disabled?: boolean;
 };
 
-const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined) => string, entry: DataEntry | undefined): MenuData[] => {
+/**
+ * Creates the application menu structure with localization for the menu item names.
+ * @param localize The localization function.
+ * @param entry The currently selected category or item.
+ * @param isNewFile A value indicating whether the file is a new file.
+ * @param isfileChanged A value indicating whether the file has been changed.
+ * @returns A localized menu structure for the application.
+ */
+const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined) => string, entry: DataEntry | undefined, isNewFile: boolean, isfileChanged: boolean): MenuData[] => {
     return [
         {
             id: "1",
@@ -60,6 +78,7 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     name: localize("fileOpen"),
                     actionName: "open",
                     icon: "folder",
+                    disabled: isfileChanged,
                 },
                 {
                     id: "1_3",
@@ -72,6 +91,7 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     name: localize("fileSave"),
                     actionName: "save",
                     icon: "save",
+                    disabled: isfileChanged !== true,
                 },
                 {
                     id: "1_5",
@@ -142,22 +162,40 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
     ];
 };
 
+/**
+ * The props for the @see AppMenu component.
+ */
 export type AppMenuProps = {
+    /** The HTML class attribute. */
     className?: string;
+    /** The currently selected @see DataEntry item. */
     entry: DataEntry | undefined;
+    /** A value indicating whether the current file is a new file. E.g. doesn't exist in the file system. */
+    isNewFile: boolean;
+    /** A value indicating whether the current file has been changed. */
+    isfileChanged: boolean;
+    /** Occurs when a menu item was clicked. */
     onItemClick: (e: ItemClickEvent) => void;
 };
 
+/**
+ * A component for the application menu for the PasswordKeeper.
+ * @param param0 The component props @see AppMenuProps.
+ * @returns A component.
+ */
 const AppMenu = ({
     className, //
     entry,
     onItemClick,
+    isNewFile,
+    isfileChanged,
 }: AppMenuProps) => {
     const lm = useLocalize("menu");
 
+    // Memoize the menu to prevent re-rendering all the time.
     const menuData = React.useMemo(() => {
-        return appMenuData(lm, entry);
-    }, [entry, lm]);
+        return appMenuData(lm, entry, isNewFile, isfileChanged);
+    }, [entry, isNewFile, isfileChanged, lm]);
 
     return (
         <Menu //
@@ -171,7 +209,7 @@ const AppMenu = ({
 };
 
 export default styled(AppMenu)`
-    // Add style here
+    // Add style(s) here
 `;
 
 export type { MenuData };

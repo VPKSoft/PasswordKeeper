@@ -30,20 +30,39 @@ import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 
+/**
+ * The props for the @see AppToolbar component.
+ */
 export type ToolBarProps = {
+    /** The HTML class attribute. */
     className?: string;
+    /** The currently selected @see DataEntry item. */
     entry: DataEntry | undefined;
+    /** Occurs when the save file item was clicked. */
     saveFileClick: () => void;
+    /** Occurs when the save file as item was clicked. */
     saveFileAsClick: () => void;
+    /** Occurs when the open file item was clicked. */
     loadFileClick: () => void;
+    /** Occurs when the edit category or entry item was clicked. */
     editClick: () => void;
+    /** Occurs when the add entry item was clicked. */
     addClick: () => void;
+    /** Occurs when the add category item was clicked. */
     addCategoryClick: () => void;
+    /** Occurs when the delete category or entry item was clicked. */
     deleteClick: () => void;
+    /** Occurs when the lock view item was clicked. */
     lockViewClick: () => void;
+    /** Occurs when the test something item was clicked. ONLY for development purposes; do not define in production. */
     testClick?: () => void;
 };
 
+/**
+ * A component for the application toolbar for the PasswordKeeper.
+ * @param param0 The component props @see ToolBarProps.
+ * @returns A component.
+ */
 const AppToolbar = ({
     className, //
     entry,
@@ -133,5 +152,5 @@ const AppToolbar = ({
 };
 
 export default styled(AppToolbar)`
-    // Add style here
+    // Add style(s) here
 `;
