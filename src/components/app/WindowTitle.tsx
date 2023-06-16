@@ -5,19 +5,35 @@ import classNames from "classnames";
 import { useLocalize } from "../../i18n";
 import { Settings } from "../../types/Settings";
 
-type Props = {
+/**
+ * The props for the @see WindowTitle component.
+ */
+type WindowTitleProps = {
+    /** The HTML class attribute. */
     className?: string;
+    /** The title text to display on the window title. */
     title: string | (() => string);
+    /** Occurs when the close button of the title bar was clicked. */
     onClose?: () => Promise<boolean> | boolean;
+    /**
+     * Occurs when user interaction occurs within the component. E.g. the mouse is moved.
+     * This is for tracking the application idle status.
+     */
     onUserInteraction?: () => void;
 };
 
+/**
+ * A custom window title component for the a Tauri application.
+ * NOTE: This is depended of the types and libraries used by this software.
+ * @param param0 The component props @see WindowTitleProps.
+ * @returns A component.
+ */
 const WindowTitle = ({
     className, //
     title,
     onClose,
     onUserInteraction,
-}: Props) => {
+}: WindowTitleProps) => {
     const lu = useLocalize("ui");
 
     const minimizeClick = React.useCallback(() => {
@@ -28,6 +44,7 @@ const WindowTitle = ({
         appWindow.toggleMaximize();
     }, []);
 
+    // Close the application if the onClose callback returned false.
     const closeClick = React.useCallback(() => {
         if (onClose) {
             Promise.resolve(onClose()).then(result => {
@@ -38,6 +55,7 @@ const WindowTitle = ({
         }
     }, [onClose]);
 
+    // Memoize the display title.
     const displayTitle = React.useMemo(() => {
         return typeof title === "string" ? title : title();
     }, [title]);
