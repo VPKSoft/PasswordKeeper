@@ -29,6 +29,7 @@ import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
+import { CommonProps } from "../Types";
 
 const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close"] as const;
 type ActionNames = (typeof ActionValues)[number];
@@ -166,8 +167,6 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
  * The props for the @see AppMenu component.
  */
 export type AppMenuProps = {
-    /** The HTML class attribute. */
-    className?: string;
     /** The currently selected @see DataEntry item. */
     entry: DataEntry | undefined;
     /** A value indicating whether the current file is a new file. E.g. doesn't exist in the file system. */
@@ -176,7 +175,7 @@ export type AppMenuProps = {
     isfileChanged: boolean;
     /** Occurs when a menu item was clicked. */
     onItemClick: (e: ItemClickEvent) => void;
-};
+} & CommonProps;
 
 /**
  * A component for the application menu for the PasswordKeeper.

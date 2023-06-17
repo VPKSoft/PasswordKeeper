@@ -9,22 +9,35 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
+import { CommonProps } from "../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link PasswordList} component.
+ */
+type PasswordListProps = {
+    /** The data source for the component. */
     dataSource: DataEntry[];
+    /** The ref for the component's TreeList component. */
     treeListRef?: React.MutableRefObject<dxTreeList | undefined>;
+    /** Occurs when the selected item has been changed. */
     setEntry: (value: DataEntry | null) => void;
-    setDataSource: (datasource: DataEntry[]) => void;
-};
+    /** A callback to pass the changed data source to the parent component. */
+    setDataSource: (dataSource: DataEntry[]) => void;
+} & CommonProps;
 
+/**
+ * A component to list the password entries and categories in a tree
+ * with drag & drop support for ordering and organizing items.
+ * @param param0 The component props: {@link PasswordListProps}.
+ * @returns A component.
+ */
 const PasswordList = ({
     className, //
     dataSource,
     treeListRef,
     setEntry,
     setDataSource,
-}: Props) => {
+}: PasswordListProps) => {
     const le = useLocalize("entries");
 
     // Order the data by setting the SortOrder and ParentId properties.
@@ -37,6 +50,7 @@ const PasswordList = ({
         [dataSource, setDataSource]
     );
 
+    // Raise the setEntry callback when the TreeList selection has been changed.
     const onSelectionChanged = React.useCallback(
         (e: SelectionChangedEvent<DataEntry>) => {
             const selected = e.selectedRowsData.length > 0 ? e.selectedRowsData[0] : null;
@@ -45,6 +59,7 @@ const PasswordList = ({
         [setEntry]
     );
 
+    // A custom save to disallow direct prop value mutation.
     const onSaving = React.useCallback(
         (e: SavingEvent) => {
             e.cancel = true;
@@ -67,7 +82,6 @@ const PasswordList = ({
     return (
         <TreeList //
             className={classNames(PasswordList.name, className)}
-            //    className="App-itemsWiew-list"
             dataSource={dataSource}
             keyExpr="id"
             parentIdExpr="parentId"
@@ -103,14 +117,37 @@ const PasswordList = ({
     );
 };
 
-const renderColumnType = (e: { row: { data: DataEntry } }) => {
+/**
+ * The type for the {@link TreeList} column {@link Template} rendering callback.
+ */
+type RenderColumnData = {
+    row: {
+        data: DataEntry;
+    };
+};
+
+/**
+ * Renders the icon to the {@link PasswordList} component.
+ * @param {RenderColumnData} e The column data passed to the callback.
+ * @returns {JSX.Element} for the column cell contents.
+ */
+const renderColumnType = (e: RenderColumnData) => {
     return e.row.data.parentId === -1 ? <div className="fas fa-folder PasswordList-imageCell" /> : <div className="fas fa-tag App-itemsWiew-list-imageCell" />;
 };
 
+/**
+ * Determines whether the specified {@link DataEntry} is a group entry.
+ * @param {DataEntry} entry The entry to check for.
+ * @returns {boolean} true if the specified entry is a group / category; false otherwise.
+ */
 const isGroup = (entry: DataEntry) => {
     return entry.parentId === -1;
 };
 
+/**
+ * Validate the drag change of the {@link TreeList} for the {@link PasswordList} component.
+ * @param {RowDraggingChangeEvent} e The event data for the row dragging event.
+ */
 const onDragChange = (e: RowDraggingChangeEvent) => {
     const visibleRows = e.component.getVisibleRows();
 
@@ -118,11 +155,14 @@ const onDragChange = (e: RowDraggingChangeEvent) => {
     const targetNode = visibleRows[e.toIndex].node;
 
     if (
-        targetNode.data.id === sourceNode.data.id ||
-        (e.dropInsideItem && !isGroup(targetNode.data)) ||
-        (e.dropInsideItem && isGroup(sourceNode.data)) ||
+        targetNode.data.id === sourceNode.data.id || // Can not drag to it self.
+        (e.dropInsideItem && !isGroup(targetNode.data)) || // Can not drag an item into a non-group.
+        (e.dropInsideItem && isGroup(sourceNode.data)) || // Can not draw group into an item.
+        // Can not drop item into a group if it is not being dropped inside a group.
         (isGroup(targetNode.data) && !isGroup(sourceNode.data) && !e.dropInsideItem) ||
+        // Cannot drop group inside another group.
         (isGroup(sourceNode.data) && isGroup(targetNode.data) && e.dropInsideItem) ||
+        // Can not drop group outside a non-group item.
         (isGroup(sourceNode.data) && !isGroup(targetNode.data) && !e.dropInsideItem)
     ) {
         e.cancel = true;
@@ -130,6 +170,12 @@ const onDragChange = (e: RowDraggingChangeEvent) => {
     }
 };
 
+/**
+ * Reorders the data source items after the {@link RowDragging} onReorder event.
+ * @param {RowDraggingChangeEvent} e The event data for the row dragging event.
+ * @param {Array<DataEntry>} dataSource The current data source of the {@link TreeList}.
+ * @returns {Array<DataEntry>} The reordered data source.
+ */
 const reorderData = (e: RowDraggingReorderEvent, dataSource: Array<DataEntry>) => {
     const sourceData = e.itemData;
     const targetIndex = dataSource.findIndex(i => i.id === e.itemData.id);

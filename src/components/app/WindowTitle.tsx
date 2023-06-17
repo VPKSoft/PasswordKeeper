@@ -4,13 +4,12 @@ import { appWindow } from "@tauri-apps/api/window";
 import classNames from "classnames";
 import { useLocalize } from "../../i18n";
 import { Settings } from "../../types/Settings";
+import { CommonProps } from "../Types";
 
 /**
- * The props for the @see WindowTitle component.
+ * The props for the {@link WindowTitle} component.
  */
 type WindowTitleProps = {
-    /** The HTML class attribute. */
-    className?: string;
     /** The title text to display on the window title. */
     title: string | (() => string);
     /** Occurs when the close button of the title bar was clicked. */
@@ -20,12 +19,12 @@ type WindowTitleProps = {
      * This is for tracking the application idle status.
      */
     onUserInteraction?: () => void;
-};
+} & CommonProps;
 
 /**
  * A custom window title component for the a Tauri application.
  * NOTE: This is depended of the types and libraries used by this software.
- * @param param0 The component props @see WindowTitleProps.
+ * @param param0 The component props: {@link WindowTitleProps}.
  * @returns A component.
  */
 const WindowTitle = ({

@@ -25,27 +25,43 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
+import { CommonProps } from "../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the @see LockScreenOverlay component.
+ */
+type LockScreenOverlayProps = {
+    /** The text to display when the component is locking the view. */
     lockText?: string;
+    /** The optional font weight for the @see lockText. The default is 'normal'. */
     fontWeight?: string;
+    /** The optional background opacity for the component. The default is 0.5. */
     backgroundOpacity?: number;
+    /** The optional background color for the overlay. The default is black. */
     backgroundColor?: string;
+    /** The optional foreground color for the overlay. The default is white. */
     foreColor?: string;
+    /** The optional foreground opacity for the component. The default is 1. */
     foreOpacity?: number;
+    /** The optional font size for the component. The default is 'xx-large'. */
     fontSize?: string;
+    /** A value indicating whether the component is visible; E.g. locked. */
     visible: boolean;
+    /** Occurs when the visible lock overlay is clicked in an attempt to unlock it. */
     onClick?: () => void;
-};
+} & CommonProps;
 
+/**
+ * A component to create a window-sized lock overlay over other components in the view.
+ * @param param0 The component props: {@link LockScreenOverlayProps}.
+ * @returns A component.
+ */
 const LockScreenOverlay = ({
-    //
-    className,
+    className, //
     lockText,
     visible,
     onClick,
-}: Props) => {
+}: LockScreenOverlayProps) => {
     if (!visible) {
         return null;
     }
@@ -61,6 +77,12 @@ const LockScreenOverlay = ({
 };
 
 // Code derived from: https://css-tricks.com/converting-color-spaces-in-javascript/
+/**
+ * Creates a 'rgba(r, g, b, a)' color value from the specified hex color string and the specified opacity.
+ * @param color The hex color string in format #RRGGBB.
+ * @param opacity The opacity between 0 to 1.
+ * @returns A 'rgba(r, g, b, a)' color value.
+ */
 const hexOpacityToRgba = (color: string, opacity: number) => {
     let r = "0x",
         g = "0x",

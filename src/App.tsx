@@ -640,7 +640,7 @@ const App = ({ className }: Props) => {
 };
 
 /**
- * Collapses a @see dxTreeList using array of @see DataEntry items as a data source.
+ * Collapses a {@link dxTreeList} using array of {@link DataEntry} items as a data source.
  * @param tree The tree list to collapse.
  */
 const collapseTree = (tree: dxTreeList | undefined) => {

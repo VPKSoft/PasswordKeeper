@@ -29,13 +29,12 @@ import styled from "styled-components";
 import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
+import { CommonProps } from "../Types";
 
 /**
  * The props for the @see AppToolbar component.
  */
 export type ToolBarProps = {
-    /** The HTML class attribute. */
-    className?: string;
     /** The currently selected @see DataEntry item. */
     entry: DataEntry | undefined;
     /** Occurs when the save file item was clicked. */
@@ -56,7 +55,7 @@ export type ToolBarProps = {
     lockViewClick: () => void;
     /** Occurs when the test something item was clicked. ONLY for development purposes; do not define in production. */
     testClick?: () => void;
-};
+} & CommonProps;
 
 /**
  * A component for the application toolbar for the PasswordKeeper.

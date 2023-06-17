@@ -30,7 +30,7 @@ import AppToolbar, { ToolBarProps } from "./AppToolbar";
 import AppMenu, { AppMenuProps, MenuData } from "./AppMenu";
 
 /**
- * The props for the @see AppMenuToolbar component.
+ * The props for the {@link AppMenuToolbar} component.
  */
 type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
     ToolBarProps & {
@@ -48,7 +48,7 @@ type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
 
 /**
  * A component for the application toolbar and menu for the PasswordKeeper.
- * @param param0 The component props @see AppMenuToolbarProps.
+ * @param param0 The component props: {@link AppMenuToolbarProps}.
  * @returns A component.
  */
 const AppMenuToolbar = ({
