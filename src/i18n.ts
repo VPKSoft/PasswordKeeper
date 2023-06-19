@@ -112,7 +112,7 @@ const useLocalize = (component: TranslationComponents) => {
     const { t } = useTranslation([component]);
 
     const localize = (entryName: string, defaultValue?: string, params?: unknown) => {
-        return t(entryName, defaultValue ?? entryName, params as never);
+        return t(entryName, defaultValue ?? entryName, params as never) as unknown as string;
     };
 
     return localize;
