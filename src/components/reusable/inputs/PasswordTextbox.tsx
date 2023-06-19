@@ -143,7 +143,7 @@ const PasswordTextBox = ({
                 onInitialized={onInitialized}
                 readOnly={readonly}
                 mode={displayPassword ? "text" : "password"}
-                className="PasswordTextbox-textBox"
+                className="PasswordTextBox-textBox"
                 value={value}
                 onValueChanged={onValueChanged}
                 onKeyDown={onKeyDown}
@@ -151,7 +151,7 @@ const PasswordTextBox = ({
             />
             <Button //
                 icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}
-                className="PasswordTextbox-button"
+                className="PasswordTextBox-button"
                 onClick={toggleDisplayPassword}
                 hint={toggleShowPasswordHint}
             />
@@ -160,7 +160,7 @@ const PasswordTextBox = ({
                     <Button //
                         icon="fas fa-rotate"
                         onClick={generatePasswordClick}
-                        className="PasswordTextbox-button"
+                        className="PasswordTextBox-button"
                         hint={lu("generatePassword")}
                     />
                 )}
@@ -168,7 +168,7 @@ const PasswordTextBox = ({
                 <Button //
                     hint={lu("copyClipboard")}
                     icon="copy"
-                    className="PasswordTextbox-button"
+                    className="PasswordTextBox-button"
                     onClick={copyToClipboard}
                 />
             )}
@@ -197,10 +197,10 @@ const generatePassword = (length = 12) => {
 export default styled(PasswordTextBox)`
     display: flex;
     flex-direction: row;
-    .PasswordTextbox-textBox {
+    .PasswordTextBox-textBox {
         width: 100%;
     }
-    .PasswordTextbox-button {
+    .PasswordTextBox-button {
         margin-left: 6px;
     }
 `;
