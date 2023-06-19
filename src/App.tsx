@@ -52,12 +52,19 @@ import AboutPopup from "./components/software/popups/AboutPopup";
 import LockScreenOverlay from "./components/reusable/LockScreenOverlay";
 import QueryPasswordPopup from "./components/software/popups/QueryPasswordPopup";
 import useTimeout, { TimeInterval } from "./hooks/UseTimeout";
+import { CommonProps } from "./components/Types";
 
-type Props = {
-    className?: string;
-};
+/**
+ * The props for the {@link App} component.
+ */
+type AppProps = CommonProps;
 
-const App = ({ className }: Props) => {
+/**
+ * The application main component.
+ * @param param0 The component props: {@link AppProps}.
+ * @returns A component.
+ */
+const App = ({ className }: AppProps) => {
     // The i18next localization hooks.
     const la = useLocalize("app");
     const lm = useLocalize("messages");

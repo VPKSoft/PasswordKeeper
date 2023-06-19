@@ -26,18 +26,33 @@ import { save, open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 import { DataEntry } from "../../types/PasswordEntry";
 
+/**
+ * A result type for the {@link loadFile} and {@link saveFile} functions.
+ */
 type FileResult = {
+    /** A value indicating whether the file was saved or opened successfully. */
     ok: boolean;
+    /** The name of file. */
     fileName: string;
+    /** The file data containing all the categories and items saved into the file. */
     fileData: DataEntry[];
+    /** An error message in case the file load or save operation was unsuccessful. */
     errorMessage?: string;
 };
 
+/**
+ * The result type the Rust "backend" gives upon *load_file* invocation.
+ */
 type BackendResult = {
+    /** A value indicating whether an error occurred. */
     error: boolean;
+    /** A JSON string data of the file contents. */
     value: string;
 };
 
+/**
+ * A value for a failed {@link FileResult}.
+ */
 const failed: FileResult = { ok: false, fileData: [], fileName: "" };
 
 /**
