@@ -31,7 +31,7 @@ import { FileQueryMode } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import PasswordTextBox from "../../reusable/inputs/PasswordTextBox";
 import { useFocus } from "../../../hooks/UseFocus";
-import FileQueryTextBox from "../inputs/FileQueryTextbox";
+import FileQueryTextBox from "../inputs/FileQueryTextBox";
 
 type Props = {
     className?: string;
