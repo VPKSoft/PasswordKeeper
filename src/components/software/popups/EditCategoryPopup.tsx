@@ -43,7 +43,7 @@ type EditCategoryPopupProps = {
     mode: ModifyType;
     /** A value indicating whether this popup is visible. */
     visible: boolean;
-    /** Occurs when the popup hams been closed. */
+    /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
 
