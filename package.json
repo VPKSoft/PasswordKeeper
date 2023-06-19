@@ -35,7 +35,7 @@
         "@tauri-apps/cli": "^1.4.0",
         "@types/node": "^20.3.1",
         "@types/react": "^18.2.11",
-        "@types/react-dom": "^18.2.0",
+        "@types/react-dom": "^18.2.5",
         "@types/styled-components": "^5.1.26",
         "@vitejs/plugin-react-swc": "^3.3.2",
         "eslint-plugin-import": "^2.27.5",
