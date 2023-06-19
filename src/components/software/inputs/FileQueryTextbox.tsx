@@ -65,6 +65,8 @@ const FileQueryTextBox = ({
     const lc = useLocalize("common");
     const la = useLocalize("app");
 
+    // A callback for select file click. Depending on the mode use the appropriate dialog;
+    // save or open file dialog.
     const selectFileClick = React.useCallback(() => {
         if (mode === FileQueryMode.Open) {
             void selectFileToOpen(la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {

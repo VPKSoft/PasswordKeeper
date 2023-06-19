@@ -29,7 +29,7 @@ import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { FileQueryMode } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
-import FileQueryTextbox from "../inputs/FileQueryTextbox";
+import FileQueryTextbox from "../inputs/FileQueryTextBox";
 import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
 import { useFocus } from "../../../hooks/UseFocus";
 
