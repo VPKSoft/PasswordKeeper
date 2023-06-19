@@ -11,7 +11,7 @@
         "lint": "eslint --max-warnings=0 --config ./.eslintrc.cjs --ext .tsx,.ts ./src/"
     },
     "dependencies": {
-        "@tauri-apps/api": "^1.2.0",
+        "@tauri-apps/api": "^1.4.0",
         "@typescript-eslint/eslint-plugin": "^5.59.9",
         "classnames": "^2.3.2",
         "devextreme": "^22.2.5",
