@@ -24,15 +24,29 @@ SOFTWARE.
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { DxThemeNames } from "../utilities/ThemeUtils";
+import { Locales } from "../i18n";
 
+/**
+ * The software settings returned by the Tauri app.
+ */
 export type Settings = {
+    /** The current devextreme theme used by the application. */
     dx_theme: DxThemeNames;
+    /** The window position. NOTE:NOT CURRENTLY IN USE - AN EXAMPLE */
     window_pos: Array<number>;
-    locale: string;
+    /** The current application locale used by the i18next library. */
+    locale: Locales;
+    /** The lock view timeout in minutes for the application. 0 means disabled. */
     lock_timeout: number;
+    /** An amount of attempts the user inputted password can be invalid before the application closes. 0 is disabled. */
     failed_unlock_attempts: number;
 };
 
+/**
+ * Loads the application settings from the settings file.
+ * Also the local storage is updated with the setting data so it can be used without a reload.
+ * @returns {Promise<Settings>} A promise to the application settings.
+ */
 const loadSettings = async () => {
     try {
         const settings = (await invoke("load_settings")) as Settings;
@@ -43,6 +57,12 @@ const loadSettings = async () => {
     }
 };
 
+/**
+ * Saves the application setting into a file.
+ * Also the local storage is updated with the setting data so it can be used without a reload.
+ * @param {Settings} settings The application settings to save into a file.
+ * @returns {Promise<void>} A promise to save the application settings.
+ */
 const saveSettings = async (settings: Settings) => {
     try {
         invoke("save_settings", { config: settings });
