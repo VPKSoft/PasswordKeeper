@@ -28,17 +28,31 @@ import styled from "styled-components";
 import classNames from "classnames";
 import { DialogButtons, DialogResult, PopupType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link ConfirmPopup} component.
+ */
+type ConfirmPopupProps = {
+    /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** The mode of the popup. */
     mode: PopupType;
+    /** The message to display on the popup contents. */
     message: string;
+    /** The buttons to display on the popup. */
     buttons: DialogButtons;
+    /** An optional title to override the default, which is generated from the {@link mode} prop value. */
     overrideTitle?: string;
+    /** Occurs when the popup is closed. The result is passed as a parameter to the callback. */
     onClose: (result: DialogResult) => void;
-};
+} & CommonProps;
 
+/**
+ * A popup component to display different styled layouts depending on the {@link mode} and the {@link buttons} props.
+ * @param param0 The component props: {@link ConfirmPopupProps}.
+ * @returns A component.
+ */
 const ConfirmPopup = ({
     className, //
     visible,
@@ -47,10 +61,11 @@ const ConfirmPopup = ({
     buttons,
     overrideTitle,
     onClose,
-}: Props) => {
+}: ConfirmPopupProps) => {
     const lc = useLocalize("common");
     const hideViaButton = React.useRef(false);
 
+    // Memoize the popup title depending on the specified mode.
     const title = React.useMemo(() => {
         if (overrideTitle) {
             return overrideTitle;
