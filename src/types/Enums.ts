@@ -23,12 +23,12 @@ SOFTWARE.
 */
 
 /**
- * An enumeration of the mode a file is being edited in.
+ * An enumeration of the mode an entry / category is being edited in.
  */
 export enum ModifyType {
-    /** The file is new. E.g. it has not been saved into a file or opened from existing file. */
+    /** The entry is new. */
     New,
-    /** The file exists. E.g. the contents of an existing file are being edited. */
+    /** The entry is an existing one. */
     Edit,
 }
 
