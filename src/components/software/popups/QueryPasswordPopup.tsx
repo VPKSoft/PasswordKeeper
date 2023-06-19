@@ -29,7 +29,7 @@ import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { InitializedEvent } from "devextreme/ui/popup";
 import { useLocalize } from "../../../i18n";
-import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
+import PasswordTextbox from "../../reusable/inputs/PasswordTextBox";
 import { useFocus } from "../../../hooks/UseFocus";
 
 type Props = {

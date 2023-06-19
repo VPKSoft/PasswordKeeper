@@ -33,9 +33,9 @@ import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 
 /**
- * The props for the @see PasswordTextbox component.
+ * The props for the @see PasswordTextBox component.
  */
-type PasswordTextboxProps = {
+type PasswordTextBoxProps = {
     /** A value indicting if the text box is in readonly mode. */
     readonly?: boolean;
     /** The current value of the text box. */
@@ -58,10 +58,10 @@ type PasswordTextboxProps = {
 
 /**
  * A password input component with password generation possibility and copy to clipboard functionality.
- * @param param0 The component props: {@link PasswordTextboxProps}.
+ * @param param0 The component props: {@link PasswordTextBoxProps}.
  * @returns A component.
  */
-const PasswordTextbox = ({
+const PasswordTextBox = ({
     readonly = false, //
     className,
     value,
@@ -72,7 +72,7 @@ const PasswordTextbox = ({
     onInitialized: onInitializedCallback,
     onValueChanged,
     onKeyDown,
-}: PasswordTextboxProps) => {
+}: PasswordTextBoxProps) => {
     const [displayPassword, setDisplayPassword] = React.useState(initialShowPassword ?? false);
 
     const lu = useLocalize("ui");
@@ -138,7 +138,7 @@ const PasswordTextbox = ({
     }, [displayPassword, lu]);
 
     return (
-        <div className={classNames(PasswordTextbox.name, className)}>
+        <div className={classNames(PasswordTextBox.name, className)}>
             <TextBox //
                 onInitialized={onInitialized}
                 readOnly={readonly}
@@ -194,7 +194,7 @@ const generatePassword = (length = 12) => {
     return pass;
 };
 
-export default styled(PasswordTextbox)`
+export default styled(PasswordTextBox)`
     display: flex;
     flex-direction: row;
     .PasswordTextbox-textBox {
