@@ -28,12 +28,12 @@ import styled from "styled-components";
 import { CommonProps } from "../Types";
 
 /**
- * The props for the @see LockScreenOverlay component.
+ * The props for the {@link LockScreenOverlay} component.
  */
 type LockScreenOverlayProps = {
     /** The text to display when the component is locking the view. */
     lockText?: string;
-    /** The optional font weight for the @see lockText. The default is 'normal'. */
+    /** The optional font weight for the {@link lockText}. The default is 'normal'. */
     fontWeight?: string;
     /** The optional background opacity for the component. The default is 0.5. */
     backgroundOpacity?: number;

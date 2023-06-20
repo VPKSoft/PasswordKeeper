@@ -32,10 +32,10 @@ import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 
 /**
- * The props for the @see AppToolbar component.
+ * The props for the {@link AppToolbar} component.
  */
-export type ToolBarProps = {
-    /** The currently selected @see DataEntry item. */
+export type AppToolbarProps = {
+    /** The currently selected {@link DataEntry} item. */
     entry: DataEntry | undefined;
     /** Occurs when the save file item was clicked. */
     saveFileClick: () => void;
@@ -59,7 +59,7 @@ export type ToolBarProps = {
 
 /**
  * A component for the application toolbar for the PasswordKeeper.
- * @param param0 The component props @see ToolBarProps.
+ * @param param0 The component props {@link AppToolbarProps}.
  * @returns A component.
  */
 const AppToolbar = ({
@@ -74,7 +74,7 @@ const AppToolbar = ({
     deleteClick,
     lockViewClick,
     testClick,
-}: ToolBarProps) => {
+}: AppToolbarProps) => {
     const lm = useLocalize("menu");
     return (
         <Toolbar className={classNames(AppToolbar.name, className)}>

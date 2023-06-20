@@ -33,7 +33,7 @@ import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 
 /**
- * The props for the @see PasswordTextBox component.
+ * The props for the {@link PasswordTextBox} component.
  */
 type PasswordTextBoxProps = {
     /** A value indicting if the text box is in readonly mode. */
@@ -48,11 +48,11 @@ type PasswordTextBoxProps = {
     showCopyButton?: boolean;
     /** An initial value to indicate whether the password should be visible as plain text. */
     initialShowPassword?: boolean;
-    /** Occurs when the @see TextBox value has been changed. */
+    /** Occurs when the {@link TextBox} value has been changed. */
     onValueChanged?: (e: ValueChangedEvent) => void;
-    /** Occurs when a key was pressed on the @see TextBox. */
+    /** Occurs when a key was pressed on the {@link TextBox}. */
     onKeyDown?: (e: KeyDownEvent) => void;
-    /** Occurs when the @see TextBox was initialized. */
+    /** Occurs when the {@link TextBox} was initialized. */
     onInitialized?: (e: InitializedEvent) => void;
 } & CommonProps;
 

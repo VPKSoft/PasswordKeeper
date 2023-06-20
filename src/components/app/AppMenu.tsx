@@ -35,7 +35,7 @@ const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addca
 type ActionNames = (typeof ActionValues)[number];
 
 /**
- * A type for menu items used by the @see AppMenu component.
+ * A type for menu items used by the {@link AppMenu} component.
  */
 type MenuData = {
     /** A pseudo-identifier for the menu item. */
@@ -164,10 +164,10 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
 };
 
 /**
- * The props for the @see AppMenu component.
+ * The props for the {@link AppMenu} component.
  */
 export type AppMenuProps = {
-    /** The currently selected @see DataEntry item. */
+    /** The currently selected {@link DataEntry} item. */
     entry: DataEntry | undefined;
     /** A value indicating whether the current file is a new file. E.g. doesn't exist in the file system. */
     isNewFile: boolean;
@@ -179,7 +179,7 @@ export type AppMenuProps = {
 
 /**
  * A component for the application menu for the PasswordKeeper.
- * @param param0 The component props @see AppMenuProps.
+ * @param param0 The component props {@link AppMenuProps}.
  * @returns A component.
  */
 const AppMenu = ({

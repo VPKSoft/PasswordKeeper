@@ -104,7 +104,7 @@ const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu", "
 type TranslationComponents = (typeof ComponentValues)[number];
 
 /**
- * Custom hook for the i18next @see useTranslation hook.
+ * Custom hook for the i18next {@link useTranslation} hook.
  * @param component The translation component (namespace) name.
  * @returns A function to localize strings with parameter support.
  */

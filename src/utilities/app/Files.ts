@@ -103,7 +103,7 @@ const selectFileToSave = async (extensionName: string, extension = "pkd") => {
  * Loads the specified file, decrypts the data and returns the decrypted data.
  * @param password The password used in the encryption.
  * @param fileName The file name to decrypt the data from.
- * @returns A @see FileResult value with the loaded data or indicating failure.
+ * @returns A {@link FileResult} value with the loaded data or indicating failure.
  */
 const loadFile = async (password: string, fileName: string) => {
     let fileData: BackendResult = { error: false, value: "" };
@@ -127,7 +127,7 @@ const loadFile = async (password: string, fileName: string) => {
  * Saves the specified data into the specified file encrypted using the specified password.
  * @param fileData The data to save to file in encrypted form.
  * @param password The password used in the encryption.
- * @returns A @see FileResult value with the the file name the data was saved into along with a success flag.
+ * @returns A {@link FileResult} value with the the file name the data was saved into along with a success flag.
  */
 const saveFile = async (fileData: DataEntry[], password: string, fileName: string) => {
     const saveData = JSON.stringify(fileData);

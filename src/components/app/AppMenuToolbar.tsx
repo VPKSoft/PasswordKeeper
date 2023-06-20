@@ -26,14 +26,14 @@ import * as React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
-import AppToolbar, { ToolBarProps } from "./AppToolbar";
+import AppToolbar, { AppToolbarProps } from "./AppToolbar";
 import AppMenu, { AppMenuProps, MenuData } from "./AppMenu";
 
 /**
  * The props for the {@link AppMenuToolbar} component.
  */
 type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
-    ToolBarProps & {
+    AppToolbarProps & {
         /** Occurs when the  item was clicked. */
         exitClick: () => void;
         /** Occurs when the new file item was clicked. */
