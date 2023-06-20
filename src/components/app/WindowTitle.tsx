@@ -5,6 +5,9 @@ import classNames from "classnames";
 import { useLocalize } from "../../i18n";
 import { Settings } from "../../types/Settings";
 import { CommonProps } from "../Types";
+import mdiClose from "../../img/mdi_close.svg";
+import mdiWindowMaximize from "../../img/mdi_window-maximize.svg";
+import mdiWindowMinimize from "../../img/mdi_window-minimize.svg";
 
 /**
  * The props for the {@link WindowTitle} component.
@@ -76,13 +79,13 @@ const WindowTitle = ({
             </div>
             <div className="titlebar-buttonContainer">
                 <div className="titlebar-button" id="titlebar-minimize" onClick={minimizeClick} title={lu("minimize", "Minimize")}>
-                    <img src="./src/img/mdi_window-minimize.svg" alt="minimize" />
+                    <img src={mdiWindowMinimize} alt="minimize" />
                 </div>
                 <div className="titlebar-button" id="titlebar-maximize" onClick={maximizeClick} title={lu("maximize", "Maximize")}>
-                    <img src="./src/img/mdi_window-maximize.svg" alt="maximize" />
+                    <img src={mdiWindowMaximize} alt="maximize" />
                 </div>
                 <div className="titlebar-button" id="titlebar-close" onClick={closeClick} title={lu("close", "Close")}>
-                    <img src="./src/img/mdi_close.svg" alt="close" />
+                    <img src={mdiClose} alt="close" />
                 </div>
             </div>
         </div>
