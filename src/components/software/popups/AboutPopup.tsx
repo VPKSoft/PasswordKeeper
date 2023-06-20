@@ -29,8 +29,7 @@ import classNames from "classnames";
 import { getName, getVersion } from "@tauri-apps/api/app";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
-import logoImage from "../../../img/LogoOnly.svg";
-import githubLogo from "../../../img/Octicons-mark-github.svg";
+import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
 
 /**
  * The props for the {@link AboutPopup} component.
@@ -111,9 +110,9 @@ SOFTWARE."
                     </div>
                 </ScrollView>
                 <div className="LogoImages">
-                    <img src={logoImage} className="LogoImage" onClick={() => open("https://www.vpksoft.net")} />
+                    <img src={LogoImage} className="LogoImage" onClick={() => open("https://www.vpksoft.net")} />
 
-                    <img src={githubLogo} className="LogoImage" onClick={() => open("https://github.com/VPKSoft/PasswordKeeper")} />
+                    <img src={GithubLogo} className="LogoImage" onClick={() => open("https://github.com/VPKSoft/PasswordKeeper")} />
                 </div>
                 <div className="Popup-ButtonRow">
                     <Button //
