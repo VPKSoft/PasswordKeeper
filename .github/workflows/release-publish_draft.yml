@@ -1,4 +1,4 @@
-name: 'Release publish'
+name: 'Release publish Draft Manual'
 on:
   workflow_dispatch:
 
