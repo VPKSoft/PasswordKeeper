@@ -34,12 +34,11 @@ use serde::{Deserialize, Serialize};
 mod config;
 mod encryption;
 
+/// Run the Tauri application.
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            my_custom_command,
-            create_window,
             save_file,
             load_file,
             load_settings,
@@ -50,39 +49,50 @@ async fn main() {
 }
 
 #[tauri::command]
-async fn my_custom_command() {
-    println!("I was invoked from TS!");
-}
-
-#[tauri::command]
-async fn create_window(app: tauri::AppHandle) {
-    tauri::WindowBuilder::new(&app, "label", tauri::WindowUrl::App("about.html".into()))
-        .build()
-        .unwrap();
-}
-
-#[tauri::command]
 async fn save_file(json_data: String, file_name: String, password: String) -> bool {
     let result = !encrypt_small_file(&file_name, &password, &json_data).is_err();
     result
 }
 
+/// A result struct for the `load_file` function.
 #[derive(Serialize, Deserialize)]
 struct StringResult {
+    /// The file contents as JSON if the result was successful.
     value: String,
+    /// A value indicating whether the `load_file` function succeeded.
     error: bool,
 }
 
+/// Loads the application settings requested by the frontend.
+///
+/// # Returns
+/// Application settings.
 #[tauri::command]
 async fn load_settings() -> AppConfig {
     get_app_config()
 }
 
+/// Saves the settings passed from the frontend.
+///
+/// # Arguments
+///
+/// `config` - the application configuration.
+///
+/// # Returns
+/// `true` if the settings were saved successfully; `false` otherwise.
 #[tauri::command]
 async fn save_settings(config: AppConfig) -> bool {
     set_app_config(config)
 }
 
+/// Loads a file requested by the frontend.
+/// # Arguments
+///
+/// * `file_name` - the file to load.
+/// * `password` - the password to use for decryption.
+///
+/// # Returns
+/// A `StringResult` indicating success or failure with the file contents decrypted.
 #[tauri::command]
 async fn load_file(file_name: String, password: String) -> StringResult {
     let result = match decrypt_small_file(&file_name, &password) {
