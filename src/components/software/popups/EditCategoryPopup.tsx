@@ -146,7 +146,7 @@ const EditCategoryPopup = ({
                             </td>
                             <td>
                                 <TextBox //
-                                    value={entry?.name}
+                                    value={categoryInternal?.name}
                                     onValueChanged={onNameChanged}
                                     onKeyDown={onKeyDown}
                                     onInitialized={textBoxInitialized}
