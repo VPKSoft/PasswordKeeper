@@ -31,22 +31,34 @@ import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
 import EntryEditor from "../EntryEditor";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link EditEntryPopup} component.
+ */
+type EditEntryPopupProps = {
+    /** The currently active entry. */
     entry: DataEntry | undefined;
+    /** The edit mode of the {@link entry} */
     mode: ModifyType;
+    /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
-};
+} & CommonProps;
 
+/**
+ * A popup component to edit an existing entry or add a new entry.
+ * @param param0 The component props: {@link EditEntryPopupProps}.
+ * @returns A component.
+ */
 const EditEntryPopup = ({
     className, //
     entry,
     mode,
     visible,
     onClose,
-}: Props) => {
+}: EditEntryPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
     const focusTextBoxRef = React.useRef<dxTextBox>();
@@ -54,12 +66,15 @@ const EditEntryPopup = ({
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
 
+    // Memoize the title for the popup based on the mode.
     const title = React.useMemo(() => (mode === ModifyType.New ? le("newEntry", "New entry") : le("modifyEntry", "Modify entry", { entry })), [entry, le, mode]);
 
+    // Set the internal state entry.
     React.useEffect(() => {
         setEntryInternal(entry);
     }, [entry]);
 
+    // Handle the visibility change callback.
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
@@ -70,11 +85,13 @@ const EditEntryPopup = ({
         [onClose, userAccepted]
     );
 
+    // Handle the hiding callback.
     const onHiding = React.useCallback(() => {
         onClose(userAccepted);
         setUserAccepted(false);
     }, [onClose, userAccepted]);
 
+    // After the component has been shown, focus the entry editor text box.
     const popupShown = React.useCallback(() => {
         focusTextBoxRef.current?.focus();
     }, []);

@@ -24,6 +24,7 @@ SOFTWARE.
 
 import themes from "devextreme/ui/themes";
 
+// Dynamic imports for the DevExtreme themes.
 const carmine_compact = () => import("devextreme/dist/css/dx.carmine.compact.css");
 const carmine = () => import("devextreme/dist/css/dx.carmine.css");
 const contrast = () => import("devextreme/dist/css/dx.contrast.css");
@@ -61,6 +62,9 @@ const material_tealLight_compact = () => import("devextreme/dist/css/dx.material
 const material_softBlue = () => import("devextreme/dist/css/dx.softblue.css");
 const material_softBlue_compact = () => import("devextreme/dist/css/dx.softblue.compact.css");
 
+/**
+ * The DevExtreme theme names as an array of strings.
+ */
 export const dxThemes = [
     "generic.carmine.compact",
     "generic.carmine",
@@ -100,8 +104,16 @@ export const dxThemes = [
     "generic.softblue",
 ] as const;
 
+/**
+ * A type for DevExtreme themes.
+ */
 export type DxThemeNames = (typeof dxThemes)[number];
 
+/**
+ * Sets the current DevExtreme theme using a dynamic import of the CSS file.
+ * To keep the application theming correct the the window should be reloaded after setting the theme.
+ * @param theme The name of the theme to set.
+ */
 export const setTheme = (theme: DxThemeNames) => {
     const settingTheme = window.localStorage.getItem("dx-theme");
     // the current import is deprecated:

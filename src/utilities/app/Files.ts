@@ -26,18 +26,33 @@ import { save, open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 import { DataEntry } from "../../types/PasswordEntry";
 
+/**
+ * A result type for the {@link loadFile} and {@link saveFile} functions.
+ */
 type FileResult = {
+    /** A value indicating whether the file was saved or opened successfully. */
     ok: boolean;
+    /** The name of file. */
     fileName: string;
+    /** The file data containing all the categories and items saved into the file. */
     fileData: DataEntry[];
+    /** An error message in case the file load or save operation was unsuccessful. */
     errorMessage?: string;
 };
 
+/**
+ * The result type the Rust "backend" gives upon *load_file* invocation.
+ */
 type BackendResult = {
+    /** A value indicating whether an error occurred. */
     error: boolean;
+    /** A JSON string data of the file contents. */
     value: string;
 };
 
+/**
+ * A value for a failed {@link FileResult}.
+ */
 const failed: FileResult = { ok: false, fileData: [], fileName: "" };
 
 /**
@@ -88,7 +103,7 @@ const selectFileToSave = async (extensionName: string, extension = "pkd") => {
  * Loads the specified file, decrypts the data and returns the decrypted data.
  * @param password The password used in the encryption.
  * @param fileName The file name to decrypt the data from.
- * @returns A @see FileResult value with the loaded data or indicating failure.
+ * @returns A {@link FileResult} value with the loaded data or indicating failure.
  */
 const loadFile = async (password: string, fileName: string) => {
     let fileData: BackendResult = { error: false, value: "" };
@@ -112,7 +127,7 @@ const loadFile = async (password: string, fileName: string) => {
  * Saves the specified data into the specified file encrypted using the specified password.
  * @param fileData The data to save to file in encrypted form.
  * @param password The password used in the encryption.
- * @returns A @see FileResult value with the the file name the data was saved into along with a success flag.
+ * @returns A {@link FileResult} value with the the file name the data was saved into along with a success flag.
  */
 const saveFile = async (fileData: DataEntry[], password: string, fileName: string) => {
     const saveData = JSON.stringify(fileData);

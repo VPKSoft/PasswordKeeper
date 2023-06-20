@@ -29,7 +29,7 @@ type Indexable = {
 };
 
 /**
- * Gets the @see Document CSS style property value.
+ * Gets the {@link Document} CSS style property value.
  * @param styleName The style class name.
  * @param styleProp The style class property name.
  * @param fallBack The fallback value for the @param styleProp value if one is not found.

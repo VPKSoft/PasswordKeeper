@@ -31,22 +31,34 @@ import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
 import { useFocus } from "../../../hooks/UseFocus";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link EditCategoryPopup} component.
+ */
+type EditCategoryPopupProps = {
+    /** The currently active entry. */
     entry: DataEntry;
+    /** The edit mode of the {@link entry} */
     mode: ModifyType;
+    /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
-};
+} & CommonProps;
 
+/**
+ * A popup component to edit an existing category or add a new category.
+ * @param param0 The component props: {@link EditCategoryPopupProps}.
+ * @returns A component.
+ */
 const EditCategoryPopup = ({
     className, //
     entry,
     mode,
     visible,
     onClose,
-}: Props) => {
+}: EditCategoryPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [categoryInternal, setCategoryInternal] = React.useState<DataEntry>(entry);
 
@@ -55,16 +67,20 @@ const EditCategoryPopup = ({
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
 
+    // Memoize the title for the popup based on the mode.
     const title = React.useMemo(() => (mode === ModifyType.Edit ? lu("renameCategory") : lu("addCategory")), [lu, mode]);
 
+    // Set the internal state entry.
     React.useEffect(() => {
         setCategoryInternal(entry);
     }, [entry]);
 
+    // Set the focus to the text box.
     const onShown = React.useCallback(() => {
         setFocus();
     }, [setFocus]);
 
+    // Handle the visibility change callback.
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
@@ -75,6 +91,7 @@ const EditCategoryPopup = ({
         [onClose, userAccepted]
     );
 
+    // Handle the hiding callback.
     const onHiding = React.useCallback(() => {
         onClose(userAccepted);
         setUserAccepted(false);

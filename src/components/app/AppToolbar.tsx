@@ -29,21 +29,39 @@ import styled from "styled-components";
 import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
+import { CommonProps } from "../Types";
 
-export type ToolBarProps = {
-    className?: string;
+/**
+ * The props for the {@link AppToolbar} component.
+ */
+export type AppToolbarProps = {
+    /** The currently selected {@link DataEntry} item. */
     entry: DataEntry | undefined;
+    /** Occurs when the save file item was clicked. */
     saveFileClick: () => void;
+    /** Occurs when the save file as item was clicked. */
     saveFileAsClick: () => void;
+    /** Occurs when the open file item was clicked. */
     loadFileClick: () => void;
+    /** Occurs when the edit category or entry item was clicked. */
     editClick: () => void;
+    /** Occurs when the add entry item was clicked. */
     addClick: () => void;
+    /** Occurs when the add category item was clicked. */
     addCategoryClick: () => void;
+    /** Occurs when the delete category or entry item was clicked. */
     deleteClick: () => void;
+    /** Occurs when the lock view item was clicked. */
     lockViewClick: () => void;
+    /** Occurs when the test something item was clicked. ONLY for development purposes; do not define in production. */
     testClick?: () => void;
-};
+} & CommonProps;
 
+/**
+ * A component for the application toolbar for the PasswordKeeper.
+ * @param param0 The component props {@link AppToolbarProps}.
+ * @returns A component.
+ */
 const AppToolbar = ({
     className, //
     entry,
@@ -56,7 +74,7 @@ const AppToolbar = ({
     deleteClick,
     lockViewClick,
     testClick,
-}: ToolBarProps) => {
+}: AppToolbarProps) => {
     const lm = useLocalize("menu");
     return (
         <Toolbar className={classNames(AppToolbar.name, className)}>
@@ -133,5 +151,5 @@ const AppToolbar = ({
 };
 
 export default styled(AppToolbar)`
-    // Add style here
+    // Add style(s) here
 `;

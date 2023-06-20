@@ -1,18 +1,26 @@
 import * as React from "react";
 
+/**
+ * An enumeration for a time interval type.
+ */
 export enum TimeInterval {
+    /** The time interval is in milliseconds. */
     Milliseconds,
+    /** The time interval is in seconds. */
     Seconds,
+    /** The time interval is in minutes. */
     Minutes,
+    /** The time interval is in hours. */
     Hours,
+    /** The time interval is in days. */
     Days,
 }
 
 /**
  * A custom hook to call the specified callback in a specified time interval.
- * @param interval The time interval in specified @see intervalType.
+ * @param interval The time interval in specified {@link intervalType}.
  * @param callback The callback function.
- * @param intervalType The type of the time interval. The default is @see TimeInterval.Milliseconds.
+ * @param intervalType The type of the time interval. The default is {@link TimeInterval.Milliseconds}.
  * @returns A function to set the enabled state of the continuous callback and a function to reset the timeout.
  */
 const useTimeout = (
@@ -54,7 +62,7 @@ const useTimeout = (
     }, []);
 
     React.useEffect(() => {
-        if (enabled) {
+        if (enabled && intervalInternal > 0) {
             const timeout = setTimeout(() => {
                 callback();
             }, intervalInternal);

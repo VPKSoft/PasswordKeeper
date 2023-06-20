@@ -30,21 +30,38 @@ import * as React from "react";
 import styled from "styled-components";
 import notify from "devextreme/ui/notify";
 import { useLocalize } from "../../../i18n";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link PasswordTextBox} component.
+ */
+type PasswordTextBoxProps = {
+    /** A value indicting if the text box is in readonly mode. */
     readonly?: boolean;
+    /** The current value of the text box. */
     value?: string | undefined;
+    /** A Value indicating a time interval in seconds to hide to password if it is visible. */
     hidePasswordTimeout?: number;
+    /** A value indicating if to display the generate password button. */
     showGeneratePassword?: boolean;
+    /** A value indicating whether to display the copy password to clipboard button. */
     showCopyButton?: boolean;
+    /** An initial value to indicate whether the password should be visible as plain text. */
     initialShowPassword?: boolean;
+    /** Occurs when the {@link TextBox} value has been changed. */
     onValueChanged?: (e: ValueChangedEvent) => void;
+    /** Occurs when a key was pressed on the {@link TextBox}. */
     onKeyDown?: (e: KeyDownEvent) => void;
+    /** Occurs when the {@link TextBox} was initialized. */
     onInitialized?: (e: InitializedEvent) => void;
-};
+} & CommonProps;
 
-const PasswordTextbox = ({
+/**
+ * A password input component with password generation possibility and copy to clipboard functionality.
+ * @param param0 The component props: {@link PasswordTextBoxProps}.
+ * @returns A component.
+ */
+const PasswordTextBox = ({
     readonly = false, //
     className,
     value,
@@ -55,13 +72,14 @@ const PasswordTextbox = ({
     onInitialized: onInitializedCallback,
     onValueChanged,
     onKeyDown,
-}: Props) => {
+}: PasswordTextBoxProps) => {
     const [displayPassword, setDisplayPassword] = React.useState(initialShowPassword ?? false);
 
     const lu = useLocalize("ui");
 
     const textBoxRef = React.useRef<dxTextBox>();
 
+    // If the password hiding is enabled, hide the password after a specified interval.
     React.useEffect(() => {
         if (hidePasswordTimeout && hidePasswordTimeout > 0 && displayPassword && readonly) {
             const timer = window.setInterval(() => {
@@ -72,16 +90,19 @@ const PasswordTextbox = ({
         }
     }, [displayPassword, hidePasswordTimeout, readonly]);
 
+    // Display the password when certain props change.
     React.useEffect(() => {
         if (!readonly && initialShowPassword === undefined) {
             setDisplayPassword(true);
         }
     }, [initialShowPassword, readonly]);
 
+    // Toggles the password visibility.
     const toggleDisplayPassword = React.useCallback(() => {
         setDisplayPassword(value => !value);
     }, []);
 
+    // Save the TextBox ref and delegate a new callback with the same parameters.
     const onInitialized = React.useCallback(
         (e: InitializedEvent) => {
             onInitializedCallback?.(e);
@@ -90,10 +111,12 @@ const PasswordTextbox = ({
         [onInitializedCallback]
     );
 
+    // Generate a new password into the TextBox.
     const generatePasswordClick = React.useCallback(() => {
         textBoxRef.current?.option("value", generatePassword());
     }, []);
 
+    // Copy the password value into the clipboard.
     const copyToClipboard = React.useCallback(() => {
         const text = textBoxRef?.current?.option("value") as string | undefined;
         if (text) {
@@ -108,17 +131,19 @@ const PasswordTextbox = ({
         }
     }, [lu]);
 
+    // Memoize the tooltip for the password visibility toggle
+    // button based on the value whether to display the password.
     const toggleShowPasswordHint = React.useMemo(() => {
         return displayPassword ? lu("hidePassword") : lu("showPassword");
     }, [displayPassword, lu]);
 
     return (
-        <div className={classNames(PasswordTextbox.name, className)}>
+        <div className={classNames(PasswordTextBox.name, className)}>
             <TextBox //
                 onInitialized={onInitialized}
                 readOnly={readonly}
                 mode={displayPassword ? "text" : "password"}
-                className="PasswordTextbox-textBox"
+                className="PasswordTextBox-textBox"
                 value={value}
                 onValueChanged={onValueChanged}
                 onKeyDown={onKeyDown}
@@ -126,7 +151,7 @@ const PasswordTextbox = ({
             />
             <Button //
                 icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}
-                className="PasswordTextbox-button"
+                className="PasswordTextBox-button"
                 onClick={toggleDisplayPassword}
                 hint={toggleShowPasswordHint}
             />
@@ -135,7 +160,7 @@ const PasswordTextbox = ({
                     <Button //
                         icon="fas fa-rotate"
                         onClick={generatePasswordClick}
-                        className="PasswordTextbox-button"
+                        className="PasswordTextBox-button"
                         hint={lu("generatePassword")}
                     />
                 )}
@@ -143,7 +168,7 @@ const PasswordTextbox = ({
                 <Button //
                     hint={lu("copyClipboard")}
                     icon="copy"
-                    className="PasswordTextbox-button"
+                    className="PasswordTextBox-button"
                     onClick={copyToClipboard}
                 />
             )}
@@ -151,6 +176,11 @@ const PasswordTextbox = ({
     );
 };
 
+/**
+ * Generates a simple password using lowercase a-z, uppercase A-Z, number 0-9 and @, # and $ characters.
+ * @param length The length of the password to generate.
+ * @returns A password generated with the specified length.
+ */
 const generatePassword = (length = 12) => {
     let pass = "";
     const str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$";
@@ -164,13 +194,13 @@ const generatePassword = (length = 12) => {
     return pass;
 };
 
-export default styled(PasswordTextbox)`
+export default styled(PasswordTextBox)`
     display: flex;
     flex-direction: row;
-    .PasswordTextbox-textBox {
+    .PasswordTextBox-textBox {
         width: 100%;
     }
-    .PasswordTextbox-button {
+    .PasswordTextBox-button {
         margin-left: 6px;
     }
 `;

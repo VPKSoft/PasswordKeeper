@@ -31,27 +31,42 @@ import { InitializedEvent, KeyDownEvent } from "devextreme/ui/text_box";
 import { useLocalize } from "../../../i18n";
 import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
 import { FileQueryMode } from "../../../types/Enums";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link FileQueryTextBox} component.
+ */
+type FileQueryTextBoxProps = {
+    /** The textbox value (the file name). */
     value?: string | undefined;
+    /** The mode the query the file name in. */
     mode: FileQueryMode;
+    /** Occurs when the value of the file name has been changed. */
     onValueChanged: (value: string | undefined) => void;
+    /** Occurs when a key was pressed in the file name edit text box.  */
     onKeyDown?: (e: KeyDownEvent) => void;
+    /** Occurs when the {@link TextBox} was initialized within the component. */
     onInitialized?: (e: InitializedEvent) => void;
-};
+} & CommonProps;
 
-const FileQueryTextbox = ({
+/**
+ * A component for inputting a file name in either open, save or save as mode.
+ * @param param0 The component props: {@link FileQueryTextBoxProps}.
+ * @returns A component.
+ */
+const FileQueryTextBox = ({
     className, //
     value,
     mode,
     onValueChanged,
     onKeyDown,
     onInitialized,
-}: Props) => {
+}: FileQueryTextBoxProps) => {
     const lc = useLocalize("common");
     const la = useLocalize("app");
 
+    // A callback for select file click. Depending on the mode use the appropriate dialog;
+    // save or open file dialog.
     const selectFileClick = React.useCallback(() => {
         if (mode === FileQueryMode.Open) {
             void selectFileToOpen(la("passwordKeeperDataFile", "PasswordKeeper data file")).then(f => {
@@ -69,7 +84,7 @@ const FileQueryTextbox = ({
     }, [la, mode, onValueChanged]);
 
     return (
-        <div className={classNames(FileQueryTextbox.name, className)}>
+        <div className={classNames(FileQueryTextBox.name, className)}>
             <TextBox //
                 readOnly={true}
                 className="FileQueryTextbox-textBox"
@@ -87,7 +102,7 @@ const FileQueryTextbox = ({
     );
 };
 
-export default styled(FileQueryTextbox)`
+export default styled(FileQueryTextBox)`
     display: flex;
     flex-direction: row;
     .FileQueryTextbox-textBox {

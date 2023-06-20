@@ -30,20 +30,40 @@ import { ValueChangedEvent } from "devextreme/ui/text_area";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
-import PasswordTextbox from "../reusable/inputs/PasswordTextbox";
+import PasswordTextBox from "../reusable/inputs/PasswordTextBox";
+import { CommonProps } from "../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link EntryEditor} component.
+ */
+type EntryEditorProps = {
+    /** The current {@link DataEntry} value which is an item, NOT a category. */
     entry?: DataEntry | null;
+    /** A value indicating whether the editor is in read-only mode. E.g. display item mode. */
     readOnly?: boolean;
+    /** A value indicating whether this popup is visible. */
     visible?: boolean;
+    /** A value in seconds the password editor should hide the password. */
     hidePasswordTimeout?: number;
+    /** A value indicating whether the password generate button is visible. */
     showGeneratePassword?: boolean;
+    /** A value indicating whether the copy password to clipboard is visible. */
     showCopyButton?: boolean;
+    /** A ref to the item name text box. */
     nameTextBoxRef?: React.MutableRefObject<dxTextBox | undefined>;
+    /**
+     * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
+     * @param {DataEntry} entry The value of the changed item entry.
+     * @returns {void} void.
+     */
     onEntryChanged?: (entry: DataEntry) => void;
-};
+} & CommonProps;
 
+/**
+ * A component to either display or edit items. NOT categories.
+ * @param param0 The component props: {@link EntryEditorProps}.
+ * @returns A component.
+ */
 const EntryEditor = ({
     className, //
     entry,
@@ -54,9 +74,11 @@ const EntryEditor = ({
     showCopyButton = false,
     nameTextBoxRef,
     onEntryChanged,
-}: Props) => {
+}: EntryEditorProps) => {
     const le = useLocalize("entries");
 
+    // A value change callback to handle the changes of all the text boxes
+    // within the component.
     const onValueChanged = React.useCallback(
         (e: TextBoxValueChangedEvent, name: keyof DataEntry) => {
             if (readOnly || (entry ?? null) === null) {
@@ -72,6 +94,7 @@ const EntryEditor = ({
         [entry, onEntryChanged, readOnly]
     );
 
+    // The item name was changed.
     const onNameChanged = React.useCallback(
         (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "name");
@@ -79,6 +102,7 @@ const EntryEditor = ({
         [onValueChanged]
     );
 
+    // The item domain value was changed.
     const onDomainChanged = React.useCallback(
         (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "domain");
@@ -86,6 +110,7 @@ const EntryEditor = ({
         [onValueChanged]
     );
 
+    // The item user name was changed.
     const onUserNameChanged = React.useCallback(
         (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "userName");
@@ -93,6 +118,7 @@ const EntryEditor = ({
         [onValueChanged]
     );
 
+    // The item password was changed.
     const onPasswordChanged = React.useCallback(
         (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "password");
@@ -100,6 +126,7 @@ const EntryEditor = ({
         [onValueChanged]
     );
 
+    // The item notes was changed.
     const onNotesChanged = React.useCallback(
         (e: ValueChangedEvent) => {
             onValueChanged(e, "notes");
@@ -107,6 +134,7 @@ const EntryEditor = ({
         [onValueChanged]
     );
 
+    // Save the ref to the name TextBox if the ref prop is defined.
     const onNameTextBoxInitialized = React.useCallback(
         (e: InitializedEvent) => {
             if (nameTextBoxRef !== undefined) {
@@ -165,7 +193,7 @@ const EntryEditor = ({
                                 </td>
                                 <td>
                                     <div>
-                                        <PasswordTextbox
+                                        <PasswordTextBox
                                             hidePasswordTimeout={hidePasswordTimeout}
                                             readonly={readOnly}
                                             value={entry?.password}

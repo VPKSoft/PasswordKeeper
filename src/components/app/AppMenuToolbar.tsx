@@ -26,21 +26,36 @@ import * as React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
-import AppToolbar, { ToolBarProps } from "./AppToolbar";
+import AppToolbar, { AppToolbarProps } from "./AppToolbar";
 import AppMenu, { AppMenuProps, MenuData } from "./AppMenu";
 
-type Props = Omit<AppMenuProps, "onItemClick"> &
-    ToolBarProps & {
+/**
+ * The props for the {@link AppMenuToolbar} component.
+ */
+type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
+    AppToolbarProps & {
+        /** Occurs when the  item was clicked. */
         exitClick: () => void;
+        /** Occurs when the new file item was clicked. */
         newFileClick: () => void;
+        /** Occurs when the preferences item was clicked. */
         settingsClick: () => void;
+        /** Occurs when the about item was clicked. */
         aboutShowClick: () => void;
+        /** Occurs when the close file item was clicked. */
         fileCloseClick: () => void;
     };
 
+/**
+ * A component for the application toolbar and menu for the PasswordKeeper.
+ * @param param0 The component props: {@link AppMenuToolbarProps}.
+ * @returns A component.
+ */
 const AppMenuToolbar = ({
     className, //
     entry,
+    isNewFile,
+    isfileChanged,
     loadFileClick,
     saveFileClick,
     saveFileAsClick,
@@ -55,7 +70,7 @@ const AppMenuToolbar = ({
     lockViewClick,
     fileCloseClick,
     testClick,
-}: Props) => {
+}: AppMenuToolbarProps) => {
     const onItemClick = React.useCallback(
         (e: ItemClickEvent) => {
             const clickedItem: MenuData = e.itemData as MenuData;
@@ -133,7 +148,12 @@ const AppMenuToolbar = ({
 
     return (
         <div className={classNames(AppMenuToolbar.name, className)}>
-            <AppMenu onItemClick={onItemClick} entry={entry} />
+            <AppMenu //
+                onItemClick={onItemClick}
+                entry={entry}
+                isNewFile={isNewFile}
+                isfileChanged={isfileChanged}
+            />
             <AppToolbar //
                 entry={entry}
                 saveFileClick={saveFileClick}

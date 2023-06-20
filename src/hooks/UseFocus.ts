@@ -24,17 +24,25 @@ SOFTWARE.
 
 import * as React from "react";
 
+/**
+ * A type for something that has a focus function as a member.
+ */
 type Focusable = {
+    /** Focuses the compoentn. */
     focus: () => void;
 };
 
+/**
+ * A type for DevExtreme component {@link onInitialized} event.
+ */
 type DxInitializedEvent = {
+    /** The component which can be focused. */
     component: Focusable;
 };
 
 /**
  * A custom hook to help focus a specific DevExtreme component.
- * @param dxInitialized An optional callback for the @see dxComponent.onInitialized event.
+ * @param dxInitialized An optional callback for the {@link dxComponent.onInitialized} event.
  * @returns A function to focus the component, the onInitialized event for the component to focus and a ref for the component.
  */
 export const useFocus = (dxInitialized?: (e: never) => void): [() => void, (e: unknown) => void, React.MutableRefObject<Focusable | undefined>] => {

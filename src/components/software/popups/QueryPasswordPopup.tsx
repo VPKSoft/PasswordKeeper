@@ -29,19 +29,38 @@ import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { InitializedEvent } from "devextreme/ui/popup";
 import { useLocalize } from "../../../i18n";
-import PasswordTextbox from "../../reusable/inputs/PasswordTextbox";
+import PasswordTextBox from "../../reusable/inputs/PasswordTextBox";
 import { useFocus } from "../../../hooks/UseFocus";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link QueryPasswordPopup} component.
+ */
+type QueryPasswordPopupProps = {
+    /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** A value indicating whether the password input should be verified by using another password text box. */
     verifyMode?: boolean;
+    /** A value indicating whether the password should be initially visible. */
     initialShowPassword?: boolean;
+    /** A value indicating whether to display the {@link Popup} close ("X") button. */
     showCloseButton?: boolean;
+    /** A value indicating whether closing the popup with not accepting the popup should be disabled. E.g. The Escape key. */
     disableCloseViaKeyboard?: boolean;
+    /**
+     * A callback when the popup is closed.
+     * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
+     * @param {string} password The password inputted by the user.
+     * @returns {void} void.
+     */
     onClose: (userAccepted: boolean, password?: string) => void;
-};
+} & CommonProps;
 
+/**
+ * A popup component to request password and optionally password verification from the user.
+ * @param param0 The component props: {@link QueryPasswordPopupProps}.
+ * @returns A component.
+ */
 const QueryPasswordPopup = ({
     className, //
     visible,
@@ -50,7 +69,7 @@ const QueryPasswordPopup = ({
     showCloseButton,
     disableCloseViaKeyboard = false,
     onClose,
-}: Props) => {
+}: QueryPasswordPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [password1, setPassword1] = React.useState("");
     const [password2, setPassword2] = React.useState("");
@@ -60,8 +79,10 @@ const QueryPasswordPopup = ({
     const lu = useLocalize("ui");
     const lc = useLocalize("common");
 
+    // Memoize the localized title.
     const title = React.useMemo(() => lc("givePassword"), [lc]);
 
+    // Handle the onVisibleChange callback of the Popup component.
     const onVisibleChange = React.useCallback(
         (visible: boolean) => {
             if (!visible) {
@@ -72,19 +93,23 @@ const QueryPasswordPopup = ({
         [onClose, password1, userAccepted]
     );
 
+    // Handle the onHiding callback of the Popup component.
     const onHiding = React.useCallback(() => {
         onClose(userAccepted, userAccepted ? password1 : undefined);
         setUserAccepted(false);
     }, [onClose, password1, userAccepted]);
 
+    // Save the first password input value to the state when it is changed.
     const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
         setPassword1(e.value);
     }, []);
 
+    // Save the second password input value to the state when it is changed.
     const onPassword2Changed = React.useCallback((e: ValueChangedEvent) => {
         setPassword2(e.value);
     }, []);
 
+    // Memoize the value whether the popup can be accepted. E.g. the password(s) are set.
     const allowAccept = React.useMemo(() => {
         if (verifyMode) {
             return password1 !== "" && password2 !== "" && password1 === password2;
@@ -109,6 +134,7 @@ const QueryPasswordPopup = ({
         [allowAccept, disableCloseViaKeyboard, onClose, password1]
     );
 
+    // Catch the escape key press of the popup if the disableCloseViaKeyboard is set.
     const onInitialized = React.useCallback(
         (e: InitializedEvent) => {
             if (disableCloseViaKeyboard) {
@@ -142,7 +168,7 @@ const QueryPasswordPopup = ({
                             </td>
                             <td>
                                 <div>
-                                    <PasswordTextbox //
+                                    <PasswordTextBox //
                                         value={password1}
                                         onValueChanged={onPassword1Changed}
                                         showGeneratePassword={false}
@@ -161,7 +187,7 @@ const QueryPasswordPopup = ({
                                 </td>
                                 <td>
                                     <div>
-                                        <PasswordTextbox //
+                                        <PasswordTextBox //
                                             value={password2}
                                             onValueChanged={onPassword2Changed}
                                             showGeneratePassword={false}

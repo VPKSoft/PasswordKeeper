@@ -28,23 +28,29 @@ import styled from "styled-components";
 import classNames from "classnames";
 import { getName, getVersion } from "@tauri-apps/api/app";
 import { useLocalize } from "../../../i18n";
+import { CommonProps } from "../../Types";
 
-type Props = {
-    className?: string;
+/**
+ * The props for the {@link AboutPopup} component.
+ */
+type AboutPopupProps = {
+    /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** Occurs when the popup has been closed. */
     onClose: () => void;
-};
+} & CommonProps;
 
 const AboutPopup = ({
     className, //
     visible,
     onClose,
-}: Props) => {
+}: AboutPopupProps) => {
     const lc = useLocalize("common");
 
     const [appVersion, setAppVersion] = React.useState("");
     const [appName, setAppName] = React.useState("");
 
+    // Get the application name and current version.
     React.useEffect(() => {
         const versionPromise = getVersion();
         const appNamePromise = getName();
@@ -54,6 +60,7 @@ const AboutPopup = ({
         });
     }, []);
 
+    // Raise the onClose if the popup is closed via the "X" button.
     const onHiding = React.useCallback(() => {
         if (visible) {
             onClose();
@@ -101,7 +108,11 @@ SOFTWARE."
                 `}
                     </div>
                 </ScrollView>
+                <div className="LogoImages">
+                    <img src="./src/img/LogoOnly.svg" className="LogoImage" onClick={() => open("https://www.vpksoft.net")} />
 
+                    <img src="./src/img/Octicons-mark-github.svg" className="LogoImage" onClick={() => open("https://github.com/VPKSoft/PasswordKeeper")} />
+                </div>
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lc("Ok")}
@@ -137,5 +148,17 @@ export default styled(AboutPopup)`
         width: 100%;
         flex-direction: row;
         justify-content: flex-end;
+    }
+    .LogoImages {
+        display: flex;
+        flex-direction: row;
+        height: 100px;
+        justify-content: space-evenly;
+    }
+    .LogoImage {
+        height: 90%;
+        // margin-left: 25%;
+        margin-top: 10px;
+        cursor: pointer;
     }
 `;
