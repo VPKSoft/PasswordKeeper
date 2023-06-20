@@ -8,6 +8,7 @@ import { CommonProps } from "../Types";
 import mdiClose from "../../img/mdi_close.svg";
 import mdiWindowMaximize from "../../img/mdi_window-maximize.svg";
 import mdiWindowMinimize from "../../img/mdi_window-minimize.svg";
+import appIcon from "../../img/app-icon.svg";
 
 /**
  * The props for the {@link WindowTitle} component.
@@ -72,7 +73,7 @@ const WindowTitle = ({
             onKeyUp={onUserInteraction}
         >
             <div className="titlebar-icon" id="titlebar-close">
-                <img src="./src/img/app-icon.svg" alt="close" width={32} height={32} />
+                <img src={appIcon} alt="app icon" width={32} height={32} />
             </div>
             <div data-tauri-drag-region className="titlebar-title">
                 {displayTitle}
