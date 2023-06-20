@@ -5,10 +5,7 @@ import classNames from "classnames";
 import { useLocalize } from "../../i18n";
 import { Settings } from "../../types/Settings";
 import { CommonProps } from "../Types";
-import mdiClose from "../../img/mdi_close.svg";
-import mdiWindowMaximize from "../../img/mdi_window-maximize.svg";
-import mdiWindowMinimize from "../../img/mdi_window-minimize.svg";
-import appIcon from "../../img/app-icon.svg";
+import { AppIcon, MdiClose, MdiWindowMaximize, MdiWindowMinimize } from "../../utilities/app/Images";
 
 /**
  * The props for the {@link WindowTitle} component.
@@ -73,20 +70,20 @@ const WindowTitle = ({
             onKeyUp={onUserInteraction}
         >
             <div className="titlebar-icon" id="titlebar-close">
-                <img src={appIcon} alt="app icon" width={32} height={32} />
+                <img src={AppIcon} alt="app icon" width={32} height={32} />
             </div>
             <div data-tauri-drag-region className="titlebar-title">
                 {displayTitle}
             </div>
             <div className="titlebar-buttonContainer">
                 <div className="titlebar-button" id="titlebar-minimize" onClick={minimizeClick} title={lu("minimize", "Minimize")}>
-                    <img src={mdiWindowMinimize} alt="minimize" />
+                    <img src={MdiWindowMinimize} alt="minimize" />
                 </div>
                 <div className="titlebar-button" id="titlebar-maximize" onClick={maximizeClick} title={lu("maximize", "Maximize")}>
-                    <img src={mdiWindowMaximize} alt="maximize" />
+                    <img src={MdiWindowMaximize} alt="maximize" />
                 </div>
                 <div className="titlebar-button" id="titlebar-close" onClick={closeClick} title={lu("close", "Close")}>
-                    <img src={mdiClose} alt="close" />
+                    <img src={MdiClose} alt="close" />
                 </div>
             </div>
         </div>
