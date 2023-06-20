@@ -42,7 +42,23 @@ export type DataEntry = {
 };
 ```
 
-# Getting started
+# Install
+## Windows
+Download the [PasswordKeeper_0.1.0_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.1.0/PasswordKeeper_0.1.0_x64-setup.exe), ignore the warnings and install the software.
+If the installation fails you may need to install webview2, See: https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section
+
+## Linux
+1. Download the [password-keeper_0.1.0_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.1.0/password-keeper_0.1.0_amd64.AppImage)
+2. Run `chmod +x password-keeper_0.1.0_amd64.AppImage` on the file.
+3. Run the password-keeper_0.1.0_amd64.AppImage file.
+
+## macOS
+1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.1.0/PasswordKeeper_x64.app.tar.gz)
+2. Extract the `PasswordKeeper.app` from the file
+3. Run `xattr -c PasswordKeeper.app` on the file.
+4. Run the `PasswordKeeper.app`
+
+# Getting started with the source code
 * Install [rust](https://www.rust-lang.org) & cargo.
 * Install [Node.js](https://nodejs.org)
 * Run the init script, `init.ps1` for Windows, `init.sh` for Linux & Mac.
