@@ -30,6 +30,7 @@ import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
+import SearchTextBox, { SearchTextBoxValue } from "../reusable/inputs/SearchTextBox";
 
 /**
  * The props for the {@link AppToolbar} component.
@@ -37,6 +38,10 @@ import { CommonProps } from "../Types";
 export type AppToolbarProps = {
     /** The currently selected {@link DataEntry} item. */
     entry: DataEntry | undefined;
+    /** A search value for filtering the password list. */
+    searchValue: SearchTextBoxValue;
+    /** Occurs when the value of the search input has been changed. */
+    searchValueChanged?: (value: SearchTextBoxValue) => void;
     /** Occurs when the save file item was clicked. */
     saveFileClick: () => void;
     /** Occurs when the save file as item was clicked. */
@@ -65,6 +70,8 @@ export type AppToolbarProps = {
 const AppToolbar = ({
     className, //
     entry,
+    searchValue,
+    searchValueChanged,
     loadFileClick,
     saveFileClick,
     saveFileAsClick,
@@ -137,6 +144,9 @@ const AppToolbar = ({
                     hint={lm("lockView")}
                 />
             </ToolbarItem>
+            <ToolbarItem location="after">
+                <SearchTextBox value={searchValue} onValueChanged={searchValueChanged} className="AppToolbar-searchBox" />
+            </ToolbarItem>
             {testClick && (
                 <ToolbarItem location="before">
                     <Button //
@@ -151,5 +161,7 @@ const AppToolbar = ({
 };
 
 export default styled(AppToolbar)`
-    // Add style(s) here
+    .AppToolbar-searchBox {
+        width: 450px;
+    }
 `;

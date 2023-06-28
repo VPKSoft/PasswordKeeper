@@ -5,11 +5,11 @@ import { Column, FilterRow, RowDragging, Selection } from "devextreme-react/tree
 import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent, InitializedEvent } from "devextreme/ui/tree_list";
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
-
 import styled from "styled-components";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
-import { CommonProps } from "../Types";
+import { CommonProps, DxFilter } from "../Types";
+import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
  * The props for the {@link PasswordList} component.
@@ -17,6 +17,8 @@ import { CommonProps } from "../Types";
 type PasswordListProps = {
     /** The data source for the component. */
     dataSource: DataEntry[];
+    /** A search value for filtering the password list. */
+    searchValue: SearchTextBoxValue;
     /** The ref for the component's TreeList component. */
     treeListRef?: React.MutableRefObject<dxTreeList | undefined>;
     /** Occurs when the selected item has been changed. */
@@ -34,6 +36,7 @@ type PasswordListProps = {
 const PasswordList = ({
     className, //
     dataSource,
+    searchValue,
     treeListRef,
     setEntry,
     setDataSource,
@@ -79,6 +82,12 @@ const PasswordList = ({
         [treeListRef]
     );
 
+    // Update the TreeList filter when the filter value changes.
+    React.useEffect(() => {
+        const filter = createFilterExpression(searchValue);
+        treeListRef?.current?.filter(filter);
+    }, [searchValue, treeListRef]);
+
     return (
         <TreeList //
             className={classNames(PasswordList.name, className)}
@@ -93,7 +102,6 @@ const PasswordList = ({
             onSaving={onSaving}
         >
             <Selection mode="single" />
-            <FilterRow visible={true} />
             <RowDragging //
                 allowReordering={true}
                 onReorder={onReorder}
@@ -105,16 +113,55 @@ const PasswordList = ({
                 cellTemplate="columnTypeTemplate"
                 caption=""
                 width={90}
+                allowSorting={false}
             />
-
             <Column //
                 dataField="name"
                 caption={le("name")}
                 dataType="string"
+                calculateFilterExpression={createFilterExpression}
+                allowSorting={false}
             />
             <Template name="columnTypeTemplate" render={renderColumnType} />
         </TreeList>
     );
+};
+
+/**
+ * Creates a DevExtreme filter expression of the specified filter value.
+ * @param value A {@link SearchTextBoxValue} with the search text and and the filter combination mode.
+ * @returns A filter for the DevExtreme or undefined if the value was empty.
+ */
+const createFilterExpression = (value: SearchTextBoxValue) => {
+    const terms = value.value.split(" ");
+    const result: DxFilter<DataEntry> = [];
+
+    const orMode = value.searchMode === SearchMode.Or;
+
+    for (const term of terms) {
+        if (term.trim() === "") {
+            continue;
+        }
+        result.push(
+            [
+                ["name", "contains", term], //
+                "or",
+                ["domain", "contains", term],
+                "or",
+                ["address", "contains", term],
+                "or",
+                ["userName", "contains", term],
+                "or",
+                ["notes", "contains", term],
+                "or",
+                ["password", "contains", term],
+            ],
+            orMode ? "or" : "and"
+        );
+    }
+    result.pop();
+
+    return result.length === 0 ? undefined : result;
 };
 
 /**

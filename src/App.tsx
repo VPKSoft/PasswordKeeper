@@ -53,6 +53,7 @@ import LockScreenOverlay from "./components/reusable/LockScreenOverlay";
 import QueryPasswordPopup from "./components/software/popups/QueryPasswordPopup";
 import useTimeout, { TimeInterval } from "./hooks/UseTimeout";
 import { CommonProps } from "./components/Types";
+import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
 
 /**
  * The props for the {@link App} component.
@@ -92,6 +93,7 @@ const App = ({ className }: AppProps) => {
     const [saveChangedFileQueryVisible, setSaveChangedFileQueryVisible] = React.useState(false);
     const [fileCloseRequested, setFileCloseRequested] = React.useState(false);
     const [isNewFile, setIsNewFile] = React.useState(true);
+    const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
 
     const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
@@ -105,6 +107,9 @@ const App = ({ className }: AppProps) => {
         // Hide the entry editor to hide sensitive data.
         setEditEntry(null);
         setEntry(null);
+
+        // Reset the search box.
+        setSearchTextBoxValue(searchBoxValueEmpty);
 
         // Hide the dialogs.
         setFileSaveOpenQueryOpen(false);
@@ -538,6 +543,8 @@ const App = ({ className }: AppProps) => {
             />
             <AppMenuToolbar //
                 entry={entry ?? undefined}
+                searchValue={searchTextBoxValue}
+                searchValueChanged={setSearchTextBoxValue}
                 saveFileClick={saveFileCallback}
                 saveFileAsClick={saveFileAsCallback}
                 loadFileClick={loadFileCallback}
@@ -564,6 +571,7 @@ const App = ({ className }: AppProps) => {
             >
                 <div id="mainView" className="App-itemsView">
                     <PasswordList //
+                        searchValue={searchTextBoxValue}
                         treeListRef={treeListRef}
                         dataSource={dataSource}
                         setDataSource={setDataSource}
@@ -660,6 +668,8 @@ const collapseTree = (tree: dxTreeList | undefined) => {
         });
     }
 };
+
+const searchBoxValueEmpty: SearchTextBoxValue = { value: "", searchMode: SearchMode.Or };
 
 export default styled(App)`
     height: 100%;

@@ -14,5 +14,9 @@
     "hidePassword": "Hide password",
     "showPassword": "Show password",
     "renameCategory": "Rename category",
-    "addCategory": "Add category"
+    "addCategory": "Add category",
+    "andMode": "Search mode: AND",
+    "orMode": "Search mode: OR",
+    "searchLabel": "Search",
+    "clearSearch": "Clear search"
 }
