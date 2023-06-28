@@ -56,6 +56,8 @@ const AppMenuToolbar = ({
     entry,
     isNewFile,
     isfileChanged,
+    searchValue,
+    searchValueChanged,
     loadFileClick,
     saveFileClick,
     saveFileAsClick,
@@ -164,6 +166,8 @@ const AppMenuToolbar = ({
                 addCategoryClick={addCategoryClick}
                 deleteClick={deleteClick}
                 lockViewClick={lockViewClick}
+                searchValue={searchValue}
+                searchValueChanged={searchValueChanged}
                 testClick={testClick}
             />
         </div>
