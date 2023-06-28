@@ -85,7 +85,11 @@ const PasswordList = ({
     // Update the TreeList filter when the filter value changes.
     React.useEffect(() => {
         const filter = createFilterExpression(searchValue);
-        treeListRef?.current?.filter(filter);
+        if (filter) {
+            treeListRef?.current?.filter(filter);
+        } else {
+            treeListRef?.current?.clearFilter();
+        }
     }, [searchValue, treeListRef]);
 
     return (
