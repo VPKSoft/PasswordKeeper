@@ -1,7 +1,7 @@
 import * as React from "react";
 import applyChanges from "devextreme/data/apply_changes";
 import { TreeList } from "devextreme-react";
-import { Column, FilterRow, RowDragging, Selection } from "devextreme-react/tree-list";
+import { Column, RowDragging, Selection } from "devextreme-react/tree-list";
 import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent, InitializedEvent } from "devextreme/ui/tree_list";
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
