@@ -14,5 +14,9 @@
     "hidePassword": "Piilota salasana",
     "showPassword": "Näytä salasana",
     "renameCategory": "Nimeä kategoria",
-    "addCategory": "Lisää kategoria"
+    "addCategory": "Lisää kategoria",
+    "searchLabel": "Haku",
+    "andMode": "Hakutila: JA",
+    "clearSearch": "Tyhjennä haku",
+    "orMode": "Hakutila: TAI"
 }
