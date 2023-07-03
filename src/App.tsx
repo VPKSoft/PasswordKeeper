@@ -24,36 +24,36 @@ SOFTWARE.
 
 import * as React from "react";
 import "./App.css";
-import styled from "styled-components";
 import classNames from "classnames";
 import { appWindow } from "@tauri-apps/api/window";
 import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
 import dxTreeList, { Node } from "devextreme/ui/tree_list";
+import { styled } from "styled-components";
 import { Locales, setLocale, useLocalize } from "./i18n";
-import EditEntryPopup from "./components/software/popups/EditEntryPopup";
 import { DataEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
-import EntryEditor from "./components/software/EntryEditor";
-import EditCategoryPopup from "./components/software/popups/EditCategoryPopup";
 import { useSecureStorage } from "./utilities/hooks";
-import StyledTitle from "./components/app/WindowTitle";
 import { loadFile, saveFile } from "./utilities/app/Files";
-import AppMenuToolbar from "./components/app/AppMenuToolbar";
-import PasswordList from "./components/reusable/PasswordList";
-import OpenSaveFilePopup from "./components/software/popups/OpenSaveFilePopup";
-import ConfirmPopup from "./components/software/popups/ConfirmPopup";
-import PreferencesPopup from "./components/software/popups/PreferencesPopup";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
-import AboutPopup from "./components/software/popups/AboutPopup";
-import LockScreenOverlay from "./components/reusable/LockScreenOverlay";
-import QueryPasswordPopup from "./components/software/popups/QueryPasswordPopup";
-import useTimeout, { TimeInterval } from "./hooks/UseTimeout";
+import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
 import { CommonProps } from "./components/Types";
 import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
+import { StyledOpenSaveFilePopup } from "./components/software/popups/OpenSaveFilePopup";
+import { StyledEditEntryPopup } from "./components/software/popups/EditEntryPopup";
+import { StyledAppMenuToolbar } from "./components/app/AppMenuToolbar";
+import { StyledTitle } from "./components/app/WindowTitle";
+import { StyledPasswordList } from "./components/reusable/PasswordList";
+import { StyledEntryEditor } from "./components/software/EntryEditor";
+import { StyledEditCategoryPopup } from "./components/software/popups/EditCategoryPopup";
+import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
+import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
+import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
+import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
+import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 
 /**
  * The props for the {@link App} component.
@@ -541,7 +541,7 @@ const App = ({ className }: AppProps) => {
                 onClose={fileSaveQueryAbortCloseCallback}
                 onUserInteraction={resetTimeOut}
             />
-            <AppMenuToolbar //
+            <StyledAppMenuToolbar //
                 entry={entry ?? undefined}
                 searchValue={searchTextBoxValue}
                 searchValueChanged={setSearchTextBoxValue}
@@ -570,7 +570,7 @@ const App = ({ className }: AppProps) => {
                 onKeyUp={resetTimeOut}
             >
                 <div id="mainView" className="App-itemsView">
-                    <PasswordList //
+                    <StyledPasswordList //
                         searchValue={searchTextBoxValue}
                         treeListRef={treeListRef}
                         dataSource={dataSource}
@@ -578,7 +578,7 @@ const App = ({ className }: AppProps) => {
                         className="App-itemsView-list"
                         setEntry={setEntry}
                     />
-                    <EntryEditor //
+                    <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
                         entry={entry}
                         readOnly={true}
@@ -588,7 +588,7 @@ const App = ({ className }: AppProps) => {
                     />
                 </div>
                 {editEntry !== null && (
-                    <EditEntryPopup //
+                    <StyledEditEntryPopup //
                         entry={editEntry}
                         mode={entryEditMode}
                         visible={entryEditVisible}
@@ -596,27 +596,27 @@ const App = ({ className }: AppProps) => {
                     />
                 )}
                 {editEntry !== null && (
-                    <EditCategoryPopup //
+                    <StyledEditCategoryPopup //
                         entry={editEntry}
                         mode={categoryPopupMode}
                         visible={categoryEditVisible}
                         onClose={onCategoryEditClose}
                     />
                 )}
-                <OpenSaveFilePopup //
+                <StyledOpenSaveFilePopup //
                     visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
                     mode={filePopupMode}
                     currentFile={currentFile}
                 />
-                <ConfirmPopup //
+                <StyledConfirmPopup //
                     visible={dialogVisible}
                     mode={PopupType.Confirm}
                     message={deleteQueryMessage}
                     buttons={DialogButtons.Yes | DialogButtons.No}
                     onClose={deleteCategoryOrEntry}
                 />
-                <ConfirmPopup //
+                <StyledConfirmPopup //
                     visible={saveChangedFileQueryVisible}
                     mode={PopupType.Confirm}
                     message={lm("fileChangedSaveQuery", undefined, { file: currentFile })}
@@ -624,23 +624,23 @@ const App = ({ className }: AppProps) => {
                     onClose={queryFileChangesPopupClosed}
                 />
                 {settingsRef.current && (
-                    <PreferencesPopup //
+                    <StyledPreferencesPopup //
                         visible={preferencesVisible}
                         settings={settingsRef.current}
                         onClose={preferencesClose}
                     />
                 )}
-                <AboutPopup //
+                <StyledAboutPopup //
                     visible={aboutVisible}
                     onClose={aboutClose}
                 />
-                <LockScreenOverlay //
+                <StyledLockScreenOverlay //
                     lockText={lm("programLockedClickToUnlock")}
                     onClick={lockOverlayClick}
                     visible={viewLocked}
                 />
                 {lockPasswordQueryVisible && (
-                    <QueryPasswordPopup //
+                    <StyledQueryPasswordPopup //
                         showCloseButton={false}
                         verifyMode={false}
                         initialShowPassword={false}
@@ -671,7 +671,7 @@ const collapseTree = (tree: dxTreeList | undefined) => {
 
 const searchBoxValueEmpty: SearchTextBoxValue = { value: "", searchMode: SearchMode.Or };
 
-export default styled(App)`
+const StyledApp = styled(App)`
     height: 100%;
     width: 100%;
     display: contents;    
@@ -690,3 +690,5 @@ export default styled(App)`
         width: 40%;
     }    
 `;
+
+export { StyledApp };

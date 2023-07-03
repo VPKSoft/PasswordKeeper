@@ -26,7 +26,7 @@ import classNames from "classnames";
 import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
 import * as React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { InitializedEvent, KeyDownEvent } from "devextreme/ui/text_box";
 import { useLocalize } from "../../../i18n";
 import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
@@ -102,7 +102,7 @@ const FileQueryTextBox = ({
     );
 };
 
-export default styled(FileQueryTextBox)`
+const StyledFileQueryTextBox = styled(FileQueryTextBox)`
     display: flex;
     flex-direction: row;
     .FileQueryTextbox-textBox {
@@ -112,3 +112,5 @@ export default styled(FileQueryTextBox)`
         margin-left: 6px;
     }
 `;
+
+export { StyledFileQueryTextBox };

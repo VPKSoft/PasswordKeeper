@@ -74,4 +74,4 @@ const useTimeout = (
     return [setEnabled, reset];
 };
 
-export default useTimeout;
+export { useTimeout };

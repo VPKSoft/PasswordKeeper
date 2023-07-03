@@ -24,14 +24,14 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { InitializedEvent } from "devextreme/ui/popup";
 import { useLocalize } from "../../../i18n";
-import PasswordTextBox from "../../reusable/inputs/PasswordTextBox";
 import { useFocus } from "../../../hooks/UseFocus";
 import { CommonProps } from "../../Types";
+import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
 
 /**
  * The props for the {@link QueryPasswordPopup} component.
@@ -168,7 +168,7 @@ const QueryPasswordPopup = ({
                             </td>
                             <td>
                                 <div>
-                                    <PasswordTextBox //
+                                    <StyledPasswordTextBox //
                                         value={password1}
                                         onValueChanged={onPassword1Changed}
                                         showGeneratePassword={false}
@@ -187,7 +187,7 @@ const QueryPasswordPopup = ({
                                 </td>
                                 <td>
                                     <div>
-                                        <PasswordTextBox //
+                                        <StyledPasswordTextBox //
                                             value={password2}
                                             onValueChanged={onPassword2Changed}
                                             showGeneratePassword={false}
@@ -223,7 +223,7 @@ const QueryPasswordPopup = ({
     );
 };
 
-export default styled(QueryPasswordPopup)`
+const StyledQueryPasswordPopup = styled(QueryPasswordPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -237,3 +237,5 @@ export default styled(QueryPasswordPopup)`
         justify-content: flex-end;
     }
 `;
+
+export { StyledQueryPasswordPopup };

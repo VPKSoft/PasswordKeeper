@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import Menu from "devextreme-react/menu";
 import classNames from "classnames";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
@@ -207,8 +207,10 @@ const AppMenu = ({
     );
 };
 
-export default styled(AppMenu)`
+const StyledAppMenu = styled(AppMenu)`
     // Add style(s) here
 `;
+
+export { StyledAppMenu };
 
 export type { MenuData };

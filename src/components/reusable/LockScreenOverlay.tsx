@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import classNames from "classnames";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { CommonProps } from "../Types";
 
 /**
@@ -103,7 +103,7 @@ const hexOpacityToRgba = (color: string, opacity: number) => {
     return `rgba(${Number.parseInt(r, 16)},${Number.parseInt(g, 16)},${Number.parseInt(b, 16)},${opacity})`;
 };
 
-export default styled(LockScreenOverlay)`
+const StyledLockScreenOverlay = styled(LockScreenOverlay)`
     // CSS Styling derived from: https://medium.com/before-semicolon/how-to-create-custom-modal-dialog-in-react-108b83e5a501
     position: fixed;
     z-index: 100;
@@ -120,3 +120,5 @@ export default styled(LockScreenOverlay)`
     justify-content: center;
     flex-wrap: wrap;
 `;
+
+export { StyledLockScreenOverlay };

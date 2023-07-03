@@ -24,14 +24,14 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import classNames from "classnames";
 import dxTextBox from "devextreme/ui/text_box";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
-import EntryEditor from "../EntryEditor";
 import { CommonProps } from "../../Types";
+import { StyledEntryEditor } from "../EntryEditor";
 
 /**
  * The props for the {@link EditEntryPopup} component.
@@ -111,7 +111,7 @@ const EditEntryPopup = ({
             onShown={popupShown}
         >
             <div className={classNames(EditEntryPopup.name, className)}>
-                <EntryEditor //
+                <StyledEntryEditor //
                     className="Popup-entryEditor"
                     entry={entryInternal}
                     readOnly={false}
@@ -140,7 +140,7 @@ const EditEntryPopup = ({
     );
 };
 
-export default styled(EditEntryPopup)`
+const StyledEditEntryPopup = styled(EditEntryPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -154,3 +154,5 @@ export default styled(EditEntryPopup)`
         justify-content: flex-end;
     }
 `;
+
+export { StyledEditEntryPopup };

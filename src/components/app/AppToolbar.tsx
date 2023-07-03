@@ -25,12 +25,12 @@ SOFTWARE.
 import * as React from "react";
 import { Button, Toolbar } from "devextreme-react";
 import { Item as ToolbarItem } from "devextreme-react/toolbar";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
-import SearchTextBox, { SearchTextBoxValue } from "../reusable/inputs/SearchTextBox";
+import { SearchTextBoxValue, StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
 
 /**
  * The props for the {@link AppToolbar} component.
@@ -145,7 +145,7 @@ const AppToolbar = ({
                 />
             </ToolbarItem>
             <ToolbarItem location="after">
-                <SearchTextBox value={searchValue} onValueChanged={searchValueChanged} className="AppToolbar-searchBox" />
+                <StyledSearchTextBox value={searchValue} onValueChanged={searchValueChanged} className="AppToolbar-searchBox" />
             </ToolbarItem>
             {testClick && (
                 <ToolbarItem location="before">
@@ -160,8 +160,10 @@ const AppToolbar = ({
     );
 };
 
-export default styled(AppToolbar)`
+const StyledAppToolbar = styled(AppToolbar)`
     .AppToolbar-searchBox {
         width: 450px;
     }
 `;
+
+export { StyledAppToolbar };

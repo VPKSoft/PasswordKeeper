@@ -27,7 +27,7 @@ import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
 import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import notify from "devextreme/ui/notify";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
@@ -194,7 +194,7 @@ const generatePassword = (length = 12) => {
     return pass;
 };
 
-export default styled(PasswordTextBox)`
+const StyledPasswordTextBox = styled(PasswordTextBox)`
     display: flex;
     flex-direction: row;
     .PasswordTextBox-textBox {
@@ -204,3 +204,5 @@ export default styled(PasswordTextBox)`
         margin-left: 6px;
     }
 `;
+
+export { StyledPasswordTextBox };
