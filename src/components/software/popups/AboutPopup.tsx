@@ -24,9 +24,9 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup, ScrollView } from "devextreme-react";
-import styled from "styled-components";
 import classNames from "classnames";
 import { getName, getVersion } from "@tauri-apps/api/app";
+import styled from "styled-components";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
@@ -125,7 +125,7 @@ SOFTWARE."
     );
 };
 
-export default styled(AboutPopup)`
+const StyledAboutPopup = styled(AboutPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -163,3 +163,5 @@ export default styled(AboutPopup)`
         cursor: pointer;
     }
 `;
+
+export { StyledAboutPopup };

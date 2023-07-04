@@ -24,8 +24,8 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
-import styled from "styled-components";
 import classNames from "classnames";
+import styled from "styled-components";
 import { DialogButtons, DialogResult, PopupType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
@@ -151,7 +151,7 @@ const ConfirmPopup = ({
     );
 };
 
-export default styled(ConfirmPopup)`
+const StyledConfirmPopup = styled(ConfirmPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -166,3 +166,5 @@ export default styled(ConfirmPopup)`
         gap: 10px;
     }
 `;
+
+export { StyledConfirmPopup };

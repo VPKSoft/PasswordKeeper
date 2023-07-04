@@ -129,7 +129,7 @@ const SearchTextBox = ({
     );
 };
 
-export default styled(SearchTextBox)`
+const StyledSearchTextBox = styled(SearchTextBox)`
     display: flex;
     flex-direction: row;
     .SearchTextBox-textBox {
@@ -151,3 +151,5 @@ export default styled(SearchTextBox)`
         margin-right: 6px;
     }
 `;
+
+export { StyledSearchTextBox };

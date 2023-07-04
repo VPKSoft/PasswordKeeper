@@ -194,7 +194,7 @@ const generatePassword = (length = 12) => {
     return pass;
 };
 
-export default styled(PasswordTextBox)`
+const StyledPasswordTextBox = styled(PasswordTextBox)`
     display: flex;
     flex-direction: row;
     .PasswordTextBox-textBox {
@@ -204,3 +204,5 @@ export default styled(PasswordTextBox)`
         margin-left: 6px;
     }
 `;
+
+export { StyledPasswordTextBox };

@@ -219,4 +219,4 @@ const StyledTitle = styled(WindowTitle)`
     }
 `;
 
-export default StyledTitle;
+export { StyledTitle };

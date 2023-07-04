@@ -30,8 +30,8 @@ import { ValueChangedEvent } from "devextreme/ui/text_area";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
-import PasswordTextBox from "../reusable/inputs/PasswordTextBox";
 import { CommonProps } from "../Types";
+import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 
 /**
  * The props for the {@link EntryEditor} component.
@@ -193,7 +193,7 @@ const EntryEditor = ({
                                 </td>
                                 <td>
                                     <div>
-                                        <PasswordTextBox
+                                        <StyledPasswordTextBox
                                             hidePasswordTimeout={hidePasswordTimeout}
                                             readonly={readOnly}
                                             value={entry?.password}
@@ -214,7 +214,7 @@ const EntryEditor = ({
     );
 };
 
-export default styled(EntryEditor)`
+const StyledEntryEditor = styled(EntryEditor)`
     display: flex;
     flex-direction: column;
     .EntryEditor-editRow {
@@ -229,3 +229,5 @@ export default styled(EntryEditor)`
         min-height: 0px;
     }
 `;
+
+export { StyledEntryEditor };
