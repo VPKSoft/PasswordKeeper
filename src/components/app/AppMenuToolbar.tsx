@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import classNames from "classnames";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
 import { AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
 import { AppMenuProps, MenuData, StyledAppMenu } from "./AppMenu";

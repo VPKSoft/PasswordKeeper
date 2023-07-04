@@ -26,7 +26,7 @@ import * as React from "react";
 import { Button, Lookup, NumberBox, Popup } from "devextreme-react";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/lookup";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { Locales, currentLocales, useLocalize } from "../../../i18n";
 import { Settings } from "../../../types/Settings";
 import { DxThemeNames, dxThemes } from "../../../utilities/ThemeUtils";

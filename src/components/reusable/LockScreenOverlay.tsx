@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import classNames from "classnames";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { CommonProps } from "../Types";
 
 /**

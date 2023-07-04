@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import classNames from "classnames";
 import dxTextBox from "devextreme/ui/text_box";
 import { ModifyType } from "../../../types/Enums";

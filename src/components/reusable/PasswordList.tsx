@@ -5,7 +5,7 @@ import { Column, RowDragging, Selection } from "devextreme-react/tree-list";
 import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent, InitializedEvent } from "devextreme/ui/tree_list";
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps, DxFilter } from "../Types";
@@ -45,9 +45,9 @@ const PasswordList = ({
 
     // Order the data by setting the SortOrder and ParentId properties.
     const onReorder = React.useCallback(
-        (e: RowDraggingReorderEvent) => {
+        (e: unknown) => {
             if (dataSource) {
-                setDataSource(reorderData(e, dataSource));
+                setDataSource(reorderData(e as RowDraggingReorderEvent, dataSource));
             }
         },
         [dataSource, setDataSource]
@@ -165,7 +165,7 @@ const createFilterExpression = (value: SearchTextBoxValue) => {
     }
     result.pop();
 
-    return result.length === 0 ? undefined : result;
+    return result.length === 0 ? "" : (result as unknown as string);
 };
 
 /**
@@ -199,7 +199,8 @@ const isGroup = (entry: DataEntry) => {
  * Validate the drag change of the {@link TreeList} for the {@link PasswordList} component.
  * @param {RowDraggingChangeEvent} e The event data for the row dragging event.
  */
-const onDragChange = (e: RowDraggingChangeEvent) => {
+const onDragChange = (data: unknown) => {
+    const e = data as RowDraggingChangeEvent;
     const visibleRows = e.component.getVisibleRows();
 
     const sourceNode = visibleRows[e.fromIndex].node;

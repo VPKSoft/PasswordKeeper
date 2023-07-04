@@ -26,7 +26,7 @@ import * as React from "react";
 import { Button, Popup, TextBox } from "devextreme-react";
 import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";

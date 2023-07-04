@@ -27,7 +27,7 @@ import Button from "devextreme-react/button";
 import TextBox from "devextreme-react/text-box";
 import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 

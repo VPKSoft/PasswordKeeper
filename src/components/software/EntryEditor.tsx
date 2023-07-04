@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import classNames from "classnames";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { TextArea, TextBox } from "devextreme-react";
 import { ValueChangedEvent } from "devextreme/ui/text_area";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
