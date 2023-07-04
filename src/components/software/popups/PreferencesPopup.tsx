@@ -24,9 +24,9 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Lookup, NumberBox, Popup } from "devextreme-react";
-import styled from "styled-components";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/lookup";
+import styled from "styled-components";
 import { Locales, currentLocales, useLocalize } from "../../../i18n";
 import { Settings } from "../../../types/Settings";
 import { DxThemeNames, dxThemes } from "../../../utilities/ThemeUtils";
@@ -227,7 +227,7 @@ const PreferencesPopup = ({
     );
 };
 
-export default styled(PreferencesPopup)`
+const StyledPreferencesPopup = styled(PreferencesPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -241,3 +241,5 @@ export default styled(PreferencesPopup)`
         justify-content: flex-end;
     }
 `;
+
+export { StyledPreferencesPopup };

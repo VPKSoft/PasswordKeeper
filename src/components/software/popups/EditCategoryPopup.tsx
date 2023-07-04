@@ -24,9 +24,9 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup, TextBox } from "devextreme-react";
-import styled from "styled-components";
 import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
+import styled from "styled-components";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
@@ -178,7 +178,7 @@ const EditCategoryPopup = ({
     );
 };
 
-export default styled(EditCategoryPopup)`
+const StyledEditCategoryPopup = styled(EditCategoryPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -192,3 +192,5 @@ export default styled(EditCategoryPopup)`
         justify-content: flex-end;
     }
 `;
+
+export { StyledEditCategoryPopup };

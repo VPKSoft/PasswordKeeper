@@ -26,8 +26,8 @@ import * as React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
-import AppToolbar, { AppToolbarProps } from "./AppToolbar";
-import AppMenu, { AppMenuProps, MenuData } from "./AppMenu";
+import { AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
+import { AppMenuProps, MenuData, StyledAppMenu } from "./AppMenu";
 
 /**
  * The props for the {@link AppMenuToolbar} component.
@@ -150,13 +150,13 @@ const AppMenuToolbar = ({
 
     return (
         <div className={classNames(AppMenuToolbar.name, className)}>
-            <AppMenu //
+            <StyledAppMenu //
                 onItemClick={onItemClick}
                 entry={entry}
                 isNewFile={isNewFile}
                 isfileChanged={isfileChanged}
             />
-            <AppToolbar //
+            <StyledAppToolbar //
                 entry={entry}
                 saveFileClick={saveFileClick}
                 saveFileAsClick={saveFileAsClick}
@@ -174,9 +174,11 @@ const AppMenuToolbar = ({
     );
 };
 
-export default styled(AppMenuToolbar)`
+const StyledAppMenuToolbar = styled(AppMenuToolbar)`
     display: flex;
     flex-direction: column;
     min-height: 0px;
     margin-bottom: 10px;
 `;
+
+export { StyledAppMenuToolbar };

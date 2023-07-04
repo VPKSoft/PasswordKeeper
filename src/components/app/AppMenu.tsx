@@ -207,8 +207,10 @@ const AppMenu = ({
     );
 };
 
-export default styled(AppMenu)`
+const StyledAppMenu = styled(AppMenu)`
     // Add style(s) here
 `;
+
+export { StyledAppMenu };
 
 export type { MenuData };

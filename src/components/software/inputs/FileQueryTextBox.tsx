@@ -102,7 +102,7 @@ const FileQueryTextBox = ({
     );
 };
 
-export default styled(FileQueryTextBox)`
+const StyledFileQueryTextBox = styled(FileQueryTextBox)`
     display: flex;
     flex-direction: row;
     .FileQueryTextbox-textBox {
@@ -112,3 +112,5 @@ export default styled(FileQueryTextBox)`
         margin-left: 6px;
     }
 `;
+
+export { StyledFileQueryTextBox };
