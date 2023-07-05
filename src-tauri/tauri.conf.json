@@ -78,7 +78,8 @@
                 "resizable": true,
                 "title": "Password Keeper",
                 "width": 1000,
-                "decorations": false
+                "decorations": false,
+                "fileDropEnabled": false
             }
         ]
     }

@@ -27,10 +27,12 @@ SOFTWARE.
     windows_subsystem = "windows"
 )]
 
+use auth2fa::{gen_secret_otpauth, Auth2FAResult};
 use config::{get_app_config, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
 use serde::{Deserialize, Serialize};
 
+mod auth2fa;
 mod config;
 mod encryption;
 
@@ -42,7 +44,8 @@ async fn main() {
             save_file,
             load_file,
             load_settings,
-            save_settings
+            save_settings,
+            gen_otpauth,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -70,6 +73,21 @@ struct StringResult {
 #[tauri::command]
 async fn load_settings() -> AppConfig {
     get_app_config()
+}
+
+/// Generates an OTPAuth key with the specified OTPAuth URL.
+/// # Arguments
+///
+/// * `otpauth` - The OTPAuth URL.
+///
+/// # Returns
+/// An `Auth2FAResult` `struct` value.
+///
+/// # Remarks
+/// * In case of error the the `Auth2FAResult.success` value is set to `false`.
+#[tauri::command]
+async fn gen_otpauth(otpauth: String) -> Auth2FAResult {
+    gen_secret_otpauth(otpauth)
 }
 
 /// Saves the settings passed from the frontend.
