@@ -83,7 +83,7 @@ Well, that was background noise - the reasons:
 2. I want to learn [rust](https://www.rust-lang.org)
 3. To have the code base working fully cross platform
 4. Have a simple structure with strong encryption for the file the data is stored into.
-5. Progamming is a nice hobby 🤓
+5. Programming is a nice hobby 🤓
 
 # Thanks to
 * [Tauri](https://tauri.app)
