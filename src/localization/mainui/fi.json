@@ -18,5 +18,7 @@
     "searchLabel": "Haku",
     "andMode": "Hakutila: JA",
     "clearSearch": "Tyhjennä haku",
-    "orMode": "Hakutila: TAI"
+    "orMode": "Hakutila: TAI",
+    "qrCodeTitle": "Lue QR-koodi kuvasta",
+    "readQrCodeTitle": "Lue QR-koodi"
 }

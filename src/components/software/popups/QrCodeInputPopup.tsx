@@ -25,12 +25,13 @@ SOFTWARE.
 import * as React from "react";
 import styled from "styled-components";
 import classNames from "classnames";
-import { Popup } from "devextreme-react";
+import { Button, Popup } from "devextreme-react";
 import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import { invoke } from "@tauri-apps/api/tauri";
-import { CommonProps } from "../../Types";
+import notify from "devextreme/ui/notify";
+import { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
-import { TwoFactorAuthCodeGeneratorStyled } from "../../reusable/TwoFactorAuthCodeGenerator";
+import { useLocalize } from "../../../i18n";
 
 /**
  * The props for the {@link QrCodeInputPopup} component.
@@ -38,6 +39,7 @@ import { TwoFactorAuthCodeGeneratorStyled } from "../../reusable/TwoFactorAuthCo
 type QrCodeInputPopupProps = {
     /** A value indicating whether this popup is visible. */
     visible: boolean;
+    onClose: (userAccepted: boolean, otpAuthKey?: string | undefined) => void;
 } & CommonProps;
 
 /**
@@ -48,34 +50,56 @@ type QrCodeInputPopupProps = {
 const QrCodeInputPopup = ({
     className, //
     visible,
+    onClose,
 }: QrCodeInputPopupProps) => {
-    const [shown, setShown] = React.useState(false);
+    const [userAccepted, setUserAccepted] = React.useState(false);
+    const [otpAuthPath, setOtpAuthPath] = React.useState("");
 
-    const onShown = React.useCallback(() => {
-        setShown(true);
-    }, []);
+    const lm = useLocalize("messages");
+    const lu = useLocalize("ui");
 
-    const onVisibleChange = React.useCallback((visible: boolean) => {
-        if (!visible) {
-            setShown(false);
-        }
-    }, []);
+    // Handle the onVisibleChange callback of the Popup component.
+    const onVisibleChange = React.useCallback(
+        (visible: boolean) => {
+            if (!visible) {
+                onClose(userAccepted, userAccepted ? otpAuthPath : undefined);
+            }
+            setUserAccepted(false);
+            setOtpAuthPath("");
+        },
+        [onClose, otpAuthPath, userAccepted]
+    );
 
+    // Handle the onHiding callback of the Popup component.
     const onHiding = React.useCallback(() => {
-        setShown(false);
-    }, []);
+        onClose(userAccepted, userAccepted ? otpAuthPath : undefined);
+        setOtpAuthPath("");
+        setUserAccepted(false);
+    }, [onClose, otpAuthPath, userAccepted]);
 
-    const onFilesUpdated = React.useCallback((e: File | File[]) => {
-        const scanner = new Html5Qrcode("reader");
-        const file = Array.isArray(e) ? e[0] : e;
+    const onFilesUpdated = React.useCallback(
+        (e: File | File[]) => {
+            const scanner = new Html5Qrcode("reader");
+            const file = Array.isArray(e) ? e[0] : e;
 
-        void scanner.scanFile(file, false).then((decodedText: string) => {
-            console.log(decodedText);
-            void invoke("gen_otpauth", { otpauth: decodedText }).then((f: any) => console.log(f));
-        });
-
-        console.log(e);
-    }, []);
+            scanner
+                .scanFile(file, false)
+                .then((decodedText: string) => {
+                    void invoke<Auth2Fa>("gen_otpauth", { otpauth: decodedText }).then((f: Auth2Fa) => {
+                        if (f.success) {
+                            notify(lm("qrSuccess"), "success", 5_000);
+                            setOtpAuthPath(decodedText);
+                        } else {
+                            notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                        }
+                    });
+                })
+                .catch(error => {
+                    notify(lm("qrCodeImageReadFailed", undefined, { message: error }));
+                });
+        },
+        [lm]
+    );
 
     return (
         <Popup //
@@ -86,24 +110,56 @@ const QrCodeInputPopup = ({
             height={320}
             width={600}
             showTitle={true}
-            onShown={onShown}
+            title={lu("readQrCodeTitle")}
             onVisibleChange={onVisibleChange}
             onHiding={onHiding}
-            className={classNames(QrCodeInputPopupStyled.name, className)}
         >
-            <div id="reader" />
-            <DragDropFileStyled //
-                onFileChange={onFilesUpdated}
-                multiple={false}
-            />
-            <TwoFactorAuthCodeGeneratorStyled //
-                otpAuthUrl="otpauth://totp/Testing?secret=OBQXG43XN5ZGIXZRGIZTINJWG44DSXZQ&issuer=VPKSoft"
-            />
+            <div className={classNames(QrCodeInputPopupStyled.name, className)}>
+                <div id="reader" />
+                <DragDropFileStyled //
+                    onFileChange={onFilesUpdated}
+                    multiple={false}
+                    dragDropFileHereText={lm("dragDropFilesHere")}
+                    pasteFileText={lm("pasteFromClipboard")}
+                    uploadFileText={lm("uploadFile")}
+                />
+                <div className="Popup-ButtonRow">
+                    <Button //
+                        text={lu("ok")}
+                        onClick={() => {
+                            setUserAccepted(true);
+                            onClose(true, otpAuthPath);
+                            setOtpAuthPath("");
+                        }}
+                        disabled={otpAuthPath === ""}
+                    />
+                    <Button //
+                        text={lu("cancel")}
+                        onClick={() => {
+                            setUserAccepted(false);
+                            onClose(false);
+                            setOtpAuthPath("");
+                        }}
+                    />
+                </div>
+            </div>
         </Popup>
     );
 };
 
 const QrCodeInputPopupStyled = styled(QrCodeInputPopup)`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .Popup-entryEditor {
+        height: 100%;
+    }
+    .Popup-ButtonRow {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
     #reader {
         display: none;
     }
