@@ -30,6 +30,7 @@ import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import { invoke } from "@tauri-apps/api/tauri";
 import { CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
+import { TwoFactorAuthCodeGeneratorStyled } from "../../reusable/TwoFactorAuthCodeGenerator";
 
 /**
  * The props for the {@link QrCodeInputPopup} component.
@@ -94,6 +95,9 @@ const QrCodeInputPopup = ({
             <DragDropFileStyled //
                 onFileChange={onFilesUpdated}
                 multiple={false}
+            />
+            <TwoFactorAuthCodeGeneratorStyled //
+                otpAuthUrl="otpauth://totp/Testing?secret=OBQXG43XN5ZGIXZRGIZTINJWG44DSXZQ&issuer=VPKSoft"
             />
         </Popup>
     );

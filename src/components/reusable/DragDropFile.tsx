@@ -35,14 +35,18 @@ type DragDropFileProps = {
     onFileChange: (files: File | File[]) => void;
     /** A value indicating whether multiple file selection is allowed. */
     multiple?: boolean;
+    /** The text for the "Drag and drop your file here or" for localization. The mentioned text is the default value. */
     dragDropFileHereText?: string;
+    /** The text for the "Paste file data from clipboard or" for localization. The mentioned text is the default value. */
+    pasteFileText?: string;
+    /** The text for the "Upload a file" for localization. The mentioned text is the default value. */
     uploadFileText?: string;
 } & CommonProps;
 
 // Based on the code at Codemzy, see: https://www.codemzy.com/blog/react-drag-drop-file-upload 🙏
 
 /**
- * A component to accept files via drag and drop or by selecting a file manually.
+ * A component to accept files via drag and drop, paste via clipboard or by selecting a file manually.
  * @param param0 The component props: {@link DragDropFileProps}.
  * @returns A component.
  * @copyright The component: https://www.codemzy.com/blog/react-drag-drop-file-upload
@@ -53,6 +57,7 @@ const DragDropFile = ({
     onFileChange,
     multiple = false,
     dragDropFileHereText = "Drag and drop your file here or",
+    pasteFileText = "Paste file data from clipboard or",
     uploadFileText = "Upload a file",
 }: DragDropFileProps) => {
     const [dragActive, setDragActive] = React.useState(false);
@@ -115,7 +120,7 @@ const DragDropFile = ({
                 return;
             }
             const item = items[0];
-            // Get the blob of image
+            // Get the blob of image == File.
             const blob = item.getAsFile();
             if (blob) {
                 onFileChange(blob);
@@ -124,6 +129,7 @@ const DragDropFile = ({
         [onFileChange]
     );
 
+    // Add and cleanup the event listener for image pasting.
     React.useEffect(() => {
         document.addEventListener("paste", onPasteImage);
 
@@ -154,6 +160,7 @@ const DragDropFile = ({
             >
                 <div>
                     <p>{dragDropFileHereText}</p>
+                    <p>{pasteFileText}</p>
                     <button className="upload-button" onClick={onButtonClick}>
                         {uploadFileText}
                     </button>
