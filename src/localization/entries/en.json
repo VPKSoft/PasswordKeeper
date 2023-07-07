@@ -5,5 +5,7 @@
     "domain": "Domain",
     "userName": "User name",
     "password": "Password",
-    "notes": "Notes"
+    "notes": "Notes",
+    "otpAuthUrl": "OTP / 2FA authentication URL",
+    "otpAuthKey": "OTP /2FA key"
 }

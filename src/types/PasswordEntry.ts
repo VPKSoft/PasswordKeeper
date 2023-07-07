@@ -42,4 +42,6 @@ export type DataEntry = {
     id: number;
     /** In case of an entry the parent category for the entry. Otherwise -1. */
     parentId: number;
+    /** The key <--> URL for OTP authentication. */
+    otpAuthKey?: string;
 };

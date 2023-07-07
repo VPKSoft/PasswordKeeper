@@ -6,5 +6,11 @@
     "fileChangedTitle": "Tiedosto on muuttunut",
     "fileChangedSaveQuery": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?",
     "programLockedClickToUnlock": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus.",
-    "passwordFailLockWarning": "Virheellinen salasana. Ohjelma lopetetaan {{lockAfter}} virheellisen yrityksen jälkeen."
+    "passwordFailLockWarning": "Virheellinen salasana. Ohjelma lopetetaan {{lockAfter}} virheellisen yrityksen jälkeen.",
+    "otpAuthKeyGenFailed": "OTP-avaimen luonti epäonnistui.",
+    "qrCodeImageReadFailed": "QR-koodin kuvan dataluku epäonnistui viestillä: '{{message}}'.",
+    "dragDropFilesHere": "Raahaa ja pudota tiedosto tähän tai",
+    "pasteFromClipboard": "Liitä tiedosto leikepöydältä tai",
+    "uploadFile": "Valitse tiedosto",
+    "qrSuccess": "QR-koodi luettu onnistuneesti."
 }

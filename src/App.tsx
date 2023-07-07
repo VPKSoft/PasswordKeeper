@@ -585,6 +585,7 @@ const App = ({ className }: AppProps) => {
                         visible={entry?.parentId !== -1}
                         hidePasswordTimeout={10}
                         showCopyButton={true}
+                        hideQrAuthPopup={true}
                     />
                 </div>
                 {editEntry !== null && (
