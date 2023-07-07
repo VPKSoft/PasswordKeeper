@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "PasswordKeeper",
-        "version": "0.1.1"
+        "version": "0.2.0"
     },
     "tauri": {
         "allowlist": {
@@ -78,7 +78,8 @@
                 "resizable": true,
                 "title": "Password Keeper",
                 "width": 1000,
-                "decorations": false
+                "decorations": false,
+                "fileDropEnabled": false
             }
         ]
     }

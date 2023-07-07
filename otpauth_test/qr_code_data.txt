@@ -1,0 +1,2 @@
+URL: otpauth://totp/Testing?secret=OBQXG43XN5ZGIXZRGIZTINJWG44DSXZQ&issuer=VPKSoft
+The base32 data: password_123456789_0

@@ -18,5 +18,7 @@
     "andMode": "Search mode: AND",
     "orMode": "Search mode: OR",
     "searchLabel": "Search",
-    "clearSearch": "Clear search"
+    "clearSearch": "Clear search",
+    "qrCodeTitle": "Read QR code from image",
+    "readQrCodeTitle": "Read QR code"
 }
