@@ -5,5 +5,7 @@
     "newEntry": "Uusi merkintä",
     "password": "Salasana",
     "userName": "Käyttäjänimi",
-    "notes": "Muistiinpanot"
+    "notes": "Muistiinpanot",
+    "otpAuthUrl": "OTP- / 2FA-autentikoinnin URL",
+    "otpAuthKey": "OTP- /2FA-avain"
 }

@@ -118,6 +118,7 @@ const EditEntryPopup = ({
                     onEntryChanged={setEntryInternal}
                     showGeneratePassword={true}
                     nameTextBoxRef={focusTextBoxRef}
+                    hideQrAuthPopup={!visible}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //

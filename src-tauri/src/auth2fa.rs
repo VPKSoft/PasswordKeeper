@@ -83,7 +83,9 @@ fn aut_error() -> Auth2FAResult {
 /// # Remarks
 /// * In case of error the the `Auth2FAResult.success` value is set to `false`.
 pub fn gen_secret_otpauth(otpauth: String) -> Auth2FAResult {
-    let auth = TOTP::from_url(otpauth);
+    // The unchecked version accepts other than minimum of 128-bit secrets,
+    // which is a requirement of the RFC6238 standard.
+    let auth = TOTP::from_url_unchecked(otpauth);
 
     // Validate the TOTP generation first.
     let result = match auth {

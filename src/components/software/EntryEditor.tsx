@@ -25,13 +25,15 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { TextArea, TextBox } from "devextreme-react";
+import { Button, TextArea, TextBox } from "devextreme-react";
 import { ValueChangedEvent } from "devextreme/ui/text_area";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
+import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
+import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 
 /**
  * The props for the {@link EntryEditor} component.
@@ -51,6 +53,8 @@ type EntryEditorProps = {
     showCopyButton?: boolean;
     /** A ref to the item name text box. */
     nameTextBoxRef?: React.MutableRefObject<dxTextBox | undefined>;
+    /** A value indicating if the 2FA QR-code popup should be hidden. */
+    hideQrAuthPopup: boolean;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -73,9 +77,23 @@ const EntryEditor = ({
     showGeneratePassword,
     showCopyButton = false,
     nameTextBoxRef,
+    hideQrAuthPopup,
     onEntryChanged,
 }: EntryEditorProps) => {
+    const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const le = useLocalize("entries");
+
+    // The 2F2 authentication code was changed. Update the data.
+    const qrCodePopupClose = React.useCallback(
+        (userAccepted: boolean, otpAuthKey?: string | undefined) => {
+            if (userAccepted && otpAuthKey && entry) {
+                const newValue: DataEntry = { ...entry, otpAuthKey: otpAuthKey };
+                onEntryChanged?.(newValue);
+                setQrCodeVisible(false);
+            }
+        },
+        [entry, onEntryChanged]
+    );
 
     // A value change callback to handle the changes of all the text boxes
     // within the component.
@@ -130,6 +148,14 @@ const EntryEditor = ({
     const onNotesChanged = React.useCallback(
         (e: ValueChangedEvent) => {
             onValueChanged(e, "notes");
+        },
+        [onValueChanged]
+    );
+
+    // The OTPAuth / 2FA key changed, update the value.
+    const onOTPAuthChanged = React.useCallback(
+        (e: ValueChangedEvent) => {
+            onValueChanged(e, "otpAuthKey");
         },
         [onValueChanged]
     );
@@ -204,10 +230,48 @@ const EntryEditor = ({
                                     </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>
+                                    <div className="dx-field-item-label-text">{le("otpAuthUrl")}</div>
+                                </td>
+                                <td>
+                                    <div className="OTPAuth">
+                                        <TextBox //
+                                            readOnly={true}
+                                            value={entry?.otpAuthKey}
+                                            onValueChanged={onOTPAuthChanged}
+                                            className="OTPAuth-textBox"
+                                        />
+                                        <Button //
+                                            icon="fas fa-qrcode"
+                                            disabled={readOnly}
+                                            onClick={() => {
+                                                setQrCodeVisible(true);
+                                            }}
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                            {entry?.otpAuthKey && (
+                                <tr>
+                                    <td>
+                                        <div className="dx-field-item-label-text">{le("otpAuthKey")}</div>
+                                    </td>
+                                    <td>
+                                        <TwoFactorAuthCodeGeneratorStyled //
+                                            otpAuthUrl={entry?.otpAuthKey}
+                                        />
+                                    </td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                     <div className="dx-field-item-label-text">{le("notes")}</div>
                     <TextArea readOnly={readOnly} value={entry?.notes} className="EntryEditor-TextArea" onValueChanged={onNotesChanged} />
+                    <QrCodeInputPopupStyled //
+                        visible={qrCodeVisible && !hideQrAuthPopup}
+                        onClose={qrCodePopupClose}
+                    />
                 </div>
             )}
         </>
@@ -227,6 +291,14 @@ const StyledEntryEditor = styled(EntryEditor)`
         width: 100%;
         height: 100%;
         min-height: 0px;
+    }
+    .OTPAuth {
+        display: flex;
+        flex-direction: row;
+    }
+    .OTPAuth-textBox {
+        width: 100%;
+        margin-right: 6px;
     }
 `;
 

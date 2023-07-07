@@ -69,7 +69,11 @@ const TwoFactorAuthCodeGenerator = ({
 
         // Call the rust backend for the code generation.
         void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
-            setTwoFactorResult(f);
+            if (f.success) {
+                setTwoFactorResult(f);
+            } else {
+                setTwoFactorResult({ ...f, key: "⚠⚠⚠⚠⚠⚠" });
+            }
         });
 
         setDurationStart(newValue);
