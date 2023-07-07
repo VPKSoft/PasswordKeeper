@@ -145,6 +145,7 @@ const TwoFactorAuthCodeGenerator = ({
                 icon="copy"
                 className="CopyButton"
                 onClick={copyToClipboard}
+                hint={lu("copyClipboard")}
             />
         </div>
     );

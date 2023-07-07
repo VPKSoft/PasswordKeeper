@@ -82,6 +82,7 @@ const EntryEditor = ({
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const le = useLocalize("entries");
+    const lu = useLocalize("ui");
 
     // The 2F2 authentication code was changed. Update the data.
     const qrCodePopupClose = React.useCallback(
@@ -243,6 +244,7 @@ const EntryEditor = ({
                                             className="OTPAuth-textBox"
                                         />
                                         <Button //
+                                            hint={lu("readQrCodeTitle")}
                                             icon="fas fa-qrcode"
                                             disabled={readOnly}
                                             onClick={() => {
