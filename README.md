@@ -50,7 +50,7 @@ Download the [PasswordKeeper_0.2.0_x64-setup.exe](https://github.com/VPKSoft/Pas
 If the installation fails you may need to install webview2, See: https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section
 
 ## Linux
-1. Download the [password-keeper_0.1.0_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.0/password-keeper_0.2.0_amd64.AppImage)
+1. Download the [password-keeper_0.2.0_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.0/password-keeper_0.2.0_amd64.AppImage)
 2. Run `chmod +x password-keeper_0.2.0_amd64.AppImage` on the file.
 3. Run the password-keeper_0.2.0_amd64.AppImage file.
 
