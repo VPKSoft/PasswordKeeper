@@ -91,6 +91,8 @@ const EntryEditor = ({
                 const newValue: DataEntry = { ...entry, otpAuthKey: otpAuthKey };
                 onEntryChanged?.(newValue);
                 setQrCodeVisible(false);
+            } else {
+                setQrCodeVisible(false);
             }
         },
         [entry, onEntryChanged]
