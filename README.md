@@ -3,7 +3,7 @@ A software to store login information into an encrypted file.
 
 [![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml)
 
-![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/1590e60d-6f37-4c17-bd84-3e5f024e904e)
+![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/c4e0893b-32b0-4d27-9051-55e31a2dc271)
 
 # The encryption
 The encryption algorithm used is [AES-GCM-SIV](https://en.wikipedia.org/wiki/AES-GCM-SIV) with [Argon2](https://en.wikipedia.org/wiki/Argon2) / Argon2id key derivation function.
@@ -39,21 +39,23 @@ export type DataEntry = {
     id: number;
     /** In case of an entry the parent category for the entry. Otherwise -1. */
     parentId: number;
+    /** The key <--> URL for OTP authentication. */
+    otpAuthKey?: string;
 };
 ```
 
 # Install
 ## Windows
-Download the [PasswordKeeper_0.1.0_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.1.0/PasswordKeeper_0.1.0_x64-setup.exe), ignore the warnings and install the software.
+Download the [PasswordKeeper_0.2.1_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/PasswordKeeper_0.2.1_x64-setup.exe), ignore the warnings and install the software.
 If the installation fails you may need to install webview2, See: https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section
 
 ## Linux
-1. Download the [password-keeper_0.1.0_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.1.0/password-keeper_0.1.0_amd64.AppImage)
-2. Run `chmod +x password-keeper_0.1.0_amd64.AppImage` on the file.
-3. Run the password-keeper_0.1.0_amd64.AppImage file.
+1. Download the [password-keeper_0.2.1_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/password-keeper_0.2.1_amd64.AppImage)
+2. Run `chmod +x password-keeper_0.2.1_amd64.AppImage` on the file.
+3. Run the password-keeper_0.2.1_amd64.AppImage file.
 
 ## macOS
-1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.1.0/PasswordKeeper_x64.app.tar.gz)
+1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/PasswordKeeper_x64.app.tar.gz)
 2. Extract the `PasswordKeeper.app` from the file
 3. Run `xattr -c PasswordKeeper.app` on the file.
 4. Run the `PasswordKeeper.app`
