@@ -46,16 +46,16 @@ export type DataEntry = {
 
 # Install
 ## Windows
-Download the [PasswordKeeper_0.2.0_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.0/PasswordKeeper_0.2.0_x64-setup.exe), ignore the warnings and install the software.
+Download the [PasswordKeeper_0.2.1_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/PasswordKeeper_0.2.1_x64-setup.exe), ignore the warnings and install the software.
 If the installation fails you may need to install webview2, See: https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section
 
 ## Linux
-1. Download the [password-keeper_0.2.0_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.0/password-keeper_0.2.0_amd64.AppImage)
-2. Run `chmod +x password-keeper_0.2.0_amd64.AppImage` on the file.
-3. Run the password-keeper_0.2.0_amd64.AppImage file.
+1. Download the [password-keeper_0.2.1_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/password-keeper_0.2.1_amd64.AppImage)
+2. Run `chmod +x password-keeper_0.2.1_amd64.AppImage` on the file.
+3. Run the password-keeper_0.2.1_amd64.AppImage file.
 
 ## macOS
-1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.0/PasswordKeeper_x64.app.tar.gz)
+1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/PasswordKeeper_x64.app.tar.gz)
 2. Extract the `PasswordKeeper.app` from the file
 3. Run `xattr -c PasswordKeeper.app` on the file.
 4. Run the `PasswordKeeper.app`
@@ -98,4 +98,3 @@ Well, that was background noise - the reasons:
 * [Html5-QRCode](https://www.npmjs.com/package/html5-qrcode)
 * [totp-rs](https://crates.io/crates/totp-rs)
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
-
