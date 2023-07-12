@@ -96,6 +96,18 @@ const EditEntryPopup = ({
         focusTextBoxRef.current?.focus();
     }, []);
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onClose(true, entryInternal);
+    }, [entryInternal, onClose]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onClose(false);
+    }, [onClose]);
+
     return (
         <Popup //
             title={title}
@@ -123,17 +135,11 @@ const EditEntryPopup = ({
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onClose(true, entryInternal);
-                        }}
+                        onClick={onOkClick}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onClose(false);
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>

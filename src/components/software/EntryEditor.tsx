@@ -173,6 +173,10 @@ const EntryEditor = ({
         [nameTextBoxRef]
     );
 
+    const readQrCodeClick = React.useCallback(() => {
+        setQrCodeVisible(true);
+    }, []);
+
     return (
         <>
             {visible && (
@@ -249,9 +253,7 @@ const EntryEditor = ({
                                             hint={lu("readQrCodeTitle")}
                                             icon="fas fa-qrcode"
                                             disabled={readOnly}
-                                            onClick={() => {
-                                                setQrCodeVisible(true);
-                                            }}
+                                            onClick={readQrCodeClick}
                                         />
                                     </div>
                                 </td>

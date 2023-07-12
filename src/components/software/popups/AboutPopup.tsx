@@ -68,6 +68,16 @@ const AboutPopup = ({
         }
     }, [onClose, visible]);
 
+    // Open the www.vpksoft.net URL when the corresponding component is clicked.
+    const openVPKSoftUrl = React.useCallback(() => {
+        open("https://www.vpksoft.net");
+    }, []);
+
+    // Open the github.com URL when the corresponding component is clicked.
+    const openGitHubUrl = React.useCallback(() => {
+        open("https://github.com/VPKSoft/PasswordKeeper");
+    }, []);
+
     return (
         <Popup //
             title={lc("About")}
@@ -110,9 +120,9 @@ SOFTWARE."
                     </div>
                 </ScrollView>
                 <div className="LogoImages">
-                    <img src={LogoImage} className="LogoImage" onClick={() => open("https://www.vpksoft.net")} />
+                    <img src={LogoImage} className="LogoImage" onClick={openVPKSoftUrl} />
 
-                    <img src={GithubLogo} className="LogoImage" onClick={() => open("https://github.com/VPKSoft/PasswordKeeper")} />
+                    <img src={GithubLogo} className="LogoImage" onClick={openGitHubUrl} />
                 </div>
                 <div className="Popup-ButtonRow">
                     <Button //
