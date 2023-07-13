@@ -25,9 +25,9 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Button, TextArea, TextBox } from "devextreme-react";
-import { ValueChangedEvent } from "devextreme/ui/text_area";
+import { Button, TagBox, TextArea, TextBox } from "devextreme-react";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
+import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
@@ -55,6 +55,8 @@ type EntryEditorProps = {
     nameTextBoxRef?: React.MutableRefObject<dxTextBox | undefined>;
     /** A value indicating if the 2FA QR-code popup should be hidden. */
     hideQrAuthPopup: boolean;
+    /** All the tags contained within the current file. */
+    allTags?: string[];
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -78,9 +80,11 @@ const EntryEditor = ({
     showCopyButton = false,
     nameTextBoxRef,
     hideQrAuthPopup,
+    allTags,
     onEntryChanged,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
+
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
 
@@ -149,7 +153,7 @@ const EntryEditor = ({
 
     // The item notes was changed.
     const onNotesChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
+        (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "notes");
         },
         [onValueChanged]
@@ -157,7 +161,7 @@ const EntryEditor = ({
 
     // The OTPAuth / 2FA key changed, update the value.
     const onOTPAuthChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
+        (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "otpAuthKey");
         },
         [onValueChanged]
@@ -172,6 +176,44 @@ const EntryEditor = ({
         },
         [nameTextBoxRef]
     );
+
+    // Update the changed tag(s) to the entry and report any removed items.
+    const onTagsValueChanged = React.useCallback(
+        (e: TagBoxValueChangedEvent) => {
+            const value: string[] = e.value ?? [];
+
+            // Update the entry.
+            if (entry) {
+                const newTags = value.join("|");
+                const newValue: DataEntry = { ...entry, tags: newTags };
+                onEntryChanged?.(newValue);
+            }
+        },
+        [entry, onEntryChanged]
+    );
+
+    // A new tag was added. Report the added tag to keep the "index" in sync.
+    const onCustomTagCreating = React.useCallback(
+        (e: CustomItemCreatingEvent) => {
+            e.customItem = e.text ?? null;
+            const newTag: string = e.customItem;
+
+            // Update the entry.
+            if (entry) {
+                const value = [...(entry.tags ?? []), newTag];
+                const newTags = value.join("|");
+                const newValue: DataEntry = { ...entry, tags: newTags };
+                onEntryChanged?.(newValue);
+            }
+        },
+        [entry, onEntryChanged]
+    );
+
+    const readQrCodeClick = React.useCallback(() => {
+        setQrCodeVisible(true);
+    }, []);
+
+    const tags = React.useMemo(() => entry?.tags?.split("|") ?? [], [entry?.tags]);
 
     return (
         <>
@@ -235,6 +277,21 @@ const EntryEditor = ({
                             </tr>
                             <tr>
                                 <td>
+                                    <div className="dx-field-item-label-text">{le("tags")}</div>
+                                </td>
+                                <td>
+                                    <TagBox //
+                                        dataSource={allTags}
+                                        readOnly={readOnly}
+                                        value={tags}
+                                        onValueChanged={onTagsValueChanged}
+                                        onCustomItemCreating={onCustomTagCreating}
+                                        acceptCustomValue={true}
+                                    />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <div className="dx-field-item-label-text">{le("otpAuthUrl")}</div>
                                 </td>
                                 <td>
@@ -249,9 +306,7 @@ const EntryEditor = ({
                                             hint={lu("readQrCodeTitle")}
                                             icon="fas fa-qrcode"
                                             disabled={readOnly}
-                                            onClick={() => {
-                                                setQrCodeVisible(true);
-                                            }}
+                                            onClick={readQrCodeClick}
                                         />
                                     </div>
                                 </td>

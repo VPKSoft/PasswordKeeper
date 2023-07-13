@@ -112,6 +112,9 @@ const TwoFactorAuthCodeGenerator = ({
         }
     }, [lu, twoFactorResult]);
 
+    // A callback when the CountdownCircleTimer completes.
+    const onComplete = React.useCallback(() => ({ shouldRepeat: true, delay: 1 }), []);
+
     // Unmount the CountdownCircleTimer component by returning null when the reset flag is raised.
     if (reset) {
         void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
@@ -129,7 +132,7 @@ const TwoFactorAuthCodeGenerator = ({
                 duration={durationStart}
                 colors={[countdownTimerColor ?? "#004777", countdownTimerColor ?? "#004777"]}
                 colorsTime={[30, 0]}
-                onComplete={() => ({ shouldRepeat: true, delay: 1 })}
+                onComplete={onComplete}
                 size={60}
                 strokeWidth={10}
             >

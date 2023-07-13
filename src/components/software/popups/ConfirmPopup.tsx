@@ -112,6 +112,21 @@ const ConfirmPopup = ({
         [onClose]
     );
 
+    // The Yes button was clicked.
+    const onYesClick = React.useCallback(() => {
+        onCloseCallback(DialogResult.Yes);
+    }, [onCloseCallback]);
+
+    // The No button was clicked.
+    const onNoClick = React.useCallback(() => {
+        onCloseCallback(DialogResult.No);
+    }, [onCloseCallback]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        onCloseCallback(DialogResult.Cancel);
+    }, [onCloseCallback]);
+
     return (
         <Popup //
             title={title}
@@ -130,19 +145,19 @@ const ConfirmPopup = ({
                     {(buttons & DialogButtons.Yes) === DialogButtons.Yes && (
                         <Button //
                             text={lc("yes")}
-                            onClick={() => onCloseCallback(DialogResult.Yes)}
+                            onClick={onYesClick}
                         />
                     )}
                     {(buttons & DialogButtons.No) === DialogButtons.No && (
                         <Button //
                             text={lc("no")}
-                            onClick={() => onCloseCallback(DialogResult.No)}
+                            onClick={onNoClick}
                         />
                     )}
                     {(buttons & DialogButtons.Cancel) === DialogButtons.Cancel && (
                         <Button //
                             text={lc("cancel")}
-                            onClick={() => onCloseCallback(DialogResult.Cancel)}
+                            onClick={onCancelClick}
                         />
                     )}
                 </div>

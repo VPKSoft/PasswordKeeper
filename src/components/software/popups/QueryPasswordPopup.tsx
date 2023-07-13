@@ -144,6 +144,18 @@ const QueryPasswordPopup = ({
         [disableCloseViaKeyboard]
     );
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onClose(true, password1);
+    }, [onClose, password1]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onClose(false);
+    }, [onClose]);
+
     return (
         <Popup //
             title={title}
@@ -204,18 +216,12 @@ const QueryPasswordPopup = ({
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onClose(true, password1);
-                        }}
+                        onClick={onOkClick}
                         disabled={!allowAccept}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onClose(false);
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>

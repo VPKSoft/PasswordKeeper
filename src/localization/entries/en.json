@@ -7,5 +7,7 @@
     "password": "Password",
     "notes": "Notes",
     "otpAuthUrl": "OTP / 2FA authentication URL",
-    "otpAuthKey": "OTP /2FA key"
+    "otpAuthKey": "OTP / 2FA key",
+    "tag": "Tag",
+    "tags": "Tags"
 }

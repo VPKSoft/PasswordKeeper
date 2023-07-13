@@ -177,6 +177,18 @@ const OpenSaveFilePopup = ({
         return mode === FileQueryMode.SaveAs ? 280 : 240;
     }, [mode]);
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onCloseCallback(true, fileName, password);
+    }, [fileName, onCloseCallback, password]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onCloseCallback(false);
+    }, [onCloseCallback]);
+
     return (
         <Popup //
             title={title}
@@ -250,18 +262,12 @@ const OpenSaveFilePopup = ({
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onCloseCallback(true, fileName, password);
-                        }}
+                        onClick={onOkClick}
                         disabled={!canAccept}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onCloseCallback(false);
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>

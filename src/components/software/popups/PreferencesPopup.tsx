@@ -132,6 +132,18 @@ const PreferencesPopup = ({
         [settings]
     );
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onClose(true, settingsInternal);
+    }, [onClose, settingsInternal]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onClose(false);
+    }, [onClose]);
+
     return (
         <Popup //
             title={title}
@@ -209,17 +221,11 @@ const PreferencesPopup = ({
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onClose(true, settingsInternal);
-                        }}
+                        onClick={onOkClick}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onClose(false);
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>

@@ -32,12 +32,12 @@ import { ask } from "@tauri-apps/api/dialog";
 import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import styled from "styled-components";
 import { Locales, setLocale, useLocalize } from "./i18n";
-import { DataEntry } from "./types/PasswordEntry";
+import { DataEntry, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
 import { useSecureStorage } from "./utilities/hooks";
-import { loadFile, saveFile } from "./utilities/app/Files";
+import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
 import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
 import { CommonProps } from "./components/Types";
@@ -76,6 +76,7 @@ const App = ({ className }: AppProps) => {
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
     const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
+    const [dataTags, setDataTags] = React.useState<GeneralEntry<string>>({ type: "tags", values: [] });
     const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
     const [fileChanged, setFileChanged] = React.useState(false);
     const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
@@ -183,7 +184,7 @@ const App = ({ className }: AppProps) => {
             const password = getFilePassword();
             if (currentFile && password) {
                 // Save the file with the current file name and the current password.
-                saveFile(dataSource, password, currentFile).then(f => {
+                saveFile<string>([...dataSource, dataTags], password, currentFile).then(f => {
                     if (f.ok) {
                         setCurrentFile(f.fileName);
                         setFileChanged(false);
@@ -199,7 +200,7 @@ const App = ({ className }: AppProps) => {
                 });
             }
         }
-    }, [currentFile, dataSource, fileCloseRequested, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+    }, [currentFile, dataSource, dataTags, fileCloseRequested, getFilePassword, isNewFile, lm, saveFileAsCallback]);
 
     // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
@@ -245,7 +246,10 @@ const App = ({ className }: AppProps) => {
             // If the popup was accepted and there is something set in the entry...
             if (userAccepted && entry) {
                 // ...update the data source and re-set the state variables.
-                setDataSource(updateDataSource(dataSource, entry));
+                const newDataSource = updateDataSource(dataSource, entry);
+                setDataSource(newDataSource);
+                const newTags = generateTags(newDataSource);
+                setDataTags(f => ({ ...f, values: newTags }));
                 setEntry(entry);
                 setEditEntry(null);
                 setFileChanged(true);
@@ -328,6 +332,7 @@ const App = ({ className }: AppProps) => {
                             setFileChanged(false);
                             setIsNewFile(false);
                             setPasswordFailedCount(0);
+                            setDataTags(f.tags);
                         } else {
                             // The file load failed with most probable reason being an invalid password.
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
@@ -337,7 +342,7 @@ const App = ({ className }: AppProps) => {
                     });
                     // The file mode is save as, so save the file.
                 } else if (filePopupMode === FileQueryMode.SaveAs) {
-                    void saveFile(dataSource, password, fileName).then(f => {
+                    void saveFile([...dataSource, dataTags], password, fileName).then(f => {
                         if (f.ok) {
                             // Set the state data for the successfully saved file.
                             setFilePassword(password);
@@ -359,7 +364,7 @@ const App = ({ className }: AppProps) => {
             }
             setFileSaveOpenQueryOpen(false);
         },
-        [dataSource, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, setFilePassword]
+        [dataSource, dataTags, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, setFilePassword]
     );
 
     // The exit application menu was chosen.
@@ -594,6 +599,7 @@ const App = ({ className }: AppProps) => {
                         mode={entryEditMode}
                         visible={entryEditVisible}
                         onClose={onEditClose}
+                        allTags={dataTags.values}
                     />
                 )}
                 {editEntry !== null && (

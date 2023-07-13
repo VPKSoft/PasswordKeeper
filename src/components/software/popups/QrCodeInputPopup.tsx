@@ -101,6 +101,19 @@ const QrCodeInputPopup = ({
         [lm]
     );
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onClose(true, otpAuthPath);
+        setOtpAuthPath("");
+    }, [onClose, otpAuthPath]);
+
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onClose(false);
+        setOtpAuthPath("");
+    }, [onClose]);
+
     return (
         <Popup //
             visible={visible}
@@ -126,20 +139,12 @@ const QrCodeInputPopup = ({
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onClose(true, otpAuthPath);
-                            setOtpAuthPath("");
-                        }}
+                        onClick={onOkClick}
                         disabled={otpAuthPath === ""}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onClose(false);
-                            setOtpAuthPath("");
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>

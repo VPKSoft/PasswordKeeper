@@ -43,6 +43,8 @@ type EditEntryPopupProps = {
     mode: ModifyType;
     /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** All the tags contained within the current file. */
+    allTags?: string[];
     /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
@@ -57,10 +59,12 @@ const EditEntryPopup = ({
     entry,
     mode,
     visible,
+    allTags,
     onClose,
 }: EditEntryPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
+
     const focusTextBoxRef = React.useRef<dxTextBox>();
 
     const le = useLocalize("entries");
@@ -96,6 +100,18 @@ const EditEntryPopup = ({
         focusTextBoxRef.current?.focus();
     }, []);
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onClose(true, entryInternal);
+    }, [entryInternal, onClose]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onClose(false);
+    }, [onClose]);
+
     return (
         <Popup //
             title={title}
@@ -105,7 +121,7 @@ const EditEntryPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={500}
+            height={600}
             width={600}
             showTitle={true}
             onShown={popupShown}
@@ -119,21 +135,16 @@ const EditEntryPopup = ({
                     showGeneratePassword={true}
                     nameTextBoxRef={focusTextBoxRef}
                     hideQrAuthPopup={!visible}
+                    allTags={allTags}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onClose(true, entryInternal);
-                        }}
+                        onClick={onOkClick}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onClose(false);
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>
