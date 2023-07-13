@@ -138,11 +138,16 @@ const DragDropFile = ({
         };
     }, [onPasteImage]);
 
+    // Submit callback for the form.
+    const onSubmit = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    }, []);
+
     return (
         <form //
             id="form-file-upload"
             onDragEnter={handleDrag}
-            onSubmit={e => e.preventDefault()}
+            onSubmit={onSubmit}
             className={classNames(DragDropFileStyled.name, className)}
         >
             <input //

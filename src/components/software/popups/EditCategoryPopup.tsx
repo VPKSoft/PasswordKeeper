@@ -123,6 +123,18 @@ const EditCategoryPopup = ({
         [categoryInternal, onClose, validCategoryName]
     );
 
+    // The OK button was clicked.
+    const onOkClick = React.useCallback(() => {
+        setUserAccepted(true);
+        onClose(true, categoryInternal);
+    }, [categoryInternal, onClose]);
+
+    // The Cancel button was clicked.
+    const onCancelClick = React.useCallback(() => {
+        setUserAccepted(false);
+        onClose(false);
+    }, [onClose]);
+
     return (
         <Popup //
             title={title}
@@ -159,18 +171,12 @@ const EditCategoryPopup = ({
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
-                        onClick={() => {
-                            setUserAccepted(true);
-                            onClose(true, categoryInternal);
-                        }}
+                        onClick={onOkClick}
                         disabled={!validCategoryName}
                     />
                     <Button //
                         text={lu("cancel")}
-                        onClick={() => {
-                            setUserAccepted(false);
-                            onClose(false);
-                        }}
+                        onClick={onCancelClick}
                     />
                 </div>
             </div>

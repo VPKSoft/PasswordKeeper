@@ -26,6 +26,9 @@ import { use } from "i18next";
 import { initReactI18next, useTranslation } from "react-i18next";
 
 // Import all translation files
+import fiMessages from "devextreme/localization/messages/fi.json";
+import enMessages from "devextreme/localization/messages/en.json";
+import { loadMessages, locale as dxLocale } from "devextreme/localization";
 import localizationEnMainUI from "./localization/mainui/en.json";
 import localizationFiMainUI from "./localization/mainui/fi.json";
 
@@ -94,6 +97,22 @@ const setLocale = (locale: Locales) => {
         resources,
         lng: locale, //default language
     });
+
+    switch (locale) {
+        case "fi": {
+            loadMessages(fiMessages);
+            break;
+        }
+        case "en": {
+            loadMessages(enMessages);
+            break;
+        }
+        default: {
+            loadMessages(enMessages);
+            break;
+        }
+    }
+    dxLocale(locale);
 };
 
 // Use English as the default locale.
