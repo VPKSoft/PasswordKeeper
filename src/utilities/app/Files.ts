@@ -24,7 +24,7 @@ SOFTWARE.
 
 import { save, open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
-import { DataEntry } from "../../types/PasswordEntry";
+import { DataEntry, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
 
 /**
  * A result type for the {@link loadFile} and {@link saveFile} functions.
@@ -36,6 +36,8 @@ type FileResult = {
     fileName: string;
     /** The file data containing all the categories and items saved into the file. */
     fileData: DataEntry[];
+    /** The tags stored in the file. */
+    tags: GeneralEntry<string>;
     /** An error message in case the file load or save operation was unsuccessful. */
     errorMessage?: string;
 };
@@ -50,10 +52,12 @@ type BackendResult = {
     value: string;
 };
 
+const EmptyGeneralEntryString: GeneralEntry<string> = { type: "tags", values: [] };
+
 /**
  * A value for a failed {@link FileResult}.
  */
-const failed: FileResult = { ok: false, fileData: [], fileName: "" };
+const failed: FileResult = { ok: false, fileData: [], fileName: "", tags: EmptyGeneralEntryString };
 
 /**
  * Displays an open file dialog and returns the user selected file.
@@ -116,9 +120,14 @@ const loadFile = async (password: string, fileName: string) => {
         return failed;
     }
 
+    const items = JSON.parse(fileData.value) as (DataEntry | GeneralEntry<string>)[];
+    const itemsGeneral: GeneralEntry<string>[] = items.filter((f: DataEntry | GeneralEntry<string>) => isGeneralEntry(f)) as GeneralEntry<string>[];
+    const itemTag = itemsGeneral.filter(f => f.type === "tags");
+
     return {
         fileName: fileName,
-        fileData: JSON.parse(fileData.value),
+        fileData: items.filter((f: DataEntry | GeneralEntry<string>) => isDataEntry(f)),
+        tags: itemTag.length > 0 ? itemTag[0] : EmptyGeneralEntryString,
         ok: true,
     } as FileResult;
 };
@@ -129,7 +138,7 @@ const loadFile = async (password: string, fileName: string) => {
  * @param password The password used in the encryption.
  * @returns A {@link FileResult} value with the the file name the data was saved into along with a success flag.
  */
-const saveFile = async (fileData: DataEntry[], password: string, fileName: string) => {
+const saveFile = async <T>(fileData: (DataEntry | GeneralEntry<T>)[], password: string, fileName: string) => {
     const saveData = JSON.stringify(fileData);
 
     try {
@@ -137,6 +146,7 @@ const saveFile = async (fileData: DataEntry[], password: string, fileName: strin
         return {
             fileName: fileName,
             fileData: [],
+            tags: EmptyGeneralEntryString,
             ok: saved,
         } as FileResult;
     } catch {
@@ -144,4 +154,36 @@ const saveFile = async (fileData: DataEntry[], password: string, fileName: strin
     }
 };
 
-export { loadFile, saveFile, selectFileToOpen, selectFileToSave };
+/**
+ * Generates a distinct sorted array of tags for a specified data source.
+ * @param fileData The file data contents.
+ * @returns Thr distinct sorted array of the tags in the data.
+ */
+const generateTags = <T>(fileData: (DataEntry | GeneralEntry<T>)[]) => {
+    let tagArray: string[] = [];
+    const data: DataEntry[] = fileData.filter(f => isDataEntry(f)) as DataEntry[];
+    for (const item of data) {
+        if (item.tags) {
+            tagArray.push(...item.tags);
+        }
+    }
+
+    tagArray = tagArray.sort((a, b) => {
+        if (a < b) {
+            return -1;
+        }
+
+        if (a > b) {
+            return 1;
+        }
+
+        return 0;
+    });
+
+    // eslint-disable-next-line unicorn/no-useless-spread
+    const resultSet = new Set<string>([...tagArray]);
+
+    return [...resultSet];
+};
+
+export { loadFile, saveFile, selectFileToOpen, selectFileToSave, generateTags };

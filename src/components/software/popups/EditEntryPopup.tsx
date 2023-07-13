@@ -43,6 +43,8 @@ type EditEntryPopupProps = {
     mode: ModifyType;
     /** A value indicating whether this popup is visible. */
     visible: boolean;
+    /** All the tags contained within the current file. */
+    allTags?: string[];
     /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
@@ -57,10 +59,12 @@ const EditEntryPopup = ({
     entry,
     mode,
     visible,
+    allTags,
     onClose,
 }: EditEntryPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
+
     const focusTextBoxRef = React.useRef<dxTextBox>();
 
     const le = useLocalize("entries");
@@ -117,7 +121,7 @@ const EditEntryPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={500}
+            height={600}
             width={600}
             showTitle={true}
             onShown={popupShown}
@@ -131,6 +135,7 @@ const EditEntryPopup = ({
                     showGeneratePassword={true}
                     nameTextBoxRef={focusTextBoxRef}
                     hideQrAuthPopup={!visible}
+                    allTags={allTags}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
