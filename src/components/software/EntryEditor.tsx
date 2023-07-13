@@ -184,7 +184,8 @@ const EntryEditor = ({
 
             // Update the entry.
             if (entry) {
-                const newValue: DataEntry = { ...entry, tags: value };
+                const newTags = value.join("|");
+                const newValue: DataEntry = { ...entry, tags: newTags };
                 onEntryChanged?.(newValue);
             }
         },
@@ -199,7 +200,9 @@ const EntryEditor = ({
 
             // Update the entry.
             if (entry) {
-                const newValue: DataEntry = { ...entry, tags: [...(entry.tags ?? []), newTag] };
+                const value = [...(entry.tags ?? []), newTag];
+                const newTags = value.join("|");
+                const newValue: DataEntry = { ...entry, tags: newTags };
                 onEntryChanged?.(newValue);
             }
         },
@@ -209,6 +212,8 @@ const EntryEditor = ({
     const readQrCodeClick = React.useCallback(() => {
         setQrCodeVisible(true);
     }, []);
+
+    const tags = React.useMemo(() => entry?.tags?.split("|") ?? [], [entry?.tags]);
 
     return (
         <>
@@ -278,7 +283,7 @@ const EntryEditor = ({
                                     <TagBox //
                                         dataSource={allTags}
                                         readOnly={readOnly}
-                                        value={entry?.tags}
+                                        value={tags}
                                         onValueChanged={onTagsValueChanged}
                                         onCustomItemCreating={onCustomTagCreating}
                                         acceptCustomValue={true}

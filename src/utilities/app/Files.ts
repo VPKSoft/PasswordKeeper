@@ -164,7 +164,7 @@ const generateTags = <T>(fileData: (DataEntry | GeneralEntry<T>)[]) => {
     const data: DataEntry[] = fileData.filter(f => isDataEntry(f)) as DataEntry[];
     for (const item of data) {
         if (item.tags) {
-            tagArray.push(...item.tags);
+            tagArray.push(...item.tags.split("|"));
         }
     }
 

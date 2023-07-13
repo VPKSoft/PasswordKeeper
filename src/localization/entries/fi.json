@@ -7,5 +7,7 @@
     "userName": "Käyttäjänimi",
     "notes": "Muistiinpanot",
     "otpAuthUrl": "OTP- / 2FA-autentikoinnin URL",
-    "otpAuthKey": "OTP- /2FA-avain"
+    "otpAuthKey": "OTP- / 2FA-avain",
+    "tag": "Tunniste",
+    "tags": "Tunnisteet"
 }

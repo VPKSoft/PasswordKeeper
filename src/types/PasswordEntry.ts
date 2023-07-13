@@ -44,8 +44,8 @@ type DataEntry = {
     parentId: number;
     /** The key <--> URL for OTP authentication. */
     otpAuthKey?: string;
-    /** The tags assigned for the item. */
-    tags?: Array<string>;
+    /** The tags assigned for the item. These are separated with the `|` character. */
+    tags?: string;
 };
 
 /**
