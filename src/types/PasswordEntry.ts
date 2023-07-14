@@ -25,7 +25,7 @@ SOFTWARE.
 /**
  * The entry / category data format for the program.
  */
-export type DataEntry = {
+type DataEntry = {
     /** The name of the entry or a category. */
     name: string;
     /** The optional domain for the login credentials. */
@@ -44,4 +44,37 @@ export type DataEntry = {
     parentId: number;
     /** The key <--> URL for OTP authentication. */
     otpAuthKey?: string;
+    /** The tags assigned for the item. These are separated with the `|` character. */
+    tags?: string;
 };
+
+/**
+ * An additional generic metadata to save along the password items.
+ */
+type GeneralEntry<T> = {
+    /** The type of the metadata. */
+    type: "tags";
+    /** The values in the metadata. */
+    values: Array<T>;
+};
+
+/**
+ * A type guard for the {@link DataEntry} type.
+ * @param value Either {@link DataEntry} or {@link GeneralEntry} type to check if the parameter is of type of {@link DataEntry}.
+ * @returns `true` if the specified parameter type was {@link DataEntry}; otherwise false.
+ */
+const isDataEntry = (value: DataEntry | GeneralEntry<unknown>): value is DataEntry => {
+    return (value as DataEntry).id !== undefined;
+};
+
+/**
+ * A type guard for the {@link GeneralEntry} type.
+ * @param value Either {@link DataEntry} or {@link GeneralEntry} type to check if the parameter is of type of {@link GeneralEntry}.
+ * @returns `true` if the specified parameter type was {@link GeneralEntry}; otherwise false.
+ */
+const isGeneralEntry = <T>(value: DataEntry | GeneralEntry<T>): value is GeneralEntry<T> => {
+    return (value as GeneralEntry<T>).type !== undefined;
+};
+
+export { isDataEntry, isGeneralEntry };
+export type { DataEntry, GeneralEntry };

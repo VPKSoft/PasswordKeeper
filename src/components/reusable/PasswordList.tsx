@@ -159,6 +159,8 @@ const createFilterExpression = (value: SearchTextBoxValue) => {
                 ["notes", "contains", term],
                 "or",
                 ["password", "contains", term],
+                "or",
+                ["tags", "contains", term],
             ],
             orMode ? "or" : "and"
         );

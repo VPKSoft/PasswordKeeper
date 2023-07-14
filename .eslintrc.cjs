@@ -37,6 +37,7 @@ module.exports = {
         "unicorn/prevent-abbreviations": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
+        "react/jsx-no-bind": "error",
         "unicorn/no-null": "off",
         "import/order": "warn",
         "unicorn/numeric-separators-style": ["error", { number: { minimumDigits: 0, groupLength: 3 } }],

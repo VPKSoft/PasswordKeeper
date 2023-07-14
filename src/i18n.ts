@@ -26,6 +26,9 @@ import { use } from "i18next";
 import { initReactI18next, useTranslation } from "react-i18next";
 
 // Import all translation files
+import fiMessages from "devextreme/localization/messages/fi.json";
+import enMessages from "devextreme/localization/messages/en.json";
+import { loadMessages, locale as dxLocale } from "devextreme/localization";
 import localizationEnMainUI from "./localization/mainui/en.json";
 import localizationFiMainUI from "./localization/mainui/fi.json";
 
@@ -94,6 +97,22 @@ const setLocale = (locale: Locales) => {
         resources,
         lng: locale, //default language
     });
+
+    switch (locale) {
+        case "fi": {
+            loadMessages(fiMessages);
+            break;
+        }
+        case "en": {
+            loadMessages(enMessages);
+            break;
+        }
+        default: {
+            loadMessages(enMessages);
+            break;
+        }
+    }
+    dxLocale(locale);
 };
 
 // Use English as the default locale.
@@ -111,8 +130,17 @@ type TranslationComponents = (typeof ComponentValues)[number];
 const useLocalize = (component: TranslationComponents) => {
     const { t } = useTranslation([component]);
 
-    const localize = (entryName: string, defaultValue?: string, params?: unknown) => {
-        return t(entryName, defaultValue ?? entryName, params as never) as unknown as string;
+    /**
+     * A localization function returned by the {@link useLocalize} hook.
+     * @param {string} entryName The name of the localization key.
+     * @param {string?} defaultValue A default value if a localization key is not found.
+     * @param params The interpolation parameters for the localization function. E.g. `{ interpolationName: interpolationValue }`.
+     * @param escapeValue A value indicating whether the special characters should be escaped with interpolation. The default value is `true`.
+     */
+    const localize = (entryName: string, defaultValue?: string, params?: unknown, escapeValue?: boolean) => {
+        const options = { interpolation: { escapeValue: escapeValue === undefined ? true : escapeValue } };
+        const paramsNew = { ...(params as object), ...options };
+        return t(entryName, defaultValue ?? entryName, paramsNew) as unknown as string;
     };
 
     return localize;

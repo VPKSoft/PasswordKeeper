@@ -46,16 +46,16 @@ export type DataEntry = {
 
 # Install
 ## Windows
-Download the [PasswordKeeper_0.2.1_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/PasswordKeeper_0.2.1_x64-setup.exe), ignore the warnings and install the software.
+Download the [PasswordKeeper_0.2.3_x64-setup.exe](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.3/PasswordKeeper_0.2.3_x64-setup.exe), ignore the warnings and install the software.
 If the installation fails you may need to install webview2, See: https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section
 
 ## Linux
-1. Download the [password-keeper_0.2.1_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/password-keeper_0.2.1_amd64.AppImage)
-2. Run `chmod +x password-keeper_0.2.1_amd64.AppImage` on the file.
-3. Run the password-keeper_0.2.1_amd64.AppImage file.
+1. Download the [password-keeper_0.2.3_amd64.AppImage](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.3/password-keeper_0.2.3_amd64.AppImage)
+2. Run `chmod +x password-keeper_0.2.3_amd64.AppImage` on the file.
+3. Run the password-keeper_0.2.3_amd64.AppImage file.
 
 ## macOS
-1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.1/PasswordKeeper_x64.app.tar.gz)
+1. Download the [PasswordKeeper_x64.app.tar.gz](https://github.com/VPKSoft/PasswordKeeper/releases/download/app-v0.2.3/PasswordKeeper_x64.app.tar.gz)
 2. Extract the `PasswordKeeper.app` from the file
 3. Run `xattr -c PasswordKeeper.app` on the file.
 4. Run the `PasswordKeeper.app`
@@ -81,7 +81,7 @@ sudo apt-get install libsoup2.4
 # Why this software
 I know there are a million password managers available already. The current solution I'm using is [VeraCrypt](https://www.veracrypt.fr/code/VeraCrypt/) virtual disk with an encrypted [LibreOffice](https://www.libreoffice.org) Calc file inside the disk. This is challenging to open for a quick review and I always forget to close the file or unmount the virtual disk - feel free to use the tip though 😄
 Well, that was background noise - the reasons:
-1. Keeping it simple, see: [The KISS Princible](https://en.wikipedia.org/wiki/KISS_principle)
+1. Keeping it simple, see: [The KISS Principle](https://en.wikipedia.org/wiki/KISS_principle)
 2. I want to learn [rust](https://www.rust-lang.org)
 3. To have the code base working fully cross platform
 4. Have a simple structure with strong encryption for the file the data is stored into.
