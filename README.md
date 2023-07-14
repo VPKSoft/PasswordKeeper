@@ -81,7 +81,7 @@ sudo apt-get install libsoup2.4
 # Why this software
 I know there are a million password managers available already. The current solution I'm using is [VeraCrypt](https://www.veracrypt.fr/code/VeraCrypt/) virtual disk with an encrypted [LibreOffice](https://www.libreoffice.org) Calc file inside the disk. This is challenging to open for a quick review and I always forget to close the file or unmount the virtual disk - feel free to use the tip though 😄
 Well, that was background noise - the reasons:
-1. Keeping it simple, see: [The KISS Princible](https://en.wikipedia.org/wiki/KISS_principle)
+1. Keeping it simple, see: [The KISS Principle](https://en.wikipedia.org/wiki/KISS_principle)
 2. I want to learn [rust](https://www.rust-lang.org)
 3. To have the code base working fully cross platform
 4. Have a simple structure with strong encryption for the file the data is stored into.
