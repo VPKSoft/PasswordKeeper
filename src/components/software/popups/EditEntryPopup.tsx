@@ -71,7 +71,7 @@ const EditEntryPopup = ({
     const lu = useLocalize("ui");
 
     // Memoize the title for the popup based on the mode.
-    const title = React.useMemo(() => (mode === ModifyType.New ? le("newEntry", "New entry") : le("modifyEntry", "Modify entry", { entry })), [entry, le, mode]);
+    const title = React.useMemo(() => (mode === ModifyType.New ? le("newEntry", "New entry") : le("modifyEntry", "Modify entry: {{entry.name}}", { entry }, false)), [entry, le, mode]);
 
     // Set the internal state entry.
     React.useEffect(() => {
