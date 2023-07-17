@@ -28,7 +28,7 @@
         "react": "^18.2.0",
         "react-countdown-circle-timer": "^3.2.1",
         "react-dom": "^18.2.0",
-        "react-i18next": "^13.0.1",
+        "react-i18next": "^13.0.2",
         "react-secure-storage": "^1.2.2",
         "styled-components": "^5.3.11",
         "typescript-eslint": "^0.0.1-alpha.0"
