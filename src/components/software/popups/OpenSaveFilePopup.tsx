@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import classNames from "classnames";
 import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { FileQueryMode } from "../../../types/Enums";
