@@ -5,7 +5,7 @@ import { Column, RowDragging, Selection } from "devextreme-react/tree-list";
 import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent, InitializedEvent } from "devextreme/ui/tree_list";
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps, DxFilter } from "../Types";

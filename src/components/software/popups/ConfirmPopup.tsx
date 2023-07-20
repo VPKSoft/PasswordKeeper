@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import classNames from "classnames";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { DialogButtons, DialogResult, PopupType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";

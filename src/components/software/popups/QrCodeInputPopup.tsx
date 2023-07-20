@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import classNames from "classnames";
 import { Button, Popup } from "devextreme-react";
 import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";

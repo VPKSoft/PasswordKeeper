@@ -30,7 +30,7 @@ import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
 import dxTreeList, { Node } from "devextreme/ui/tree_list";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";

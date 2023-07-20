@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { appWindow } from "@tauri-apps/api/window";
 import classNames from "classnames";
 import { useLocalize } from "../../i18n";
