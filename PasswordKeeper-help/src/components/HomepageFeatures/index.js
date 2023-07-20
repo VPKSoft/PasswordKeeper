@@ -1,64 +1,65 @@
-import React from 'react';
-import clsx from 'clsx';
-import styles from './styles.module.css';
+import React from "react";
+import clsx from "clsx";
+import styles from "./styles.module.css";
 
 const FeatureList = [
-  {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
-    description: (
-      <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
-      </>
-    ),
-  },
-  {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: (
-      <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
-      </>
-    ),
-  },
-  {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
-    description: (
-      <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
-      </>
-    ),
-  },
+    {
+        title: "Open and easy to use",
+        Svg: require("@site/static/img/app-icon.svg").default,
+        description: (
+            <>
+                The simple UX and only the necessary features makes the software easy to use. The <a href="https://en.wikipedia.org/wiki/MIT_License">MIT</a> license keeps the source open and
+                available for auditing, modification and improvements.
+            </>
+        ),
+    },
+    {
+        title: "Strong encryption",
+        Svg: require("@site/static/img/encryption-data-svgrepo-com.svg").default,
+        description: (
+            <>
+                The encryption algorithm used is <a href="https://en.wikipedia.org/wiki/AES-GCM-SIV">AES-GCM-SIV</a> with <a href="https://en.wikipedia.org/wiki/Argon2">Argon2</a> / Argon2id key
+                derivation function. The PasswordKeeper does not use cloud - only files within the OS file system.
+            </>
+        ),
+    },
+    {
+        title: "Cross-platform",
+        Svg: require("@site/static/img/gears-gear-svgrepo-com.svg").default,
+        description: (
+            <>
+                The <a href="https://tauri.app">Tauri Application Framework</a> allows the code base to be cross-platform for Windows, Linux and macOS.
+            </>
+        ),
+    },
 ];
 
-function Feature({Svg, title, description}) {
-  return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-    </div>
-  );
-}
-
-export default function HomepageFeatures() {
-  return (
-    <section className={styles.features}>
-      <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
+const Feature = ({ Svg, title, description }) => {
+    return (
+        <div className={clsx("col col--4")}>
+            <div className="text--center">
+                <Svg className={styles.featureSvg} role="img" />
+            </div>
+            <div className="text--center padding-horiz--md">
+                <h3>{title}</h3>
+                <p>{description}</p>
+            </div>
         </div>
-      </div>
-    </section>
-  );
-}
+    );
+};
+
+const HomepageFeatures = () => {
+    return (
+        <section className={styles.features}>
+            <div className="container">
+                <div className="row">
+                    {FeatureList.map((props, idx) => (
+                        <Feature key={idx} {...props} />
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default HomepageFeatures;
