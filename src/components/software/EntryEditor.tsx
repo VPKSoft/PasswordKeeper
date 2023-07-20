@@ -24,7 +24,7 @@ SOFTWARE.
 
 import * as React from "react";
 import classNames from "classnames";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import { Button, TagBox, TextArea, TextBox } from "devextreme-react";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
