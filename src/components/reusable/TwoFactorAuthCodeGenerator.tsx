@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 import classNames from "classnames";
 import { ColorHex, CountdownCircleTimer, TimeProps } from "react-countdown-circle-timer";
 import { invoke } from "@tauri-apps/api/tauri";
