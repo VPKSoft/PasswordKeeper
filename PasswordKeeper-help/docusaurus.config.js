@@ -29,7 +29,7 @@ const config = {
     // to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: "en",
-        locales: ["en"],
+        locales: ["en", "fi"],
     },
     presets: [
         [
@@ -69,6 +69,10 @@ const config = {
                         label: "GitHub",
                         position: "right",
                     },
+                    {
+                        type: "localeDropdown",
+                        position: "left",
+                    },
                 ],
             },
             footer: {
@@ -78,7 +82,7 @@ const config = {
                         title: "Docs",
                         items: [
                             {
-                                label: "Tutorial",
+                                label: "Help",
                                 to: "/docs/intro",
                             },
                         ],
