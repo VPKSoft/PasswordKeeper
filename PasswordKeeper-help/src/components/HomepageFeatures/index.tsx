@@ -4,7 +4,13 @@ import Translate, { translate } from "@docusaurus/Translate";
 import Link from "@docusaurus/Link";
 import styles from "./styles.module.css";
 
-const FeatureList = [
+type FeatureItem = {
+    title: string;
+    Svg: React.ComponentType<React.ComponentProps<"svg">>;
+    description: JSX.Element;
+};
+
+const FeatureList: FeatureItem[] = [
     {
         title: translate({ message: "Open source and easy to use", id: "help.openEasyTitle" }),
         Svg: require("@site/static/img/app-icon.svg").default,
@@ -60,7 +66,7 @@ const FeatureList = [
     },
     {
         title: translate({ message: "Multi-platform", id: "help.multiPlatformTitle" }),
-        Svg: require("@site/static/img/gears-gear-svgrepo-com.svg").default,
+        Svg: require("@site/static/img/TAURI_Glyph_Color.svg").default,
         description: (
             <Translate //
                 id="help.multiPlatformText"
@@ -82,7 +88,7 @@ const FeatureList = [
     },
 ];
 
-const Feature = ({ Svg, title, description }) => {
+const Feature = ({ title, Svg, description }: FeatureItem) => {
     return (
         <div className={clsx("col col--4")}>
             <div className="text--center">
