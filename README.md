@@ -5,6 +5,8 @@ A software to store login information into an encrypted file.
 
 ![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/c4e0893b-32b0-4d27-9051-55e31a2dc271)
 
+For instructions, see: [Help](https://vpksoft.github.io/PasswordKeeper/).
+
 # The encryption
 The encryption algorithm used is [AES-GCM-SIV](https://en.wikipedia.org/wiki/AES-GCM-SIV) with [Argon2](https://en.wikipedia.org/wiki/Argon2) / Argon2id key derivation function.
 
