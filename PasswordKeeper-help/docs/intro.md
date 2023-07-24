@@ -2,46 +2,28 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# About PasswordKeeper
 
-Let's discover **Docusaurus in less than 5 minutes**.
+PasswordKeeper is a file-based credential manager with [TOTP](https://en.wikipedia.org/wiki/Time-based_one-time_password) ([Time-based One-Time Password](https://en.wikipedia.org/wiki/Time-based_one-time_password)) support. The files are [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) encrypted.
 
-## Getting Started
+## The software
+The UI is on [DevExtreme](https://js.devexpress.com) JavaScript components. The UI is quite simple; items divided into categories in a tree list with search, menu and toolbar.
 
-Get started by **creating a new site**.
+![Main window](./img/main_window_1.png)
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## Installation
 
-### What you'll need
+### Windows
+Download the *PasswordKeeper_X.Y.Z_x64-setup.exe* from the latest [release](https://github.com/VPKSoft/PasswordKeeper/releases), ignore the warnings and install the software.
+If the installation fails you may need to install [webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/#download-section).
 
-- [Node.js](https://nodejs.org/en/download/) version 16.14 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+### Linux
+1. Download the *password-keeper_X.Y.Z_amd64.AppImage* from the latest [release](https://github.com/VPKSoft/PasswordKeeper/releases).
+2. Run `chmod +x password-keeper_X.Y.Z_amd64.AppImage` on the file.
+3. Run the *password-keeper_X.Y.Z_amd64.AppImage* file.
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+### macOS
+1. Download the *PasswordKeeper_x64.app.tar.gz* from the latest [release](https://github.com/VPKSoft/PasswordKeeper/releases).
+2. Extract the `PasswordKeeper.app` from the file
+3. Run `xattr -c PasswordKeeper.app` on the file.
+4. Run the `PasswordKeeper.app`

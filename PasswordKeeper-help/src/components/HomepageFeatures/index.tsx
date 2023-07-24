@@ -2,6 +2,9 @@ import React from "react";
 import clsx from "clsx";
 import Translate, { translate } from "@docusaurus/Translate";
 import Link from "@docusaurus/Link";
+import app_icon from "@site/static/img/app-icon.svg";
+import encrypt_image from "@site/static/img/encryption-data-svgrepo-com.svg";
+import tauri_glyph from "@site/static/img/TAURI_Glyph_Color.svg";
 import styles from "./styles.module.css";
 
 type FeatureItem = {
@@ -13,7 +16,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
     {
         title: translate({ message: "Open source and easy to use", id: "help.openEasyTitle" }),
-        Svg: require("@site/static/img/app-icon.svg").default,
+        Svg: app_icon,
         description: (
             <Translate //
                 id="help.openEasyText"
@@ -35,7 +38,7 @@ const FeatureList: FeatureItem[] = [
     },
     {
         title: translate({ message: "Strong encryption", id: "help.strongEncryptionTitle" }),
-        Svg: require("@site/static/img/encryption-data-svgrepo-com.svg").default,
+        Svg: encrypt_image,
         description: (
             <Translate //
                 id="help.strongEncryptionText"
@@ -66,7 +69,7 @@ const FeatureList: FeatureItem[] = [
     },
     {
         title: translate({ message: "Multi-platform", id: "help.multiPlatformTitle" }),
-        Svg: require("@site/static/img/TAURI_Glyph_Color.svg").default,
+        Svg: tauri_glyph,
         description: (
             <Translate //
                 id="help.multiPlatformText"
