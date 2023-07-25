@@ -194,7 +194,7 @@ const PreferencesPopup = ({
                             </td>
                             <td>
                                 <NumberBox //
-                                    value={settings.lock_timeout}
+                                    value={settingsInternal?.lock_timeout}
                                     min={0}
                                     max={120}
                                     onValueChange={setLockTimeout}
@@ -208,7 +208,7 @@ const PreferencesPopup = ({
                             </td>
                             <td>
                                 <NumberBox //
-                                    value={settings.failed_unlock_attempts}
+                                    value={settingsInternal?.failed_unlock_attempts}
                                     min={0}
                                     max={20}
                                     onValueChange={setFailedUnlockCount}
