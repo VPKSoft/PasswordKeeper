@@ -287,6 +287,7 @@ const EntryEditor = ({
                                         onValueChanged={onTagsValueChanged}
                                         onCustomItemCreating={onCustomTagCreating}
                                         acceptCustomValue={true}
+                                        searchEnabled={true}
                                     />
                                 </td>
                             </tr>
