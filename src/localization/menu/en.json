@@ -14,5 +14,6 @@
     "fileSave": "Save",
     "about": "About",
     "lockView": "Lock view",
-    "fileClose": "Close file"
+    "fileClose": "Close file",
+    "help": "Help"
 }
