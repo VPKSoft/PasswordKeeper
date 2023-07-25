@@ -44,6 +44,8 @@ type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
         aboutShowClick: () => void;
         /** Occurs when the close file item was clicked. */
         fileCloseClick: () => void;
+        /** Occurs when the help item was clicked. */
+        onHelpClick: () => void;
     };
 
 /**
@@ -71,6 +73,7 @@ const AppMenuToolbar = ({
     aboutShowClick,
     lockViewClick,
     fileCloseClick,
+    onHelpClick,
     testClick,
 }: AppMenuToolbarProps) => {
     const onItemClick = React.useCallback(
@@ -127,6 +130,11 @@ const AppMenuToolbar = ({
                     break;
                 }
 
+                case "help": {
+                    onHelpClick();
+                    break;
+                }
+
                 default: {
                     break;
                 }
@@ -142,6 +150,7 @@ const AppMenuToolbar = ({
             fileCloseClick,
             loadFileClick,
             newFileClick,
+            onHelpClick,
             saveFileAsClick,
             saveFileClick,
             settingsClick,

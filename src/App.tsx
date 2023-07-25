@@ -31,6 +31,7 @@ import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
 import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import { styled } from "styled-components";
+import { open } from "@tauri-apps/api/shell";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
@@ -509,6 +510,11 @@ const App = ({ className }: AppProps) => {
         lockView();
     }, [lockView]);
 
+    // Open the Help from github.io to an external browser.
+    const onHelpClick = React.useCallback(() => {
+        void open("https://vpksoft.github.io/PasswordKeeper/");
+    }, []);
+
     // A callback to try to unlock the view when a password protected file is opened.
     const queryUnlockPassword = React.useCallback(
         (userAccepted: boolean, password?: string) => {
@@ -563,6 +569,7 @@ const App = ({ className }: AppProps) => {
                 lockViewClick={lockViewClick}
                 aboutShowClick={aboutShowClick}
                 fileCloseClick={closeFile}
+                onHelpClick={onHelpClick}
                 isNewFile={isNewFile}
                 isfileChanged={fileChanged}
             />
