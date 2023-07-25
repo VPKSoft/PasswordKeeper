@@ -31,7 +31,7 @@ import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
 
-const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close"] as const;
+const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close", "help"] as const;
 type ActionNames = (typeof ActionValues)[number];
 
 /**
@@ -154,6 +154,12 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                 },
                 {
                     id: "3_2",
+                    name: localize("help"),
+                    actionName: "help",
+                    icon: "help",
+                },
+                {
+                    id: "3_3",
                     name: localize("about"),
                     actionName: "about",
                     icon: "info",

@@ -27,6 +27,7 @@ import { Button, Popup, ScrollView } from "devextreme-react";
 import classNames from "classnames";
 import { getName, getVersion } from "@tauri-apps/api/app";
 import { styled } from "styled-components";
+import { open } from "@tauri-apps/api/shell";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
