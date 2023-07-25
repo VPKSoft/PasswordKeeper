@@ -494,16 +494,35 @@ const App = ({ className }: AppProps) => {
         setAboutVisible(false);
     }, []);
 
+    // Expands the tree list selection and restores the selected state upon unlocking the view.
+    const expandTreeListSelection = React.useCallback(async () => {
+        const key = treeListRef.current?.getSelectedRowKeys()[0] as number | undefined;
+        if (key) {
+            const item = dataSource.find(f => f.id === key);
+
+            if (item) {
+                if (item.parentId !== -1) {
+                    await treeListRef.current?.expandRow(item.parentId);
+                }
+                await treeListRef.current?.expandRow(key);
+                await treeListRef.current?.navigateToRow(key);
+
+                setEntry(item);
+            }
+        }
+    }, [dataSource]);
+
     // A callback to unlock the view locked with an overlay.
     // If an existing file is opened a password dialog is displayed instead to unlock the view.
     const lockOverlayClick = React.useCallback(() => {
         if (isNewFile) {
             setViewLocked(false);
+            void expandTreeListSelection();
         } else {
             setLockPasswordQueryVisible(true);
             setViewLocked(false);
         }
-    }, [isNewFile]);
+    }, [expandTreeListSelection, isNewFile]);
 
     // Locks the view via user interaction.
     const lockViewClick = React.useCallback(() => {
@@ -515,6 +534,24 @@ const App = ({ className }: AppProps) => {
         void open("https://vpksoft.github.io/PasswordKeeper/");
     }, []);
 
+    // Handles the key down event for the document.
+    const handleKeyDown = React.useCallback(
+        (e: KeyboardEvent) => {
+            if (e.key === "F1") {
+                onHelpClick();
+                e.stopPropagation();
+            }
+        },
+        [onHelpClick]
+    );
+
+    // Add key down event listener to the document.
+    React.useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown);
+
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [handleKeyDown]);
+
     // A callback to try to unlock the view when a password protected file is opened.
     const queryUnlockPassword = React.useCallback(
         (userAccepted: boolean, password?: string) => {
@@ -524,6 +561,7 @@ const App = ({ className }: AppProps) => {
                 if (password === getFilePassword()) {
                     // The password validation was successful, unlock the view.
                     setViewLocked(false);
+                    void expandTreeListSelection();
                     setPasswordFailedCount(0);
                 } else {
                     // The password validation failed, keep the view locked and update the
@@ -536,7 +574,7 @@ const App = ({ className }: AppProps) => {
                 setViewLocked(true);
             }
         },
-        [getFilePassword, increaseFileLockFail]
+        [expandTreeListSelection, getFilePassword, increaseFileLockFail]
     );
 
     // Don't render the page if the settings have not been loaded yet.
