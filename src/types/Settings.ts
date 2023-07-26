@@ -65,7 +65,7 @@ const loadSettings = async () => {
  */
 const saveSettings = async (settings: Settings) => {
     try {
-        invoke("save_settings", { config: settings });
+        await invoke("save_settings", { config: settings });
         window.localStorage.setItem("settings", JSON.stringify(settings));
         return true;
     } catch {

@@ -15,6 +15,7 @@ module.exports = {
         ecmaFeatures: {
             jsx: true, // Allows for the parsing of JSX
         },
+        project: ['tsconfig.json'],
     },
     plugins: ["eslint-plugin-jsdoc", "eslint-plugin-unicorn", "react", "@typescript-eslint", "prettier", "react-hooks", "prefer-arrow"],
     settings: {
@@ -32,6 +33,7 @@ module.exports = {
         "prettier/prettier": "warn",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-floating-promises": "warn",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
         "unicorn/prevent-abbreviations": "off",

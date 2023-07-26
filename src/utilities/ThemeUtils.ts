@@ -114,7 +114,7 @@ export type DxThemeNames = (typeof dxThemes)[number];
  * To keep the application theming correct the the window should be reloaded after setting the theme.
  * @param theme The name of the theme to set.
  */
-export const setTheme = (theme: DxThemeNames) => {
+export const setTheme = async (theme: DxThemeNames) => {
     const settingTheme = window.localStorage.getItem("dx-theme");
     // the current import is deprecated:
     // eslint-disable-next-line import/no-named-as-default-member
@@ -122,151 +122,151 @@ export const setTheme = (theme: DxThemeNames) => {
     if (theme !== currentTheme) {
         switch (theme) {
             case "generic.carmine": {
-                carmine();
+                await carmine();
                 break;
             }
             case "generic.carmine.compact": {
-                carmine_compact();
+                await carmine_compact();
                 break;
             }
             case "generic.contrast": {
-                contrast();
+                await contrast();
                 break;
             }
             case "generic.contrast.compact": {
-                contrast_compact();
+                await contrast_compact();
                 break;
             }
             case "generic.dark": {
-                dark();
+                await dark();
                 break;
             }
             case "generic.dark.compact": {
-                dark_compact();
+                await dark_compact();
                 break;
             }
             case "generic.darkmoon": {
-                darkmoon();
+                await darkmoon();
                 break;
             }
             case "generic.darkmoon.compact": {
-                darkmoon_compact();
+                await darkmoon_compact();
                 break;
             }
             case "generic.darkviolet": {
-                darkviolet();
+                void darkviolet();
                 break;
             }
             case "generic.darkviolet.compact": {
-                darkviolet_compact();
+                await darkviolet_compact();
                 break;
             }
             case "generic.greenmist": {
-                greenmist();
+                await greenmist();
                 break;
             }
             case "generic.greenmist.compact": {
-                greenmist_compact();
+                await greenmist_compact();
                 break;
             }
             case "generic.light": {
-                light();
+                await light();
                 break;
             }
             case "generic.light.compact": {
-                light_compact();
+                await light_compact();
                 break;
             }
             case "generic.softblue": {
-                material_softBlue();
+                await material_softBlue();
                 break;
             }
             case "generic.softblue.compact": {
-                material_softBlue_compact();
+                await material_softBlue_compact();
                 break;
             }
             case "material.blue.dark": {
-                material_blueDark();
+                await material_blueDark();
                 break;
             }
             case "material.blue.dark.compact": {
-                material_blueDark_compact();
+                await material_blueDark_compact();
                 break;
             }
             case "material.blue.light": {
-                material_blueLight();
+                await material_blueLight();
                 break;
             }
             case "material.blue.light.compact": {
-                material_blueLight_compact();
+                await material_blueLight_compact();
                 break;
             }
             case "material.lime.dark": {
-                material_limeDark();
+                await material_limeDark();
                 break;
             }
             case "material.lime.dark.compact": {
-                material_limeDark_compact();
+                await material_limeDark_compact();
                 break;
             }
             case "material.lime.light": {
-                material_limeLight();
+                await material_limeLight();
                 break;
             }
             case "material.lime.light.compact": {
-                material_limeLight_compact();
+                await material_limeLight_compact();
                 break;
             }
             case "material.orange.dark": {
-                material_orangeDark();
+                await material_orangeDark();
                 break;
             }
             case "material.orange.dark.compact": {
-                material_orangeDark_compact();
+                await material_orangeDark_compact();
                 break;
             }
             case "material.orange.light": {
-                material_orangeLight();
+                await material_orangeLight();
                 break;
             }
             case "material.orange.light.compact": {
-                material_orangeLight_compact();
+                await material_orangeLight_compact();
                 break;
             }
             case "material.purple.dark": {
-                material_purpleDark();
+                await material_purpleDark();
                 break;
             }
             case "material.purple.dark.compact": {
-                material_purpleDark_compact();
+                await material_purpleDark_compact();
                 break;
             }
             case "material.purple.light": {
-                material_purpleLight();
+                await material_purpleLight();
                 break;
             }
             case "material.purple.light.compact": {
-                material_purpleLight_compact();
+                await material_purpleLight_compact();
                 break;
             }
             case "material.teal.dark": {
-                material_tealDark();
+                await material_tealDark();
                 break;
             }
             case "material.teal.dark.compact": {
-                material_tealDark_compact();
+                await material_tealDark_compact();
                 break;
             }
             case "material.teal.light": {
-                material_tealLight();
+                await material_tealLight();
                 break;
             }
             case "material.teal.light.compact": {
-                material_tealLight_compact();
+                await material_tealLight_compact();
                 break;
             }
             default: {
-                carmine_compact();
+                await carmine_compact();
                 break;
             }
         }

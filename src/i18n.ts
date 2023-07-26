@@ -93,26 +93,28 @@ const currentLocales: LocaleCodeName[] = [
  * @param locale The locale code to initialize the i18next with.
  */
 const setLocale = (locale: Locales) => {
-    use(initReactI18next).init({
-        resources,
-        lng: locale, //default language
-    });
-
-    switch (locale) {
-        case "fi": {
-            loadMessages(fiMessages);
-            break;
-        }
-        case "en": {
-            loadMessages(enMessages);
-            break;
-        }
-        default: {
-            loadMessages(enMessages);
-            break;
-        }
-    }
-    dxLocale(locale);
+    void use(initReactI18next)
+        .init({
+            resources,
+            lng: locale, //default language
+        })
+        .then(() => {
+            switch (locale) {
+                case "fi": {
+                    loadMessages(fiMessages);
+                    break;
+                }
+                case "en": {
+                    loadMessages(enMessages);
+                    break;
+                }
+                default: {
+                    loadMessages(enMessages);
+                    break;
+                }
+            }
+            dxLocale(locale);
+        });
 };
 
 // Use English as the default locale.

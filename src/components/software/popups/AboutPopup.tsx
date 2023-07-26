@@ -56,7 +56,7 @@ const AboutPopup = ({
     React.useEffect(() => {
         const versionPromise = getVersion();
         const appNamePromise = getName();
-        Promise.all([versionPromise, appNamePromise]).then(([v, n]) => {
+        void Promise.all([versionPromise, appNamePromise]).then(([v, n]) => {
             setAppName(n);
             setAppVersion(v);
         });
