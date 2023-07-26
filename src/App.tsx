@@ -150,11 +150,12 @@ const App = ({ className }: AppProps) => {
     const applySettings = React.useCallback(
         (value: Settings) => {
             settingsRef.current = value;
-            setTheme(value.dx_theme);
-            setLocale((value.locale ?? "en") as Locales);
-            setTimeoutEnabled(value.lock_timeout > 0);
-            setTimeOut(value.lock_timeout);
-            setSettingsLoaded(true);
+            void setTheme(value.dx_theme).then(() => {
+                setLocale((value.locale ?? "en") as Locales);
+                setTimeoutEnabled(value.lock_timeout > 0);
+                setTimeOut(value.lock_timeout);
+                setSettingsLoaded(true);
+            });
         },
         [setTimeoutEnabled]
     );
@@ -185,7 +186,7 @@ const App = ({ className }: AppProps) => {
             const password = getFilePassword();
             if (currentFile && password) {
                 // Save the file with the current file name and the current password.
-                saveFile<string>([...dataSource, dataTags], password, currentFile).then(f => {
+                void saveFile<string>([...dataSource, dataTags], password, currentFile).then(f => {
                     if (f.ok) {
                         setCurrentFile(f.fileName);
                         setFileChanged(false);
@@ -237,7 +238,7 @@ const App = ({ className }: AppProps) => {
 
         // Stop the event listening.
         return () => {
-            unlisten.then(f => f());
+            void unlisten.then(f => f());
         };
     }, [fileSaveQueryAbortCloseCallback]);
 
@@ -313,7 +314,7 @@ const App = ({ className }: AppProps) => {
             notify(lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), "warning", 5_000);
         } else {
             // The count exceeded, exit the software.
-            exit(0);
+            void exit(0);
         }
     }, [lm, passwordFailedCount]);
 
@@ -371,11 +372,11 @@ const App = ({ className }: AppProps) => {
     // The exit application menu was chosen.
     const exitClick = React.useCallback(() => {
         // First make sure the application exit doesn't discard any changes that were wished to be saved.
-        fileSaveQueryAbortCloseCallback().then(result => {
+        void fileSaveQueryAbortCloseCallback().then(result => {
             if (!result) {
                 // If the exit is authorized or there are no changes to the current file,
                 // exit the application.
-                exit(0);
+                void exit(0);
             }
         });
     }, [fileSaveQueryAbortCloseCallback]);
@@ -442,7 +443,7 @@ const App = ({ className }: AppProps) => {
         (e: DialogResult) => {
             setSaveChangedFileQueryVisible(false);
             if (e === DialogResult.Yes) {
-                saveFileCallback();
+                void saveFileCallback();
             } else if (e === DialogResult.Cancel) {
                 setSaveChangedFileQueryVisible(false);
                 setFileCloseRequested(false);
@@ -459,7 +460,7 @@ const App = ({ className }: AppProps) => {
         (userAccepted: boolean, settings?: Settings) => {
             if (userAccepted && settings) {
                 // Save the settings as the changes were accepted.
-                saveSettings(settings).then(f => {
+                void saveSettings(settings).then(f => {
                     if (f) {
                         // Apply the setting changes.
                         applySettings(settings);
@@ -715,7 +716,7 @@ const collapseTree = (tree: dxTreeList | undefined) => {
         tree.forEachNode((f: Node<DataEntry>) => {
             // Only collapse the parent nodes.
             if (f.data?.parentId === -1) {
-                tree.collapseRow(f.key);
+                void tree.collapseRow(f.key);
             }
         });
     }
