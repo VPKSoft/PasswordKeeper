@@ -17,7 +17,7 @@ module.exports = {
         },
         project: ['tsconfig.json'],
     },
-    plugins: ["eslint-plugin-jsdoc", "eslint-plugin-unicorn", "react", "@typescript-eslint", "prettier", "react-hooks", "prefer-arrow"],
+    plugins: ["eslint-plugin-jsdoc", "eslint-plugin-unicorn", "react", "@typescript-eslint", "prettier", "react-hooks", "prefer-arrow", "import"],
     settings: {
         react: {
             version: "detect", // Tells eslint-plugin-react to automatically detect the version of React to use
@@ -60,5 +60,9 @@ module.exports = {
         ],
         "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
         "func-style": ["error", "expression", { allowArrowFunctions: true }],
+        "no-restricted-syntax": ["error", {
+            "selector": "ExportDefaultDeclaration",
+            "message": "Prefer named exports"
+        }],
     },
 };
