@@ -28,3 +28,7 @@ If the file could not be opened with the specified password, a counter is increa
 *The notification of a failed open file try*
 
 ![FailOpenPassword](../img/invalid_password_countdown_1.png)
+
+## Saving existing file
+
+The password specified when opening an existing file is preserved in the memory so the modifications made to an existing file can be just saved using the ![save](/img/icons/save.svg) save function.

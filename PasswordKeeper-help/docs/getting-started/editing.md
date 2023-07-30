@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Basic editing
+# Editing
 
 This covers the basic editing such as adding categories and items.
 
