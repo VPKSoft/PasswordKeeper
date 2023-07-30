@@ -60,5 +60,9 @@ module.exports = {
         ],
         "prefer-arrow-callback": ["error", { allowNamedFunctions: true }],
         "func-style": ["error", "expression", { allowArrowFunctions: true }],
+        "no-restricted-syntax": ["error", {
+            "selector": "ExportDefaultDeclaration",
+            "message": "Prefer named exports"
+        }],
     },
 };
