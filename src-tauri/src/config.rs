@@ -26,7 +26,7 @@ impl ::std::default::Default for AppConfig {
             locale: "en".to_string(),
             lock_timeout: 10,
             failed_unlock_attempts: 10,
-            save_window_state: true,
+            save_window_state: false,
         }
     }
 }
