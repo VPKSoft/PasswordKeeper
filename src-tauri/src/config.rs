@@ -13,6 +13,8 @@ pub struct AppConfig {
     lock_timeout: u32,
     /// An amount of attempts the user inputted password can be invalid before the application closes. 0 is disabled.
     failed_unlock_attempts: u32,
+    /// A value indicating whether the plugin-window-state should be used to remember the previous window state.
+    save_window_state: bool,
 }
 
 // The default value for the application configuration.
@@ -24,6 +26,7 @@ impl ::std::default::Default for AppConfig {
             locale: "en".to_string(),
             lock_timeout: 10,
             failed_unlock_attempts: 10,
+            save_window_state: true,
         }
     }
 }

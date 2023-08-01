@@ -215,13 +215,17 @@ const App = ({ className }: AppProps) => {
                 result = true; // True for abort close
             } else {
                 // Save the window state.
-                await saveWindowState(StateFlags.ALL);
+                if (settingsRef.current?.save_window_state === true) {
+                    await saveWindowState(StateFlags.ALL);
+                }
             }
 
             return result;
         } else {
             // Save the window state.
-            await saveWindowState(StateFlags.ALL);
+            if (settingsRef.current?.save_window_state === true) {
+                await saveWindowState(StateFlags.ALL);
+            }
             return false;
         }
     }, [currentFile, fileChanged, lm, saveFileCallback]);
@@ -586,7 +590,7 @@ const App = ({ className }: AppProps) => {
 
     // Restore the window state when the settings have been loaded.
     React.useEffect(() => {
-        if (settingsLoaded) {
+        if (settingsLoaded && settingsRef.current?.save_window_state === true) {
             void restoreStateCurrent(StateFlags.ALL);
         }
     }, [settingsLoaded]);

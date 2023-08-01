@@ -5,5 +5,6 @@
     "saveSuccess": "Settings were saved successfully.",
     "themeChangeFailFileUnsaved": "Theme change didn't succeed as the unsaved changes to the file would have been lost in case of application reload.",
     "lockTimeoutMinutes": "Lock timeout (minutes)",
-    "failedUnlockExitCount": "Exit program after failed password attempts"
+    "failedUnlockExitCount": "Exit program after failed password attempts",
+    "saveWindowPosition": "Save window position"
 }
