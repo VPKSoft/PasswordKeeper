@@ -5,5 +5,6 @@
     "saveSuccess": "Asetukset tallennettiin onnistuneesti.",
     "themeChangeFailFileUnsaved": "Teeman vaihto ei onnistunut koska tiedostossa on tallentamattomia muutoksia ja sovelluksen uudelleenlataus olisi kadottanut ne.",
     "lockTimeoutMinutes": "Lukituksen aikakatkaisu (minuuttia)",
-    "failedUnlockExitCount": "Sulje ohjelma virheellisten salasanan syöttökertojen jälkeen"
+    "failedUnlockExitCount": "Sulje ohjelma virheellisten salasanan syöttökertojen jälkeen",
+    "saveWindowPosition": "Tallenna ikkunan sijainti"
 }

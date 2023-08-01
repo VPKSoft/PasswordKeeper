@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Lookup, NumberBox, Popup } from "devextreme-react";
+import { Button, CheckBox, Lookup, NumberBox, Popup } from "devextreme-react";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/lookup";
 import { styled } from "styled-components";
@@ -102,34 +102,41 @@ const PreferencesPopup = ({
     const onThemeValueChanged = React.useCallback(
         (e: ValueChangedEvent) => {
             const value = e.value as DxThemeNames;
-            setSettingsInternal({ ...settings, dx_theme: value });
+            setSettingsInternal({ ...(settingsInternal ?? settings), dx_theme: value });
         },
-        [settings]
+        [settings, settingsInternal]
     );
 
     // Save the locale Lookup value into the internal state.
     const onLocaleValueChanged = React.useCallback(
         (e: ValueChangedEvent) => {
             const value = e.value as Locales;
-            setSettingsInternal({ ...settings, locale: value });
+            setSettingsInternal({ ...(settingsInternal ?? settings), locale: value });
         },
-        [settings]
+        [settings, settingsInternal]
     );
 
     // Save the changed lock timeout NumberBox value into the internal state.
     const setLockTimeout = React.useCallback(
         (value: number) => {
-            setSettingsInternal({ ...settings, lock_timeout: value });
+            setSettingsInternal({ ...(settingsInternal ?? settings), lock_timeout: value });
         },
-        [settings]
+        [settings, settingsInternal]
     );
 
     // Save the password retry count NumberBox value into the internal state.
     const setFailedUnlockCount = React.useCallback(
         (value: number) => {
-            setSettingsInternal({ ...settings, failed_unlock_attempts: value });
+            setSettingsInternal({ ...(settingsInternal ?? settings), failed_unlock_attempts: value });
         },
-        [settings]
+        [settings, settingsInternal]
+    );
+
+    const setSaveWindowState = React.useCallback(
+        (value: boolean | null) => {
+            setSettingsInternal({ ...(settingsInternal ?? settings), save_window_state: value === true });
+        },
+        [settings, settingsInternal]
     );
 
     // The OK button was clicked.
@@ -153,7 +160,7 @@ const PreferencesPopup = ({
             onVisibleChange={onVisibleChange}
             dragEnabled={true}
             resizeEnabled={true}
-            height={320}
+            height={360}
             width={600}
             showTitle={true}
         >
@@ -213,6 +220,18 @@ const PreferencesPopup = ({
                                     max={20}
                                     onValueChange={setFailedUnlockCount}
                                     showSpinButtons={true}
+                                />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div className="dx-field-item-label-text">{ls("saveWindowPosition")}</div>
+                            </td>
+                            <td>
+                                <CheckBox //
+                                    value={settingsInternal?.save_window_state}
+                                    onValueChange={setSaveWindowState}
                                 />
                             </td>
                         </tr>
