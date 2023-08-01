@@ -32,6 +32,7 @@ import { ask } from "@tauri-apps/api/dialog";
 import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
+import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
@@ -212,10 +213,15 @@ const App = ({ className }: AppProps) => {
             if (dialogResult) {
                 void saveFileCallback();
                 result = true; // True for abort close
+            } else {
+                // Save the window state.
+                await saveWindowState(StateFlags.ALL);
             }
 
             return result;
         } else {
+            // Save the window state.
+            await saveWindowState(StateFlags.ALL);
             return false;
         }
     }, [currentFile, fileChanged, lm, saveFileCallback]);
@@ -577,6 +583,13 @@ const App = ({ className }: AppProps) => {
         },
         [expandTreeListSelection, getFilePassword, increaseFileLockFail]
     );
+
+    // Restore the window state when the settings have been loaded.
+    React.useEffect(() => {
+        if (settingsLoaded) {
+            void restoreStateCurrent(StateFlags.ALL);
+        }
+    }, [settingsLoaded]);
 
     // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded) {
