@@ -37,19 +37,19 @@ const WindowTitle = ({
     const lu = useLocalize("ui");
 
     const minimizeClick = React.useCallback(() => {
-        appWindow.minimize();
+        void appWindow.minimize();
     }, []);
 
     const maximizeClick = React.useCallback(() => {
-        appWindow.toggleMaximize();
+        void appWindow.toggleMaximize();
     }, []);
 
     // Close the application if the onClose callback returned false.
     const closeClick = React.useCallback(() => {
         if (onClose) {
-            Promise.resolve(onClose()).then(result => {
+            void Promise.resolve(onClose()).then(result => {
                 if (!result) {
-                    appWindow.close();
+                    void appWindow.close();
                 }
             });
         }

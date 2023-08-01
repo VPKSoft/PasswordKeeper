@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "PasswordKeeper",
-        "version": "0.2.4"
+        "version": "0.2.5"
     },
     "tauri": {
         "allowlist": {
@@ -22,7 +22,9 @@
                 "minimize": true,
                 "unmaximize": true,
                 "unminimize": true,
-                "startDragging": true
+                "startDragging": true,
+                "setSize": true,
+                "setPosition": true
             },
             "dialog": {
                 "all": true,

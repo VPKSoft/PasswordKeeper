@@ -40,6 +40,8 @@ export type Settings = {
     lock_timeout: number;
     /** An amount of attempts the user inputted password can be invalid before the application closes. 0 is disabled. */
     failed_unlock_attempts: number;
+    /** A value indicating whether the plugin-window-state should be used to remember the previous window state. */
+    save_window_state: boolean;
 };
 
 /**
@@ -65,7 +67,7 @@ const loadSettings = async () => {
  */
 const saveSettings = async (settings: Settings) => {
     try {
-        invoke("save_settings", { config: settings });
+        await invoke("save_settings", { config: settings });
         window.localStorage.setItem("settings", JSON.stringify(settings));
         return true;
     } catch {

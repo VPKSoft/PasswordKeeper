@@ -1,0 +1,29 @@
+name: Docusaurus Test
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - PasswordKeeper-help/**
+  workflow_dispatch:
+
+jobs:
+  docusaurus_test:
+    name: Test docusaurus build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          cd PasswordKeeper-help
+          npm install
+      - name: Build website
+        run: |
+          cd PasswordKeeper-help
+          npm run build

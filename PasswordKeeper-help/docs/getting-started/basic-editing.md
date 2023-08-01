@@ -56,3 +56,23 @@ After the **OK** button click on success the code keeps generating. The actual [
 *In case of any failure the following message is displayed instead*
 
 ![QR Fail](../img/qr_fail_1.png)
+
+## Ordering items
+
+Items and categories can be ordered via Drag & Drop using the drag column of the item list (![DragAndDrop](/img/icons/drag.svg)).
+
+Items can be also dragged into different categories.
+
+## Editing items
+
+Items can be edited by selecting the ![edit](/img/icons/edit.svg) edit function for a selected category or an item.
+
+## Removing items
+
+Items or categories can be deleted by selecting the ![trash](/img/icons/trash.svg) delete function for a selected category or an item. Both item and category deletions are confirmed via popup.
+
+**NOTE: Deleting a category also deletes the items within the category.**
+
+*Delete category confirmation popup*
+
+![QR Fail](../img/confirm_popup_delete_category_1.png)
