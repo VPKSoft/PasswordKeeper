@@ -32,6 +32,7 @@ import notify from "devextreme/ui/notify";
 import { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
 import { useLocalize } from "../../../i18n";
+import { decode, makeOtpAuthKey } from "../../../utilities/gauth/auth_exporter";
 
 /**
  * The props for the {@link QrCodeInputPopup} component.
@@ -85,14 +86,38 @@ const QrCodeInputPopup = ({
             scanner
                 .scanFile(file, false)
                 .then((decodedText: string) => {
-                    void invoke<Auth2Fa>("gen_otpauth", { otpauth: decodedText }).then((f: Auth2Fa) => {
-                        if (f.success) {
-                            notify(lm("qrSuccess"), "success", 5_000);
-                            setOtpAuthPath(decodedText);
-                        } else {
+                    if (decodedText.startsWith("otpauth-migration")) {
+                        try {
+                            const queryParams = new URL(decodedText).search;
+                            const data = new URLSearchParams(queryParams).get("data");
+                            if (data) {
+                                void decode(data).then(otpData => {
+                                    if (otpData.length > 0) {
+                                        setOtpAuthPath(makeOtpAuthKey(otpData[0]));
+                                        if (otpData.length !== 1) {
+                                            notify(lm("qrMoreThan1"), "warning", 5_000);
+                                        }
+                                        notify(lm("qrSuccess"), "success", 5_000);
+                                    } else {
+                                        notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                    }
+                                });
+                            } else {
+                                notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                            }
+                        } catch {
                             notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
                         }
-                    });
+                    } else {
+                        void invoke<Auth2Fa>("gen_otpauth", { otpauth: decodedText }).then((f: Auth2Fa) => {
+                            if (f.success) {
+                                notify(lm("qrSuccess"), "success", 5_000);
+                                setOtpAuthPath(decodedText);
+                            } else {
+                                notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                            }
+                        });
+                    }
                 })
                 .catch(error => {
                     notify(lm("qrCodeImageReadFailed", undefined, { message: error }));
