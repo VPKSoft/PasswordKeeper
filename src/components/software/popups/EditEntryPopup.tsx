@@ -136,6 +136,7 @@ const EditEntryPopup = ({
                     nameTextBoxRef={focusTextBoxRef}
                     hideQrAuthPopup={!visible}
                     allTags={allTags}
+                    showQrViewButton={false}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //

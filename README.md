@@ -99,4 +99,7 @@ Well, that was background noise - the reasons:
 * [React Countdown Circle Timer](https://www.npmjs.com/package/react-countdown-circle-timer)
 * [Html5-QRCode](https://www.npmjs.com/package/html5-qrcode)
 * [totp-rs](https://crates.io/crates/totp-rs)
+* [qrcode](https://www.npmjs.com/package/qrcode)
+* [google-authenticator-exporter](https://github.com/krissrex/google-authenticator-exporter)
+* [protobufjs](https://www.npmjs.com/package/protobufjs)
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)

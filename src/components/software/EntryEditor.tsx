@@ -33,6 +33,7 @@ import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
+import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 
 /**
@@ -57,6 +58,8 @@ type EntryEditorProps = {
     hideQrAuthPopup: boolean;
     /** All the tags contained within the current file. */
     allTags?: string[];
+    /** A value indicating whether the QR code view popup button should be displayed. */
+    showQrViewButton?: boolean;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -80,10 +83,12 @@ const EntryEditor = ({
     showCopyButton = false,
     nameTextBoxRef,
     hideQrAuthPopup,
+    showQrViewButton = true,
     allTags,
     onEntryChanged,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
+    const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -101,6 +106,11 @@ const EntryEditor = ({
         },
         [entry, onEntryChanged]
     );
+
+    // The QR code popup was closed so hide it.
+    const qrCodePopupDisplayClose = React.useCallback(() => {
+        setQrCodePopupVisible(false);
+    }, []);
 
     // A value change callback to handle the changes of all the text boxes
     // within the component.
@@ -213,7 +223,20 @@ const EntryEditor = ({
         setQrCodeVisible(true);
     }, []);
 
+    // Display the QR code view popup.
+    const displayQrCodeClick = React.useCallback(() => {
+        setQrCodePopupVisible(true);
+    }, []);
+
+    // If the entry changes, hide the QR code popup,
+    React.useEffect(() => {
+        setQrCodePopupVisible(false);
+    }, [entry]);
+
     const tags = React.useMemo(() => entry?.tags?.split("|") ?? [], [entry?.tags]);
+
+    // Memoize the disabled value for the view QR code button.
+    const displayQrCodeDisabled = React.useMemo(() => !(entry?.otpAuthKey ?? "").startsWith("otpauth"), [entry?.otpAuthKey]);
 
     return (
         <>
@@ -303,6 +326,14 @@ const EntryEditor = ({
                                             onValueChanged={onOTPAuthChanged}
                                             className="OTPAuth-textBox"
                                         />
+                                        {showQrViewButton && (
+                                            <Button //
+                                                hint={lu("displayQrCodeTitle")}
+                                                icon="find"
+                                                disabled={displayQrCodeDisabled}
+                                                onClick={displayQrCodeClick}
+                                            />
+                                        )}
                                         <Button //
                                             hint={lu("readQrCodeTitle")}
                                             icon="fas fa-qrcode"
@@ -327,10 +358,20 @@ const EntryEditor = ({
                         </tbody>
                     </table>
                     <div className="dx-field-item-label-text">{le("notes")}</div>
-                    <TextArea readOnly={readOnly} value={entry?.notes} className="EntryEditor-TextArea" onValueChanged={onNotesChanged} />
+                    <TextArea //
+                        readOnly={readOnly}
+                        value={entry?.notes}
+                        className="EntryEditor-TextArea"
+                        onValueChanged={onNotesChanged}
+                    />
                     <QrCodeInputPopupStyled //
                         visible={qrCodeVisible && !hideQrAuthPopup}
                         onClose={qrCodePopupClose}
+                    />
+                    <DisplayQrCodePopupStyled //
+                        visible={qrCodePopupVisible}
+                        onClose={qrCodePopupDisplayClose}
+                        qrUrl={entry?.otpAuthKey}
                     />
                 </div>
             )}
