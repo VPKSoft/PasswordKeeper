@@ -20,5 +20,7 @@
     "searchLabel": "Search",
     "clearSearch": "Clear search",
     "qrCodeTitle": "Read QR code from image",
-    "readQrCodeTitle": "Read QR code"
+    "readQrCodeTitle": "Read QR code",
+    "displayQrCodeTitle": "View QR code",
+    "qrCodePopupTitle": "QR code"
 }

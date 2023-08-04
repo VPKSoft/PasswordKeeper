@@ -20,5 +20,7 @@
     "clearSearch": "Tyhjennä haku",
     "orMode": "Hakutila: TAI",
     "qrCodeTitle": "Lue QR-koodi kuvasta",
-    "readQrCodeTitle": "Lue QR-koodi"
+    "readQrCodeTitle": "Lue QR-koodi",
+    "displayQrCodeTitle": "Näytä QR-koodi",
+    "qrCodePopupTitle": "QR-koodi"
 }
