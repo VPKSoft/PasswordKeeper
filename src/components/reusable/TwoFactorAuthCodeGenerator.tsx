@@ -104,10 +104,10 @@ const TwoFactorAuthCodeGenerator = ({
             navigator.clipboard
                 .writeText(twoFactorResult.key)
                 .then(() => {
-                    notify(lu("clipboardCopySuccess"), "success", 2_000);
+                    notify(lu("clipboardCopySuccess"), "success", 5_000);
                 })
                 .catch(() => {
-                    notify(lu("clipboardCopyFailed"), "error", 2_000);
+                    notify(lu("clipboardCopyFailed"), "error", 5_000);
                 });
         }
     }, [lu, twoFactorResult]);
