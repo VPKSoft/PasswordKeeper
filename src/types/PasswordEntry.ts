@@ -46,6 +46,8 @@ type DataEntry = {
     otpAuthKey?: string;
     /** The tags assigned for the item. These are separated with the `|` character. */
     tags?: string;
+    /** A value indicating whether to use markdown for the {@link DataEntry.notes} rendering. */
+    useMarkdown?: boolean;
 };
 
 /**

@@ -9,5 +9,8 @@
     "otpAuthUrl": "OTP / 2FA authentication URL",
     "otpAuthKey": "OTP / 2FA key",
     "tag": "Tag",
-    "tags": "Tags"
+    "tags": "Tags",
+    "useMarkdown": "Use Markdown",
+    "entryNotesEdit": "Edit notes",
+    "entryNotesPreview": "Preview notes"
 }
