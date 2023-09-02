@@ -43,6 +43,8 @@ export type DataEntry = {
     parentId: number;
     /** The key <--> URL for OTP authentication. */
     otpAuthKey?: string;
+    /** A value indicating whether to use markdown for the {@link DataEntry.notes} rendering. */
+    useMarkdown?: boolean;    
 };
 ```
 
@@ -102,4 +104,8 @@ Well, that was background noise - the reasons:
 * [qrcode](https://www.npmjs.com/package/qrcode)
 * [google-authenticator-exporter](https://github.com/krissrex/google-authenticator-exporter)
 * [protobufjs](https://www.npmjs.com/package/protobufjs)
+* [html-react-parser](https://www.npmjs.com/package/html-react-parser)
+* [DOMPurify](https://www.npmjs.com/package/dompurify)
+* [Marked](https://www.npmjs.com/package/marked)
+
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
