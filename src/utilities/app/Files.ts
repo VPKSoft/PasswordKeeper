@@ -24,7 +24,7 @@ SOFTWARE.
 
 import { save, open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
-import { DataEntry, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
+import { DataEntry, FileData, FileOptions, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
 
 /**
  * A result type for the {@link loadFile} and {@link saveFile} functions.
@@ -40,6 +40,8 @@ type FileResult = {
     tags: GeneralEntry<string>;
     /** An error message in case the file load or save operation was unsuccessful. */
     errorMessage?: string;
+    /** Global file options. */
+    dataOptions?: FileOptions;
 };
 
 /**
@@ -121,15 +123,31 @@ const loadFile = async (password: string, fileName: string) => {
     }
 
     const items = JSON.parse(fileData.value) as (DataEntry | GeneralEntry<string>)[];
-    const itemsGeneral: GeneralEntry<string>[] = items.filter((f: DataEntry | GeneralEntry<string>) => isGeneralEntry(f)) as GeneralEntry<string>[];
-    const itemTag = itemsGeneral.filter(f => f.type === "tags");
 
-    return {
-        fileName: fileName,
-        fileData: items.filter((f: DataEntry | GeneralEntry<string>) => isDataEntry(f)),
-        tags: itemTag.length > 0 ? itemTag[0] : EmptyGeneralEntryString,
-        ok: true,
-    } as FileResult;
+    // In the old file "format" everything was in same array with different types.
+    if (Array.isArray(items)) {
+        const itemsGeneral: GeneralEntry<string>[] = items.filter((f: DataEntry | GeneralEntry<string>) => isGeneralEntry(f)) as GeneralEntry<string>[];
+        const itemTag = itemsGeneral.filter(f => f.type === "tags");
+
+        return {
+            fileName: fileName,
+            fileData: items.filter((f: DataEntry | GeneralEntry<string>) => isDataEntry(f)),
+            tags: itemTag.length > 0 ? itemTag[0] : EmptyGeneralEntryString,
+            ok: true,
+        } as FileResult;
+    } else {
+        // The new format.
+        const data = items as FileData;
+
+        const itemTag = (data.metaData ?? []).filter(f => f.type === "tags");
+        return {
+            fileName: fileName,
+            fileData: data.entries,
+            tags: itemTag.length > 0 ? itemTag[0] : EmptyGeneralEntryString,
+            ok: true,
+            dataOptions: data.dataOptions,
+        } as FileResult;
+    }
 };
 
 /**
@@ -138,7 +156,7 @@ const loadFile = async (password: string, fileName: string) => {
  * @param password The password used in the encryption.
  * @returns A {@link FileResult} value with the the file name the data was saved into along with a success flag.
  */
-const saveFile = async <T>(fileData: (DataEntry | GeneralEntry<T>)[], password: string, fileName: string) => {
+const saveFile = async (fileData: FileData, password: string, fileName: string) => {
     const saveData = JSON.stringify(fileData);
 
     try {
