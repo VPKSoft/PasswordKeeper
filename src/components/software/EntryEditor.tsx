@@ -29,7 +29,7 @@ import { Button, CheckBox, ScrollView, TagBox, TextArea, TextBox } from "devextr
 import { ValueChangedEvent as CheckBoxValueChangedEvent } from "devextreme/ui/check_box";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
-import { DataEntry } from "../../types/PasswordEntry";
+import { CssFont, DataEntry, makeFont } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
@@ -63,6 +63,10 @@ type EntryEditorProps = {
     allTags?: string[];
     /** A value indicating whether the QR code view popup button should be displayed. */
     showQrViewButton?: boolean;
+    /** A value indicating whether to use Markdown by default in the notes editor. */
+    defaultUseMarkdown?: boolean;
+    /** An optional font definition for the notes area. */
+    notesFont?: CssFont;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -88,6 +92,7 @@ const EntryEditor = ({
     hideQrAuthPopup,
     showQrViewButton = true,
     allTags,
+    defaultUseMarkdown,
     onEntryChanged,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
@@ -386,7 +391,7 @@ const EntryEditor = ({
                             <CheckBox //
                                 text={le("useMarkdown")}
                                 onValueChanged={onUseMarkdownChanged}
-                                value={entry?.useMarkdown ?? false}
+                                value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
                             />
                         )}
                     </div>
@@ -397,20 +402,21 @@ const EntryEditor = ({
                             >
                                 <MarkDownViewStyled //
                                     markDown={entry?.notes}
+                                    className="Notes-font"
                                 />
                             </ScrollView>
                         ) : (
                             <MarkdownTextEditorStyled //
                                 markDown={entry?.notes}
                                 setMarkDown={setMarkDown}
-                                className="EntryEditor-TextArea"
+                                className={classNames("EntryEditor-TextArea", "Notes-font")}
                             />
                         )
                     ) : (
                         <TextArea //
                             readOnly={readOnly}
                             value={entry?.notes}
-                            className="EntryEditor-TextArea"
+                            className={classNames("EntryEditor-TextArea", "Notes-font")}
                             onValueChanged={onNotesChanged}
                         />
                     )}
@@ -436,6 +442,9 @@ const StyledEntryEditor = styled(EntryEditor)`
     .EntryEditor-editRow {
         display: flex;
         flex-direction: row;
+    }
+    .Notes-font {
+        ${props => makeFont(props.notesFont)}
     }
     .Notes-labelArea {
         display: flex;

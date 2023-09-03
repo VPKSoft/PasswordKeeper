@@ -34,7 +34,7 @@ import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
 import { Locales, setLocale, useLocalize } from "./i18n";
-import { DataEntry, GeneralEntry } from "./types/PasswordEntry";
+import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
@@ -97,6 +97,7 @@ const App = ({ className }: AppProps) => {
     const [fileCloseRequested, setFileCloseRequested] = React.useState(false);
     const [isNewFile, setIsNewFile] = React.useState(true);
     const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
+    const [fileOptions, setFileOptions] = React.useState<FileOptions>();
 
     const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
@@ -187,7 +188,12 @@ const App = ({ className }: AppProps) => {
             const password = getFilePassword();
             if (currentFile && password) {
                 // Save the file with the current file name and the current password.
-                void saveFile<string>([...dataSource, dataTags], password, currentFile).then(f => {
+                const data: FileData = {
+                    entries: dataSource,
+                    metaData: [dataTags],
+                };
+
+                void saveFile(data, password, currentFile).then(f => {
                     if (f.ok) {
                         setCurrentFile(f.fileName);
                         setFileChanged(false);
@@ -345,6 +351,7 @@ const App = ({ className }: AppProps) => {
                             setIsNewFile(false);
                             setPasswordFailedCount(0);
                             setDataTags(f.tags);
+                            setFileOptions(f.dataOptions);
                         } else {
                             // The file load failed with most probable reason being an invalid password.
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
@@ -354,7 +361,11 @@ const App = ({ className }: AppProps) => {
                     });
                     // The file mode is save as, so save the file.
                 } else if (filePopupMode === FileQueryMode.SaveAs) {
-                    void saveFile([...dataSource, dataTags], password, fileName).then(f => {
+                    const data: FileData = {
+                        entries: dataSource,
+                        metaData: [dataTags],
+                    };
+                    void saveFile(data, password, fileName).then(f => {
                         if (f.ok) {
                             // Set the state data for the successfully saved file.
                             setFilePassword(password);
@@ -654,6 +665,8 @@ const App = ({ className }: AppProps) => {
                         hidePasswordTimeout={10}
                         showCopyButton={true}
                         hideQrAuthPopup={true}
+                        notesFont={fileOptions?.notesFont}
+                        defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                     />
                 </div>
                 {editEntry !== null && (
@@ -663,6 +676,8 @@ const App = ({ className }: AppProps) => {
                         visible={entryEditVisible}
                         onClose={onEditClose}
                         allTags={dataTags.values}
+                        notesFont={fileOptions?.notesFont}
+                        defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                     />
                 )}
                 {editEntry !== null && (

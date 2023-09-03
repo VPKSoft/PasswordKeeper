@@ -29,7 +29,7 @@ import classNames from "classnames";
 import dxTextBox from "devextreme/ui/text_box";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
-import { DataEntry } from "../../../types/PasswordEntry";
+import { CssFont, DataEntry } from "../../../types/PasswordEntry";
 import { CommonProps } from "../../Types";
 import { StyledEntryEditor } from "../EntryEditor";
 
@@ -45,6 +45,10 @@ type EditEntryPopupProps = {
     visible: boolean;
     /** All the tags contained within the current file. */
     allTags?: string[];
+    /** A value indicating whether to use Markdown by default in the notes editor. */
+    defaultUseMarkdown?: boolean;
+    /** An optional font definition for the notes area. */
+    notesFont?: CssFont;
     /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
@@ -60,6 +64,8 @@ const EditEntryPopup = ({
     mode,
     visible,
     allTags,
+    defaultUseMarkdown,
+    notesFont,
     onClose,
 }: EditEntryPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
@@ -137,6 +143,8 @@ const EditEntryPopup = ({
                     hideQrAuthPopup={!visible}
                     allTags={allTags}
                     showQrViewButton={false}
+                    defaultUseMarkdown={defaultUseMarkdown}
+                    notesFont={notesFont}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
