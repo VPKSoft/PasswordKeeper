@@ -28,6 +28,7 @@ import classNames from "classnames";
 import { marked } from "marked";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
+import { open } from "@tauri-apps/api/shell";
 import { CommonProps } from "../Types";
 
 /**
@@ -56,6 +57,21 @@ const MarkDownView = ({
         return parse(markDownAsHtml);
     }, [markDown]);
 
+    // Add click handlers to the anchors of the document to prevent the
+    // default click handling and open them into an external browser instead.
+    React.useEffect(() => {
+        const anchors = getAnchors();
+        for (const anchor of anchors) {
+            anchor.addEventListener("click", linkClickToBrowser);
+        }
+
+        return () => {
+            for (const anchor of anchors) {
+                anchor.removeEventListener("click", linkClickToBrowser);
+            }
+        };
+    }, [markDownContent]);
+
     return (
         <div //
             className={classNames(MarkDownView.name, className)}
@@ -63,6 +79,36 @@ const MarkDownView = ({
             {markDownContent}
         </div>
     );
+};
+
+/**
+ * A function to prevent mouse click event of an anchor click and use Tauri API to open the link into an external browser.
+ * @param e The mouse event of the anchor.
+ */
+const linkClickToBrowser = (e: MouseEvent) => {
+    if (e.target) {
+        e.preventDefault();
+        e.stopPropagation();
+        const a: HTMLAnchorElement = e.target as HTMLAnchorElement;
+        const url = a.href;
+        try {
+            void open(url);
+        } catch {
+            // The link is possibly invalid?
+        }
+    }
+};
+
+/**
+ * Gets the anchors elements of the document.
+ * @returns The anchors elements of the document.
+ */
+const getAnchors = () => {
+    const result: HTMLAnchorElement[] = [];
+    for (const link of document.querySelectorAll("a")) {
+        result.push(link);
+    }
+    return result;
 };
 
 const MarkDownViewStyled = styled(MarkDownView)`
