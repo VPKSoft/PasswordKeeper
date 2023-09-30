@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/no-negated-condition */
 /* eslint-disable prettier/prettier */
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   // prevent vite from obscuring rust errors
@@ -9,6 +10,9 @@ export default defineConfig({
   server: {
     strictPort: true,
   },
+  plugins: [
+    react(), 
+  ],
   // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
   // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
   // env variables

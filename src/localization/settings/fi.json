@@ -6,5 +6,8 @@
     "themeChangeFailFileUnsaved": "Teeman vaihto ei onnistunut koska tiedostossa on tallentamattomia muutoksia ja sovelluksen uudelleenlataus olisi kadottanut ne.",
     "lockTimeoutMinutes": "Lukituksen aikakatkaisu (minuuttia)",
     "failedUnlockExitCount": "Sulje ohjelma virheellisten salasanan syöttökertojen jälkeen",
-    "saveWindowPosition": "Tallenna ikkunan sijainti"
+    "saveWindowPosition": "Tallenna ikkunan sijainti",
+    "filePreferences": "Tiedoston ominaisuudet",
+    "defaultUseMonoSpacedFontOnNotes": "Käytä tasavälistä fonttia oletuksena muistiinpanoissa",
+    "defaultUseMarkdownOnNotes": "Käytä Markdown:ia oletuksena muistiinpanoissa"
 }

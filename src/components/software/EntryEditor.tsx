@@ -65,6 +65,8 @@ type EntryEditorProps = {
     showQrViewButton?: boolean;
     /** A value indicating whether to use Markdown by default in the notes editor. */
     defaultUseMarkdown?: boolean;
+    /** A value indicating whether to use monospaced font by default in the notes editor. */
+    defaultUseMonospacedFont?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /**
@@ -73,6 +75,7 @@ type EntryEditorProps = {
      * @returns {void} void.
      */
     onEntryChanged?: (entry: DataEntry) => void;
+    onShouldRefreshPopup?: () => void;
 } & CommonProps;
 
 /**
@@ -93,13 +96,19 @@ const EntryEditor = ({
     showQrViewButton = true,
     allTags,
     defaultUseMarkdown,
+    defaultUseMonospacedFont,
     onEntryChanged,
+    onShouldRefreshPopup,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
+
+    React.useEffect(() => {
+        onShouldRefreshPopup?.();
+    }, [onShouldRefreshPopup]);
 
     // The 2F2 authentication code was changed. Update the data.
     const qrCodePopupClose = React.useCallback(
@@ -187,6 +196,15 @@ const EntryEditor = ({
         [entry, onEntryChanged]
     );
 
+    const onMonospacedFontChanged = React.useCallback(
+        (e: CheckBoxValueChangedEvent) => {
+            if (entry) {
+                onEntryChanged?.({ ...entry, useMonospacedFont: e.value });
+            }
+        },
+        [entry, onEntryChanged]
+    );
+
     // The markdown editor value changed, set the notes value.
     const setMarkDown = React.useCallback(
         (value: string | undefined) => {
@@ -261,10 +279,18 @@ const EntryEditor = ({
         setQrCodePopupVisible(false);
     }, [entry]);
 
-    const tags = React.useMemo(() => entry?.tags?.split("|") ?? [], [entry?.tags]);
+    const tags = React.useMemo(() => {
+        const result = entry?.tags?.split("|") ?? undefined;
+        if (result?.length === 1 && result[0] === "") {
+            return;
+        }
+        return result;
+    }, [entry?.tags]);
 
     // Memoize the disabled value for the view QR code button.
     const displayQrCodeDisabled = React.useMemo(() => !(entry?.otpAuthKey ?? "").startsWith("otpauth"), [entry?.otpAuthKey]);
+
+    const style: React.CSSProperties | undefined = React.useMemo(() => (entry?.useMonospacedFont ? { fontFamily: "monospace" } : undefined), [entry?.useMonospacedFont]);
 
     return (
         <>
@@ -394,29 +420,38 @@ const EntryEditor = ({
                                 value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
                             />
                         )}
+                        {!readOnly && (
+                            <CheckBox //
+                                text={le("monoSpacedFont")}
+                                onValueChanged={onMonospacedFontChanged}
+                                value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
+                            />
+                        )}
                     </div>
-                    {entry?.useMarkdown === true ? (
+                    {(entry?.useMarkdown ?? defaultUseMarkdown) === true ? (
                         readOnly ? (
                             <ScrollView //
                                 className="EntryEditor-TextArea"
                             >
                                 <MarkDownViewStyled //
                                     markDown={entry?.notes}
-                                    className="Notes-font"
+                                    monospacedFont={entry?.useMonospacedFont ?? defaultUseMonospacedFont}
                                 />
                             </ScrollView>
                         ) : (
                             <MarkdownTextEditorStyled //
                                 markDown={entry?.notes}
                                 setMarkDown={setMarkDown}
-                                className={classNames("EntryEditor-TextArea", "Notes-font")}
+                                monospacedFont={entry?.useMonospacedFont ?? defaultUseMonospacedFont}
+                                className="EntryEditor-TextArea"
                             />
                         )
                     ) : (
                         <TextArea //
                             readOnly={readOnly}
                             value={entry?.notes}
-                            className={classNames("EntryEditor-TextArea", "Notes-font")}
+                            className={classNames("EntryEditor-TextArea")}
+                            style={style}
                             onValueChanged={onNotesChanged}
                         />
                     )}
@@ -442,9 +477,6 @@ const StyledEntryEditor = styled(EntryEditor)`
     .EntryEditor-editRow {
         display: flex;
         flex-direction: row;
-    }
-    .Notes-font {
-        ${props => makeFont(props.notesFont)}
     }
     .Notes-labelArea {
         display: flex;

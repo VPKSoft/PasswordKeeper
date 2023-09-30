@@ -12,5 +12,6 @@
     "tags": "Tunnisteet",
     "useMarkdown": "Käytä Markdown:ia",
     "entryNotesEdit": "Muokkaa muistiinpanoja",
-    "entryNotesPreview": "Esikatsele muistiinpanoja"
+    "entryNotesPreview": "Esikatsele muistiinpanoja",
+    "monoSpacedFont": "Tasavälinen kirjasin"
 }

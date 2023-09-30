@@ -37,6 +37,8 @@ import { CommonProps } from "../Types";
 type MarkDownViewProps = {
     // The markdown text to render into the component.
     markDown?: string;
+    /** A value indicating whether to use monospaced font in the markdown view. */
+    monospacedFont?: boolean;
 } & CommonProps;
 
 /**
@@ -47,7 +49,10 @@ type MarkDownViewProps = {
 const MarkDownView = ({
     className, //
     markDown,
+    monospacedFont,
 }: MarkDownViewProps) => {
+    const style: React.CSSProperties | undefined = React.useMemo(() => (monospacedFont ? { fontFamily: "monospace" } : undefined), [monospacedFont]);
+
     const markDownContent = React.useMemo(() => {
         if (!markDown) {
             return null;
@@ -74,6 +79,7 @@ const MarkDownView = ({
 
     return (
         <div //
+            style={style}
             className={classNames(MarkDownView.name, className)}
         >
             {markDownContent}

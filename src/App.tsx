@@ -56,6 +56,7 @@ import { StyledPreferencesPopup } from "./components/software/popups/Preferences
 import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
 import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
+import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 
 /**
  * The props for the {@link App} component.
@@ -77,6 +78,8 @@ const App = ({ className }: AppProps) => {
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
     const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
+    const [filePreferencesVisible, setFilePreferencesVisible] = React.useState(false);
+
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
     const [dataTags, setDataTags] = React.useState<GeneralEntry<string>>({ type: "tags", values: [] });
     const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
@@ -191,6 +194,7 @@ const App = ({ className }: AppProps) => {
                 const data: FileData = {
                     entries: dataSource,
                     metaData: [dataTags],
+                    dataOptions: fileOptions,
                 };
 
                 void saveFile(data, password, currentFile).then(f => {
@@ -209,7 +213,7 @@ const App = ({ className }: AppProps) => {
                 });
             }
         }
-    }, [currentFile, dataSource, dataTags, fileCloseRequested, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, saveFileAsCallback]);
 
     // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
@@ -606,6 +610,20 @@ const App = ({ className }: AppProps) => {
         }
     }, [settingsLoaded]);
 
+    // File options were changed. Apply the changes and set the file changed flag.
+    const fileOptionsChanged = React.useCallback((userAccepted: boolean, fileOptions?: FileOptions) => {
+        if (userAccepted && fileOptions) {
+            setFileOptions(fileOptions);
+            setFileChanged(true);
+        }
+        setFilePreferencesVisible(false);
+    }, []);
+
+    // The file preferences was requested to be modified.
+    const filePreferencesClick = React.useCallback(() => {
+        setFilePreferencesVisible(true);
+    }, []);
+
     // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded) {
         return null;
@@ -637,6 +655,7 @@ const App = ({ className }: AppProps) => {
                 aboutShowClick={aboutShowClick}
                 fileCloseClick={closeFile}
                 onHelpClick={onHelpClick}
+                filePreferencesClick={filePreferencesClick}
                 isNewFile={isNewFile}
                 isfileChanged={fileChanged}
             />
@@ -667,6 +686,7 @@ const App = ({ className }: AppProps) => {
                         hideQrAuthPopup={true}
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
+                        defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
                 </div>
                 {editEntry !== null && (
@@ -678,6 +698,7 @@ const App = ({ className }: AppProps) => {
                         allTags={dataTags.values}
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
+                        defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
                 )}
                 {editEntry !== null && (
@@ -734,6 +755,11 @@ const App = ({ className }: AppProps) => {
                         disableCloseViaKeyboard={true}
                     />
                 )}
+                <FilePreferencesPopupStyled //
+                    visible={filePreferencesVisible}
+                    fileOptions={fileOptions}
+                    onClose={fileOptionsChanged}
+                />
             </div>
         </>
     );

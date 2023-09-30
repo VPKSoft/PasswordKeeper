@@ -47,6 +47,8 @@ type EditEntryPopupProps = {
     allTags?: string[];
     /** A value indicating whether to use Markdown by default in the notes editor. */
     defaultUseMarkdown?: boolean;
+    /** A value indicating whether to use monospaced font by default in the notes editor. */
+    defaultUseMonospacedFont?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /** Occurs when the popup has been closed. */
@@ -65,6 +67,7 @@ const EditEntryPopup = ({
     visible,
     allTags,
     defaultUseMarkdown,
+    defaultUseMonospacedFont,
     notesFont,
     onClose,
 }: EditEntryPopupProps) => {
@@ -144,6 +147,7 @@ const EditEntryPopup = ({
                     allTags={allTags}
                     showQrViewButton={false}
                     defaultUseMarkdown={defaultUseMarkdown}
+                    defaultUseMonospacedFont={defaultUseMonospacedFont}
                     notesFont={notesFont}
                 />
                 <div className="Popup-ButtonRow">
