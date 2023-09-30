@@ -58,6 +58,8 @@ export type AppToolbarProps = {
     deleteClick: () => void;
     /** Occurs when the lock view item was clicked. */
     lockViewClick: () => void;
+    /** Occurs the file preferences item was clicked. */
+    filePreferencesClick: () => void;
     /** Occurs when the test something item was clicked. ONLY for development purposes; do not define in production. */
     testClick?: () => void;
 } & CommonProps;
@@ -80,9 +82,11 @@ const AppToolbar = ({
     addCategoryClick,
     deleteClick,
     lockViewClick,
+    filePreferencesClick,
     testClick,
 }: AppToolbarProps) => {
     const lm = useLocalize("menu");
+    const ls = useLocalize("settings");
     return (
         <Toolbar className={classNames(AppToolbar.name, className)}>
             <ToolbarItem location="before">
@@ -142,6 +146,13 @@ const AppToolbar = ({
                     icon="lock"
                     onClick={lockViewClick}
                     hint={lm("lockView")}
+                />
+            </ToolbarItem>
+            <ToolbarItem location="before">
+                <Button //
+                    icon="fas fa-sliders"
+                    onClick={filePreferencesClick}
+                    hint={ls("filePreferences")}
                 />
             </ToolbarItem>
             <ToolbarItem location="after">

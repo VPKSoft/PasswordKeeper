@@ -34,7 +34,7 @@ import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
 import { Locales, setLocale, useLocalize } from "./i18n";
-import { DataEntry, GeneralEntry } from "./types/PasswordEntry";
+import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
@@ -56,6 +56,7 @@ import { StyledPreferencesPopup } from "./components/software/popups/Preferences
 import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
 import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
+import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 
 /**
  * The props for the {@link App} component.
@@ -77,6 +78,8 @@ const App = ({ className }: AppProps) => {
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
     const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
+    const [filePreferencesVisible, setFilePreferencesVisible] = React.useState(false);
+
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
     const [dataTags, setDataTags] = React.useState<GeneralEntry<string>>({ type: "tags", values: [] });
     const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
@@ -97,6 +100,7 @@ const App = ({ className }: AppProps) => {
     const [fileCloseRequested, setFileCloseRequested] = React.useState(false);
     const [isNewFile, setIsNewFile] = React.useState(true);
     const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
+    const [fileOptions, setFileOptions] = React.useState<FileOptions>();
 
     const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
@@ -187,7 +191,13 @@ const App = ({ className }: AppProps) => {
             const password = getFilePassword();
             if (currentFile && password) {
                 // Save the file with the current file name and the current password.
-                void saveFile<string>([...dataSource, dataTags], password, currentFile).then(f => {
+                const data: FileData = {
+                    entries: dataSource,
+                    metaData: [dataTags],
+                    dataOptions: fileOptions,
+                };
+
+                void saveFile(data, password, currentFile).then(f => {
                     if (f.ok) {
                         setCurrentFile(f.fileName);
                         setFileChanged(false);
@@ -203,7 +213,7 @@ const App = ({ className }: AppProps) => {
                 });
             }
         }
-    }, [currentFile, dataSource, dataTags, fileCloseRequested, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, saveFileAsCallback]);
 
     // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
@@ -345,6 +355,7 @@ const App = ({ className }: AppProps) => {
                             setIsNewFile(false);
                             setPasswordFailedCount(0);
                             setDataTags(f.tags);
+                            setFileOptions(f.dataOptions);
                         } else {
                             // The file load failed with most probable reason being an invalid password.
                             notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
@@ -354,7 +365,11 @@ const App = ({ className }: AppProps) => {
                     });
                     // The file mode is save as, so save the file.
                 } else if (filePopupMode === FileQueryMode.SaveAs) {
-                    void saveFile([...dataSource, dataTags], password, fileName).then(f => {
+                    const data: FileData = {
+                        entries: dataSource,
+                        metaData: [dataTags],
+                    };
+                    void saveFile(data, password, fileName).then(f => {
                         if (f.ok) {
                             // Set the state data for the successfully saved file.
                             setFilePassword(password);
@@ -595,6 +610,20 @@ const App = ({ className }: AppProps) => {
         }
     }, [settingsLoaded]);
 
+    // File options were changed. Apply the changes and set the file changed flag.
+    const fileOptionsChanged = React.useCallback((userAccepted: boolean, fileOptions?: FileOptions) => {
+        if (userAccepted && fileOptions) {
+            setFileOptions(fileOptions);
+            setFileChanged(true);
+        }
+        setFilePreferencesVisible(false);
+    }, []);
+
+    // The file preferences was requested to be modified.
+    const filePreferencesClick = React.useCallback(() => {
+        setFilePreferencesVisible(true);
+    }, []);
+
     // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded) {
         return null;
@@ -626,6 +655,7 @@ const App = ({ className }: AppProps) => {
                 aboutShowClick={aboutShowClick}
                 fileCloseClick={closeFile}
                 onHelpClick={onHelpClick}
+                filePreferencesClick={filePreferencesClick}
                 isNewFile={isNewFile}
                 isfileChanged={fileChanged}
             />
@@ -654,6 +684,9 @@ const App = ({ className }: AppProps) => {
                         hidePasswordTimeout={10}
                         showCopyButton={true}
                         hideQrAuthPopup={true}
+                        notesFont={fileOptions?.notesFont}
+                        defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
+                        defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
                 </div>
                 {editEntry !== null && (
@@ -663,6 +696,9 @@ const App = ({ className }: AppProps) => {
                         visible={entryEditVisible}
                         onClose={onEditClose}
                         allTags={dataTags.values}
+                        notesFont={fileOptions?.notesFont}
+                        defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
+                        defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
                 )}
                 {editEntry !== null && (
@@ -719,6 +755,11 @@ const App = ({ className }: AppProps) => {
                         disableCloseViaKeyboard={true}
                     />
                 )}
+                <FilePreferencesPopupStyled //
+                    visible={filePreferencesVisible}
+                    fileOptions={fileOptions}
+                    onClose={fileOptionsChanged}
+                />
             </div>
         </>
     );

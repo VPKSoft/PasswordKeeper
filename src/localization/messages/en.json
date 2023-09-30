@@ -12,5 +12,6 @@
     "dragDropFilesHere": "Drag and drop your file here or",
     "pasteFromClipboard": "Paste file data from clipboard or",
     "uploadFile": "Upload a file",
-    "qrSuccess": "QR code read successfully."
+    "qrSuccess": "QR code read successfully.",
+    "filePreferences": "File preferences"
 }

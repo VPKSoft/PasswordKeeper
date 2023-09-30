@@ -23,6 +23,63 @@ SOFTWARE.
 */
 
 /**
+ * The file data, entries, metadata and file global options.
+ */
+type FileData = {
+    /** The password entries and categories. */
+    entries: DataEntry[];
+    /** The metadata information, e.g. The tags used for the entries in the file. */
+    metaData?: GeneralEntry<string>[];
+    /** Global file options. */
+    dataOptions?: FileOptions;
+};
+
+/**
+ * CSS font properties.
+ */
+type CssFont = {
+    /** The `font-size` CSS property value. */
+    fontSize?: string;
+    /** The `font-family` CSS property value. */
+    fontFamily?: string;
+    /** The `font-weight` CSS property value. */
+    fontWeight?: string;
+    /** The `font-style` CSS property value. */
+    FontStyle: "normal" | "italic" | "oblique" | "initial" | "inherit";
+};
+
+/**
+ * Creates a CSS style declaration of the specified {@link CssFont}.
+ * @param font The {@link CssFont} specifying the font style data.
+ * @returns The CSS styling for the font.
+ */
+const makeFont = (font?: CssFont) => {
+    let result = "";
+
+    if (!font) {
+        return result;
+    }
+
+    if (font.fontSize) {
+        result += `font-size: ${font.fontSize};\n`;
+    }
+
+    if (font.fontFamily) {
+        result += `font-family: ${font.fontFamily};\n`;
+    }
+
+    if (font.fontWeight) {
+        result += `font-weight: ${font.fontWeight};\n`;
+    }
+
+    if (font.FontStyle) {
+        result += `font-style: ${font.FontStyle};\n`;
+    }
+
+    return result;
+};
+
+/**
  * The entry / category data format for the program.
  */
 type DataEntry = {
@@ -48,6 +105,8 @@ type DataEntry = {
     tags?: string;
     /** A value indicating whether to use markdown for the {@link DataEntry.notes} rendering. */
     useMarkdown?: boolean;
+    /** A value indicating whether to use monospaced font for the {@link DataEntry.notes} rendering. */
+    useMonospacedFont?: boolean;
 };
 
 /**
@@ -58,6 +117,18 @@ type GeneralEntry<T> = {
     type: "tags";
     /** The values in the metadata. */
     values: Array<T>;
+};
+
+/**
+ * File-level options for some entry styling, etc.
+ */
+type FileOptions = {
+    /** A value indicating whether to use markdown by default on entry editing and rendering. */
+    useMarkdownOnNotes?: boolean;
+    /** An optional CSS style for the entry notes rendering. */
+    notesFont?: CssFont;
+    /** A value indicating whether to use monospaced font by default on entry editing and rendering. */
+    useMonospacedFont?: boolean;
 };
 
 /**
@@ -78,5 +149,5 @@ const isGeneralEntry = <T>(value: DataEntry | GeneralEntry<T>): value is General
     return (value as GeneralEntry<T>).type !== undefined;
 };
 
-export { isDataEntry, isGeneralEntry };
-export type { DataEntry, GeneralEntry };
+export { isDataEntry, isGeneralEntry, makeFont };
+export type { DataEntry, GeneralEntry, FileData, FileOptions, CssFont };

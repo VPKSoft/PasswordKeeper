@@ -29,7 +29,7 @@ import { Button, CheckBox, ScrollView, TagBox, TextArea, TextBox } from "devextr
 import { ValueChangedEvent as CheckBoxValueChangedEvent } from "devextreme/ui/check_box";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
-import { DataEntry } from "../../types/PasswordEntry";
+import { CssFont, DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
@@ -63,12 +63,19 @@ type EntryEditorProps = {
     allTags?: string[];
     /** A value indicating whether the QR code view popup button should be displayed. */
     showQrViewButton?: boolean;
+    /** A value indicating whether to use Markdown by default in the notes editor. */
+    defaultUseMarkdown?: boolean;
+    /** A value indicating whether to use monospaced font by default in the notes editor. */
+    defaultUseMonospacedFont?: boolean;
+    /** An optional font definition for the notes area. */
+    notesFont?: CssFont;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
      * @returns {void} void.
      */
     onEntryChanged?: (entry: DataEntry) => void;
+    onShouldRefreshPopup?: () => void;
 } & CommonProps;
 
 /**
@@ -88,13 +95,20 @@ const EntryEditor = ({
     hideQrAuthPopup,
     showQrViewButton = true,
     allTags,
+    defaultUseMarkdown,
+    defaultUseMonospacedFont,
     onEntryChanged,
+    onShouldRefreshPopup,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
+
+    React.useEffect(() => {
+        onShouldRefreshPopup?.();
+    }, [onShouldRefreshPopup]);
 
     // The 2F2 authentication code was changed. Update the data.
     const qrCodePopupClose = React.useCallback(
@@ -182,6 +196,15 @@ const EntryEditor = ({
         [entry, onEntryChanged]
     );
 
+    const onMonospacedFontChanged = React.useCallback(
+        (e: CheckBoxValueChangedEvent) => {
+            if (entry) {
+                onEntryChanged?.({ ...entry, useMonospacedFont: e.value });
+            }
+        },
+        [entry, onEntryChanged]
+    );
+
     // The markdown editor value changed, set the notes value.
     const setMarkDown = React.useCallback(
         (value: string | undefined) => {
@@ -256,10 +279,18 @@ const EntryEditor = ({
         setQrCodePopupVisible(false);
     }, [entry]);
 
-    const tags = React.useMemo(() => entry?.tags?.split("|") ?? [], [entry?.tags]);
+    const tags = React.useMemo(() => {
+        const result = entry?.tags?.split("|") ?? undefined;
+        if (result?.length === 1 && result[0] === "") {
+            return;
+        }
+        return result;
+    }, [entry?.tags]);
 
     // Memoize the disabled value for the view QR code button.
     const displayQrCodeDisabled = React.useMemo(() => !(entry?.otpAuthKey ?? "").startsWith("otpauth"), [entry?.otpAuthKey]);
+
+    const style: React.CSSProperties | undefined = React.useMemo(() => (entry?.useMonospacedFont ? { fontFamily: "monospace" } : undefined), [entry?.useMonospacedFont]);
 
     return (
         <>
@@ -386,23 +417,32 @@ const EntryEditor = ({
                             <CheckBox //
                                 text={le("useMarkdown")}
                                 onValueChanged={onUseMarkdownChanged}
-                                value={entry?.useMarkdown ?? false}
+                                value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
+                            />
+                        )}
+                        {!readOnly && (
+                            <CheckBox //
+                                text={le("monoSpacedFont")}
+                                onValueChanged={onMonospacedFontChanged}
+                                value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
                             />
                         )}
                     </div>
-                    {entry?.useMarkdown === true ? (
+                    {(entry?.useMarkdown ?? defaultUseMarkdown) === true ? (
                         readOnly ? (
                             <ScrollView //
                                 className="EntryEditor-TextArea"
                             >
                                 <MarkDownViewStyled //
                                     markDown={entry?.notes}
+                                    monospacedFont={entry?.useMonospacedFont ?? defaultUseMonospacedFont}
                                 />
                             </ScrollView>
                         ) : (
                             <MarkdownTextEditorStyled //
                                 markDown={entry?.notes}
                                 setMarkDown={setMarkDown}
+                                monospacedFont={entry?.useMonospacedFont ?? defaultUseMonospacedFont}
                                 className="EntryEditor-TextArea"
                             />
                         )
@@ -410,7 +450,8 @@ const EntryEditor = ({
                         <TextArea //
                             readOnly={readOnly}
                             value={entry?.notes}
-                            className="EntryEditor-TextArea"
+                            className={classNames("EntryEditor-TextArea")}
+                            style={style}
                             onValueChanged={onNotesChanged}
                         />
                     )}

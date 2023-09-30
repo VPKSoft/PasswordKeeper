@@ -74,6 +74,7 @@ const AppMenuToolbar = ({
     lockViewClick,
     fileCloseClick,
     onHelpClick,
+    filePreferencesClick,
     testClick,
 }: AppMenuToolbarProps) => {
     const onItemClick = React.useCallback(
@@ -135,19 +136,25 @@ const AppMenuToolbar = ({
                     break;
                 }
 
+                case "file_preferences": {
+                    filePreferencesClick();
+                    break;
+                }
+
                 default: {
                     break;
                 }
             }
         },
         [
-            aboutShowClick, //
+            aboutShowClick,
             addCategoryClick,
             addClick,
             deleteClick,
             editClick,
             exitClick,
             fileCloseClick,
+            filePreferencesClick,
             loadFileClick,
             newFileClick,
             onHelpClick,
@@ -177,6 +184,7 @@ const AppMenuToolbar = ({
                 lockViewClick={lockViewClick}
                 searchValue={searchValue}
                 searchValueChanged={searchValueChanged}
+                filePreferencesClick={filePreferencesClick}
                 testClick={testClick}
             />
         </div>
