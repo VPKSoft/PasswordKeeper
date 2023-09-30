@@ -31,7 +31,7 @@ import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
 
-const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close", "help"] as const;
+const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close", "help", "file_preferences"] as const;
 type ActionNames = (typeof ActionValues)[number];
 
 /**
@@ -83,26 +83,32 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                 },
                 {
                     id: "1_3",
+                    name: localize("filePreferences"),
+                    actionName: "file_preferences",
+                    icon: "fas fa-sliders",
+                },
+                {
+                    id: "1_4",
                     name: localize("fileClose"),
                     actionName: "close",
                     icon: "fas fa-file-circle-xmark",
                 },
                 {
-                    id: "1_4",
+                    id: "1_5",
                     name: localize("fileSave"),
                     actionName: "save",
                     icon: "save",
                     disabled: isfileChanged !== true,
                 },
                 {
-                    id: "1_5",
+                    id: "1_6",
                     name: localize("fileSaveAs"),
                     actionName: "saveas",
                     icon: "fas fa-floppy-disk",
                 },
                 {
                     beginGroup: true,
-                    id: "1_6",
+                    id: "1_7",
                     name: localize("appExit"),
                     actionName: "exit",
                     icon: "fas fa-door-open",

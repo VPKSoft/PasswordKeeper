@@ -105,6 +105,8 @@ type DataEntry = {
     tags?: string;
     /** A value indicating whether to use markdown for the {@link DataEntry.notes} rendering. */
     useMarkdown?: boolean;
+    /** A value indicating whether to use monospaced font for the {@link DataEntry.notes} rendering. */
+    useMonospacedFont?: boolean;
 };
 
 /**
@@ -117,9 +119,16 @@ type GeneralEntry<T> = {
     values: Array<T>;
 };
 
+/**
+ * File-level options for some entry styling, etc.
+ */
 type FileOptions = {
-    useMarkdownOnNotes: boolean;
+    /** A value indicating whether to use markdown by default on entry editing and rendering. */
+    useMarkdownOnNotes?: boolean;
+    /** An optional CSS style for the entry notes rendering. */
     notesFont?: CssFont;
+    /** A value indicating whether to use monospaced font by default on entry editing and rendering. */
+    useMonospacedFont?: boolean;
 };
 
 /**

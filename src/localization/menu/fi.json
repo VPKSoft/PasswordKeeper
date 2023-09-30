@@ -15,5 +15,6 @@
     "about": "Tietoja",
     "lockView": "Lukitse näkymä",
     "fileClose": "Sulje tiedosto",
-    "help": "Apu"
+    "help": "Apu",
+    "filePreferences": "Tiedoston ominaisuudet"
 }

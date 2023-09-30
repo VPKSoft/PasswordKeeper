@@ -24,10 +24,18 @@ SOFTWARE.
 
 import * as React from "react";
 import ReactDOM from "react-dom/client";
+import { StyleSheetManager } from "styled-components";
 import { StyledApp } from "./App";
+
+const shouldForwardProp = () => true;
 
 ReactDOM.createRoot(document.querySelector("#root") as HTMLElement).render(
     <React.StrictMode>
-        <StyledApp />
+        <StyleSheetManager //
+            enableVendorPrefixes
+            shouldForwardProp={shouldForwardProp}
+        >
+            <StyledApp />
+        </StyleSheetManager>
     </React.StrictMode>
 );

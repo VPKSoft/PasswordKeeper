@@ -36,8 +36,12 @@ import { MarkDownViewStyled } from "./MarkDownView";
  * The props for the {@link MarkdownTextEditor} component.
  */
 type MarkdownTextEditorProps = {
+    /** The markdown text value. */
     markDown: string | undefined;
+    /** A callback to store the changed markdown value. */
     setMarkDown: (value: string | undefined) => void;
+    /** A value indicating whether to use monospaced font in the markdown editor. */
+    monospacedFont?: boolean;
 } & CommonProps;
 
 /**
@@ -48,6 +52,7 @@ type MarkdownTextEditorProps = {
 const MarkdownTextEditor = ({
     className, //
     markDown,
+    monospacedFont,
     setMarkDown,
 }: MarkdownTextEditorProps) => {
     const le = useLocalize("entries");
@@ -58,6 +63,8 @@ const MarkdownTextEditor = ({
         },
         [setMarkDown]
     );
+
+    const style: React.CSSProperties | undefined = React.useMemo(() => (monospacedFont ? { fontFamily: "monospace" } : undefined), [monospacedFont]);
 
     return (
         <TabPanel //
@@ -71,13 +78,17 @@ const MarkdownTextEditor = ({
                     readOnly={false}
                     value={markDown}
                     onValueChanged={onValueChanged}
+                    style={style}
                 />
             </TabItem>
             <TabItem //
                 title={le("entryNotesPreview")}
             >
                 <ScrollView>
-                    <MarkDownViewStyled markDown={markDown} />
+                    <MarkDownViewStyled //
+                        markDown={markDown}
+                        monospacedFont={monospacedFont}
+                    />
                 </ScrollView>
             </TabItem>
         </TabPanel>
