@@ -17,7 +17,7 @@
         "buffer": "^6.0.3",
         "classnames": "^2.3.2",
         "devextreme": "^23.1.5",
-        "devextreme-react": "^23.1.4",
+        "devextreme-react": "^23.1.5",
         "dompurify": "^3.0.5",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-jsdoc": "^46.5.1",
