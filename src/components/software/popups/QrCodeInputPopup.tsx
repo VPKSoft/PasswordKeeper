@@ -29,10 +29,10 @@ import { Button, Popup } from "devextreme-react";
 import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import { invoke } from "@tauri-apps/api/tauri";
 import notify from "devextreme/ui/notify";
+import { decodeMigrationUriData, makeOtpAuthKey } from "gauth-decode";
 import { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
 import { useLocalize } from "../../../i18n";
-import { decode, makeOtpAuthKey } from "../../../utilities/gauth/auth_exporter";
 
 /**
  * The props for the {@link QrCodeInputPopup} component.
@@ -91,7 +91,7 @@ const QrCodeInputPopup = ({
                             const queryParams = new URL(decodedText).search;
                             const data = new URLSearchParams(queryParams).get("data");
                             if (data) {
-                                void decode(data).then(otpData => {
+                                void decodeMigrationUriData(data).then(otpData => {
                                     if (otpData.length > 0) {
                                         setOtpAuthPath(makeOtpAuthKey(otpData[0]));
                                         if (otpData.length !== 1) {
