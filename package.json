@@ -41,7 +41,7 @@
         "typescript-eslint": "^0.0.1-alpha.0"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^1.5.0",
+        "@tauri-apps/cli": "^1.5.2",
         "@types/dompurify": "^3.0.2",
         "@types/node": "^20.6.2",
         "@types/qrcode": "^1.5.2",
