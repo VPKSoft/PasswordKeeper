@@ -64,8 +64,6 @@ const MarkdownTextEditor = ({
         [setMarkDown]
     );
 
-    const style: React.CSSProperties | undefined = React.useMemo(() => (monospacedFont ? { fontFamily: "monospace" } : undefined), [monospacedFont]);
-
     return (
         <TabPanel //
             className={classNames(MarkdownTextEditor.name, className)}
@@ -78,7 +76,6 @@ const MarkdownTextEditor = ({
                     readOnly={false}
                     value={markDown}
                     onValueChanged={onValueChanged}
-                    style={style}
                 />
             </TabItem>
             <TabItem //
@@ -97,6 +94,7 @@ const MarkdownTextEditor = ({
 
 const MarkdownTextEditorStyled = styled(MarkdownTextEditor)`
     .Editor-textArea {
+        font-family: ${props => (props.monospacedFont === true ? "monospace" : "system-ui")};
         height: 100%;
     }
 `;

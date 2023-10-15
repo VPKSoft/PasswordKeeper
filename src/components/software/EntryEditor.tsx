@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { Button, CheckBox, ScrollView, TagBox, TextArea, TextBox } from "devextreme-react";
+import { Button, CheckBox, ScrollView, TagBox, TextBox } from "devextreme-react";
 import { ValueChangedEvent as CheckBoxValueChangedEvent } from "devextreme/ui/check_box";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
@@ -38,6 +38,7 @@ import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
+import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
 
 /**
  * The props for the {@link EntryEditor} component.
@@ -205,6 +206,10 @@ const EntryEditor = ({
         [entry, onEntryChanged]
     );
 
+    const monoSpacedFont = React.useMemo(() => {
+        return entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false;
+    }, [defaultUseMonospacedFont, entry?.useMonospacedFont]);
+
     // The markdown editor value changed, set the notes value.
     const setMarkDown = React.useCallback(
         (value: string | undefined) => {
@@ -289,8 +294,6 @@ const EntryEditor = ({
 
     // Memoize the disabled value for the view QR code button.
     const displayQrCodeDisabled = React.useMemo(() => !(entry?.otpAuthKey ?? "").startsWith("otpauth"), [entry?.otpAuthKey]);
-
-    const style: React.CSSProperties | undefined = React.useMemo(() => (entry?.useMonospacedFont ? { fontFamily: "monospace" } : undefined), [entry?.useMonospacedFont]);
 
     return (
         <>
@@ -435,24 +438,24 @@ const EntryEditor = ({
                             >
                                 <MarkDownViewStyled //
                                     markDown={entry?.notes}
-                                    monospacedFont={entry?.useMonospacedFont ?? defaultUseMonospacedFont}
+                                    monospacedFont={monoSpacedFont}
                                 />
                             </ScrollView>
                         ) : (
                             <MarkdownTextEditorStyled //
                                 markDown={entry?.notes}
                                 setMarkDown={setMarkDown}
-                                monospacedFont={entry?.useMonospacedFont ?? defaultUseMonospacedFont}
+                                monospacedFont={monoSpacedFont}
                                 className="EntryEditor-TextArea"
                             />
                         )
                     ) : (
-                        <TextArea //
+                        <EntryEditorTextAreaStyled //
                             readOnly={readOnly}
                             value={entry?.notes}
                             className={classNames("EntryEditor-TextArea")}
-                            style={style}
                             onValueChanged={onNotesChanged}
+                            monospacedFont={monoSpacedFont}
                         />
                     )}
                     <QrCodeInputPopupStyled //
