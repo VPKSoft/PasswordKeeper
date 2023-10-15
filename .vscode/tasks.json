@@ -24,7 +24,6 @@
         "type": "npm",
         "script": "build",
         "group": "build",
-        "problemMatcher": [],
         "label": "npm: build",
         "detail": "next build"
       }
