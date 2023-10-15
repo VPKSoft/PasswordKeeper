@@ -49,10 +49,7 @@ type MarkDownViewProps = {
 const MarkDownView = ({
     className, //
     markDown,
-    monospacedFont,
 }: MarkDownViewProps) => {
-    const style: React.CSSProperties | undefined = React.useMemo(() => (monospacedFont ? { fontFamily: "monospace" } : undefined), [monospacedFont]);
-
     const markDownContent = React.useMemo(() => {
         if (!markDown) {
             return null;
@@ -79,7 +76,6 @@ const MarkDownView = ({
 
     return (
         <div //
-            style={style}
             className={classNames(MarkDownView.name, className)}
         >
             {markDownContent}
@@ -120,6 +116,7 @@ const getAnchors = () => {
 const MarkDownViewStyled = styled(MarkDownView)`
     width: 100%;
     height: 100%;
+    font-family: ${props => (props.monospacedFont === true ? "monospace" : "system-ui")};
 `;
 
 export { MarkDownViewStyled };
