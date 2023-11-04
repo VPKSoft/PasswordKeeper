@@ -31,6 +31,7 @@ import { open } from "@tauri-apps/api/shell";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
+import { useTauriUpdater } from "../../../hooks/UseTauriUpdater";
 
 /**
  * The props for the {@link AboutPopup} component.
@@ -40,6 +41,8 @@ type AboutPopupProps = {
     visible: boolean;
     /** Occurs when the popup has been closed. */
     onClose: () => void;
+    /** A  text color for highlighted text. */
+    textColor: string;
 } & CommonProps;
 
 const AboutPopup = ({
@@ -48,9 +51,12 @@ const AboutPopup = ({
     onClose,
 }: AboutPopupProps) => {
     const lc = useLocalize("common");
+    const ud = useLocalize("updates");
 
     const [appVersion, setAppVersion] = React.useState("");
     const [appName, setAppName] = React.useState("");
+
+    const [shouldUpdate, manifest, reCheck, update] = useTauriUpdater(false);
 
     // Get the application name and current version.
     React.useEffect(() => {
@@ -79,9 +85,14 @@ const AboutPopup = ({
         void open("https://github.com/VPKSoft/PasswordKeeper");
     }, []);
 
+    // Open the latest release from the github.com.
+    const manualDownloadClick = React.useCallback(() => {
+        void open("https://github.com/VPKSoft/PasswordKeeper/releases/latest");
+    }, []);
+
     return (
         <Popup //
-            title={lc("About")}
+            title={lc("about")}
             showCloseButton={true}
             visible={visible}
             dragEnabled={true}
@@ -125,6 +136,22 @@ SOFTWARE."
 
                     <img src={GithubLogo} className="LogoImage" onClick={openGitHubUrl} />
                 </div>
+                <div
+                    className="Popup-UpdateNotify" //
+                >
+                    {shouldUpdate ? (
+                        <div className={classNames("Popup-UpdateNotify-text", "Popup-UpdateNotify-text-updates")}>{ud("newVersionAvailable")}</div>
+                    ) : (
+                        <div className="Popup-UpdateNotify-text">{ud("versionUpToDate")}</div>
+                    )}
+
+                    <div className="Popup-UpdateNotify-text">{`v.${manifest?.version ?? appVersion}`}</div>
+                    <div>
+                        <Button className="Popup-UpdateNotify-button" icon="refresh" hint={ud("buttonRefresh")} onClick={reCheck}></Button>
+                        <Button className="Popup-UpdateNotify-button" icon="download" hint={ud("updateButton")} onClick={update} disabled={!shouldUpdate}></Button>
+                        <Button className="Popup-UpdateNotify-button" text={ud("manualDownload")} onClick={manualDownloadClick} />
+                    </div>
+                </div>
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lc("Ok")}
@@ -154,6 +181,26 @@ const StyledAboutPopup = styled(AboutPopup)`
     }
     .Popup-licenseContent {
         white-space: pre-wrap;
+    }
+    .Popup-UpdateNotify {
+        justify-content: space-between;
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .Popup-UpdateNotify-text {
+        align-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 10px;
+    }
+    .Popup-UpdateNotify-button {
+        margin-right: 4px;
+    }
+    .Popup-UpdateNotify-text-updates {
+        color: ${p => p.textColor};
     }
     .Popup-ButtonRow {
         display: flex;
