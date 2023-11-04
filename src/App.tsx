@@ -168,6 +168,13 @@ const App = ({ className }: AppProps) => {
         [setTimeoutEnabled]
     );
 
+    // Enable the time out hook if the view was unlocked.
+    React.useEffect(() => {
+        if (settingsRef.current && !viewLocked) {
+            setTimeoutEnabled(settingsRef.current.lock_timeout > 0);
+        }
+    }, [setTimeoutEnabled, viewLocked]);
+
     // Load the settings from the setting file.
     React.useEffect(() => {
         void loadSettings().then(f => {
