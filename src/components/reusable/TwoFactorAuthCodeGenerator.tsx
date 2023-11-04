@@ -30,9 +30,9 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Button } from "devextreme-react";
 import notify from "devextreme/ui/notify";
 import { Auth2Fa, CommonProps } from "../Types";
-import { useTimeSecond } from "../../hooks/UseTimeSecond";
 import { useLocalize } from "../../i18n";
 import { cssRgbToHex } from "../../utilities/ColorConversion";
+import { useTimeSecond } from "../../hooks/UseTimeSecond";
 
 /**
  * The props for the {@link TwoFactorAuthCodeGenerator} component.
