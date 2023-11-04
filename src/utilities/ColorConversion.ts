@@ -22,30 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import secureLocalStorage from "react-secure-storage";
-
 /**
- * A custom hook to get, set and clear a secure value from the secureLocalStorage.
- * @param valueName The value name in question.
- * @param emptyValue An optional empty value used as a fallback in case the store value doesn't exist.
- * @returns Functions to set, get and clear the value in question.
+ * Converts an `rgb(r, g, b)` color value to hex notation. E.g. `#ffffff`.
+ * @param {string} value The rgb value to convert to hex.
+ * @param {string} fallbackValue The fallback value to return if the conversion fails.
+ * @returns {string} A value representing the color in hex notation.
  */
-const useSecureStorage = <T extends string | number | boolean | object>(valueName: string, emptyValue?: T): [(value: T) => void, () => T | null, () => void] => {
-    const setValue = (value: T) => {
-        secureLocalStorage.setItem(valueName, value);
-    };
+const cssRgbToHex = (value: string, fallbackValue: string): string => {
+    try {
+        const valuesSplit = value.split("(")[1].split(")")[0];
+        const components = valuesSplit.split(",");
+        const result =
+            "#" +
+            components
+                .map(f => {
+                    const component = Number.parseInt(f).toString(16);
+                    return component.length === 1 ? "0" + component : component;
+                })
+                .join("");
 
-    const getValue = () => {
-        const result = secureLocalStorage.getItem(valueName) as T | null;
-
-        return result ?? emptyValue ?? null;
-    };
-
-    const clear = () => {
-        secureLocalStorage.removeItem(valueName);
-    };
-
-    return [setValue, getValue, clear];
+        return result;
+    } catch {
+        return fallbackValue;
+    }
 };
 
-export { useSecureStorage };
+export { cssRgbToHex };

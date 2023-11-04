@@ -37,6 +37,7 @@ import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeG
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
+import { useCssStyle } from "../../hooks/UseCssStyle";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
 
@@ -103,6 +104,7 @@ const EntryEditor = ({
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
+    const countDownColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -408,6 +410,7 @@ const EntryEditor = ({
                                     <td>
                                         <TwoFactorAuthCodeGeneratorStyled //
                                             otpAuthUrl={entry?.otpAuthKey}
+                                            countdownTimerColor={countDownColor}
                                         />
                                     </td>
                                 </tr>

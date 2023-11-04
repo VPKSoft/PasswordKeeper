@@ -50,6 +50,9 @@ import localizationFiMenu from "./localization/menu/fi.json";
 import localizationEnSettings from "./localization/settings/en.json";
 import localizationFiSettings from "./localization/settings/fi.json";
 
+import localizationEnUpdates from "./localization/updates/en.json";
+import localizationFiUpdates from "./localization/updates/fi.json";
+
 // Create a structure for the localization data: LocaleCode.CategoryName.
 const resources = {
     en: {
@@ -60,6 +63,7 @@ const resources = {
         messages: localizationEnMessages,
         menu: localizationEnMenu,
         settings: localizationEnSettings,
+        updates: localizationEnUpdates,
     },
     fi: {
         ui: localizationFiMainUI,
@@ -69,6 +73,7 @@ const resources = {
         messages: localizationFiMessages,
         menu: localizationFiMenu,
         settings: localizationFiSettings,
+        updates: localizationFiUpdates,
     },
 };
 
@@ -121,7 +126,7 @@ const setLocale = (locale: Locales) => {
 setLocale("en");
 
 // Create a type of the supported locale categories.
-const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu", "settings"] as const;
+const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu", "settings", "updates"] as const;
 type TranslationComponents = (typeof ComponentValues)[number];
 
 /**

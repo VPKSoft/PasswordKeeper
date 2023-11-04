@@ -30,16 +30,16 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { Button } from "devextreme-react";
 import notify from "devextreme/ui/notify";
 import { Auth2Fa, CommonProps } from "../Types";
-import { useTimeSecond } from "../../hooks/useTimeSecond";
-import { titleColor } from "../../utilities/DxUtils";
 import { useLocalize } from "../../i18n";
+import { cssRgbToHex } from "../../utilities/ColorConversion";
+import { useTimeSecond } from "../../hooks/UseTimeSecond";
 
 /**
  * The props for the {@link TwoFactorAuthCodeGenerator} component.
  */
 type TwoFactorAuthCodeGeneratorProps = {
     duration?: number;
-    countdownTimerColor?: ColorHex;
+    countdownTimerColor: ColorHex;
     otpAuthUrl: string;
 } & CommonProps;
 
@@ -51,7 +51,7 @@ type TwoFactorAuthCodeGeneratorProps = {
 const TwoFactorAuthCodeGenerator = ({
     className, //
     duration = 30,
-    countdownTimerColor = titleColor("foreground", "#329ea3") as ColorHex,
+    countdownTimerColor,
     otpAuthUrl,
 }: TwoFactorAuthCodeGeneratorProps) => {
     const lu = useLocalize("ui");
@@ -115,6 +115,11 @@ const TwoFactorAuthCodeGenerator = ({
     // A callback when the CountdownCircleTimer completes.
     const onComplete = React.useCallback(() => ({ shouldRepeat: true, delay: 1 }), []);
 
+    // The start and end color for the CountdownCircleTimer component.
+    const circleTimerColor = React.useMemo(() => {
+        return cssRgbToHex(countdownTimerColor, "#004777") as ColorHex;
+    }, [countdownTimerColor]);
+
     // Unmount the CountdownCircleTimer component by returning null when the reset flag is raised.
     if (reset) {
         void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
@@ -130,7 +135,7 @@ const TwoFactorAuthCodeGenerator = ({
             <CountdownCircleTimer //
                 isPlaying={true}
                 duration={durationStart}
-                colors={[countdownTimerColor ?? "#004777", countdownTimerColor ?? "#004777"]}
+                colors={[circleTimerColor, circleTimerColor]}
                 colorsTime={[30, 0]}
                 onComplete={onComplete}
                 size={60}
