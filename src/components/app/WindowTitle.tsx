@@ -5,7 +5,6 @@ import classNames from "classnames";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { AppIcon, MdiClose, MdiWindowMaximize, MdiWindowMinimize } from "../../utilities/app/Images";
-import { titleColor } from "../../utilities/DxUtils";
 
 /**
  * The props for the {@link WindowTitle} component.
@@ -20,6 +19,10 @@ type WindowTitleProps = {
      * This is for tracking the application idle status.
      */
     onUserInteraction?: () => void;
+    /** A  text color for window title text. */
+    textColor: string;
+    /** Background color for the window title bar. */
+    backColor: string;
 } & CommonProps;
 
 /**
@@ -92,7 +95,7 @@ const WindowTitle = ({
 
 const StyledTitle = styled(WindowTitle)`
     height: 32px;
-    background: ${titleColor("foreground", "#329ea3")};
+    background: ${p => p.textColor};
     user-select: none;
     display: flex;
     flex-direction: row;
@@ -117,7 +120,7 @@ const StyledTitle = styled(WindowTitle)`
         align-items: center;
         width: 32px;
         height: 32px;
-        background: ${titleColor("background", "#5bbec3")};
+        background: ${p => p.backColor};
     }
     .titlebar-button {
         display: inline-flex;
@@ -127,7 +130,7 @@ const StyledTitle = styled(WindowTitle)`
         height: 32px;
     }
     .titlebar-button:hover {
-        background: ${titleColor("background", "#5bbec3")};
+        background: ${p => p.backColor};
     }
 `;
 

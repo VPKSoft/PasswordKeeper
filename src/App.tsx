@@ -38,7 +38,7 @@ import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/Password
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
 import { setTheme } from "./utilities/ThemeUtils";
-import { useSecureStorage } from "./utilities/hooks";
+import { useSecureStorage } from "./hooks/UseSecureStorage";
 import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
 import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
@@ -57,6 +57,7 @@ import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
 import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
+import { useCssStyle } from "./hooks/UseCssStyle";
 
 /**
  * The props for the {@link App} component.
@@ -104,6 +105,8 @@ const App = ({ className }: AppProps) => {
 
     const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
+    const textColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
+    const backColor = useCssStyle("color", "#5bbec3", null, "dx-theme-border-color-as-text-color");
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -636,6 +639,8 @@ const App = ({ className }: AppProps) => {
                 title={title}
                 onClose={fileSaveQueryAbortCloseCallback}
                 onUserInteraction={resetTimeOut}
+                textColor={textColor}
+                backColor={backColor}
             />
             <StyledAppMenuToolbar //
                 entry={entry ?? undefined}
@@ -739,6 +744,7 @@ const App = ({ className }: AppProps) => {
                 <StyledAboutPopup //
                     visible={aboutVisible}
                     onClose={aboutClose}
+                    textColor={textColor}
                 />
                 <StyledLockScreenOverlay //
                     lockText={lm("programLockedClickToUnlock")}
