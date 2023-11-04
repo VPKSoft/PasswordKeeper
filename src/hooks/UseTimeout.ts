@@ -40,8 +40,10 @@ export enum TimeInterval {
     Days,
 }
 
+const milliSecondResolution = 50;
+
 /**
- * A custom hook to call the specified callback in a specified time interval.
+ * A custom hook to call the specified callback in a specified time interval. The hook must be **re-enabled** after the {@link callback} has been called.
  * @param interval The time interval in specified {@link intervalType}.
  * @param callback The callback function.
  * @param intervalType The type of the time interval. The default is {@link TimeInterval.Milliseconds}.
@@ -55,7 +57,8 @@ const useTimeout = (
 ): //
 [(enabled: boolean) => void, () => void] => {
     const [enabled, setEnabled] = React.useState(true);
-    const [resetState, setResetState] = React.useState(false);
+    const resetState = React.useRef(false);
+    const start = React.useRef(new Date());
 
     // Convert the interval to integral milliseconds.
     const intervalInternal = React.useMemo(() => {
@@ -82,18 +85,42 @@ const useTimeout = (
     }, [interval, intervalType]);
 
     const reset = React.useCallback(() => {
-        setResetState(state => !state);
+        resetState.current = true;
     }, []);
 
     React.useEffect(() => {
-        if (enabled && intervalInternal > 0) {
-            const timeout = setTimeout(() => {
-                callback();
-            }, intervalInternal);
-
-            return () => clearTimeout(timeout);
+        if (enabled) {
+            start.current = new Date();
         }
-    }, [callback, interval, enabled, resetState, intervalInternal]);
+    }, [enabled]);
+
+    const timeOutInternal = React.useCallback(() => {
+        if (!enabled) {
+            resetState.current = false;
+            return;
+        }
+
+        if (resetState.current) {
+            resetState.current = false;
+            start.current = new Date();
+            return;
+        }
+
+        const currentTime = new Date();
+        const timeDiff = currentTime.getTime() - start.current.getTime();
+
+        if (timeDiff > intervalInternal) {
+            start.current = new Date();
+            setEnabled(false);
+            callback();
+        }
+    }, [callback, enabled, intervalInternal]);
+
+    React.useEffect(() => {
+        const interval = setInterval(timeOutInternal, milliSecondResolution);
+
+        return () => clearInterval(interval);
+    }, [timeOutInternal, intervalInternal]);
 
     return [setEnabled, reset];
 };
