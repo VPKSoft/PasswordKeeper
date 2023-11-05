@@ -1,0 +1,138 @@
+[
+    {
+        "identifier": "retypePassword",
+        "source_string": "Re-type password",
+        "translation": "Syötä salasana uudelleen",
+        "context": " -> retypePassword",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "givePassword",
+        "source_string": "Give a password",
+        "translation": "Anna salasana",
+        "context": " -> givePassword",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "selectFileOpen",
+        "source_string": "Select file to open",
+        "translation": "Valitse avattava tiedosto",
+        "context": " -> selectFileOpen",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "openFile",
+        "source_string": "Open file…",
+        "translation": "Avaa tiedosto…",
+        "context": " -> openFile",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileName",
+        "source_string": "File name",
+        "translation": "Tiedostonimi",
+        "context": " -> fileName",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "saveFile",
+        "source_string": "Save file",
+        "translation": "Tallenna tiedosto",
+        "context": " -> saveFile",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "saveFileAs",
+        "source_string": "Save file as",
+        "translation": "Tallenna tiedosto nimellä",
+        "context": " -> saveFileAs",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "confirm",
+        "source_string": "Confirm",
+        "translation": "Vahvistus",
+        "context": " -> confirm",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "information",
+        "source_string": "Information",
+        "translation": "Tietoja",
+        "context": " -> information",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "warning",
+        "source_string": "Warning",
+        "translation": "Varoitus",
+        "context": " -> warning",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "yes",
+        "source_string": "Yes",
+        "translation": "Kyllä",
+        "context": " -> yes",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "no",
+        "source_string": "No",
+        "translation": "Ei",
+        "context": " -> no",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "cancel",
+        "source_string": "Cancel",
+        "translation": "Peruuta",
+        "context": " -> cancel",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "about",
+        "source_string": "About",
+        "translation": "Tietoja",
+        "context": " -> about",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "license",
+        "source_string": "License",
+        "translation": "Lisenssi",
+        "context": " -> license",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "copyright",
+        "source_string": "Copyright",
+        "translation": "Tekijänoikeus",
+        "context": " -> copyright",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "language",
+        "source_string": "Language",
+        "translation": "Kieli",
+        "context": " -> language",
+        "labels": null,
+        "max_length": null
+    }
+]
