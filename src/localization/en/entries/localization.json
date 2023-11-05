@@ -1,0 +1,122 @@
+[
+    {
+        "identifier": "newEntry",
+        "source_string": "New entry",
+        "translation": "New entry",
+        "context": " -> newEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "modifyEntry",
+        "source_string": "Modify entry: {{entry.name}}",
+        "translation": "Modify entry: {{entry.name}}",
+        "context": " -> modifyEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "name",
+        "source_string": "Name",
+        "translation": "Name",
+        "context": " -> name",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "domain",
+        "source_string": "Domain",
+        "translation": "Domain",
+        "context": " -> domain",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "userName",
+        "source_string": "User name",
+        "translation": "User name",
+        "context": " -> userName",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "password",
+        "source_string": "Password",
+        "translation": "Password",
+        "context": " -> password",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "notes",
+        "source_string": "Notes",
+        "translation": "Notes",
+        "context": " -> notes",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "otpAuthUrl",
+        "source_string": "OTP / 2FA authentication URL",
+        "translation": "OTP / 2FA authentication URL",
+        "context": " -> otpAuthUrl",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "otpAuthKey",
+        "source_string": "OTP / 2FA key",
+        "translation": "OTP / 2FA key",
+        "context": " -> otpAuthKey",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "tag",
+        "source_string": "Tag",
+        "translation": "Tag",
+        "context": " -> tag",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "tags",
+        "source_string": "Tags",
+        "translation": "Tags",
+        "context": " -> tags",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "useMarkdown",
+        "source_string": "Use Markdown",
+        "translation": "Use Markdown",
+        "context": " -> useMarkdown",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "entryNotesEdit",
+        "source_string": "Edit notes",
+        "translation": "Edit notes",
+        "context": " -> entryNotesEdit",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "entryNotesPreview",
+        "source_string": "Preview notes",
+        "translation": "Preview notes",
+        "context": " -> entryNotesPreview",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "monoSpacedFont",
+        "source_string": "Mono-spaced font",
+        "translation": "Mono-spaced font",
+        "context": " -> monoSpacedFont",
+        "labels": null,
+        "max_length": null
+    }
+]
