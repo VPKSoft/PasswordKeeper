@@ -1,0 +1,42 @@
+[
+    {
+        "identifier": "newVersionAvailable",
+        "source_string": "A new version of the software is available",
+        "translation": "A new version of the software is available",
+        "context": " -> newVersionAvailable",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "versionUpToDate",
+        "source_string": "The version is up to date",
+        "translation": "The version is up to date",
+        "context": " -> versionUpToDate",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "updateButton",
+        "source_string": "Update",
+        "translation": "Update",
+        "context": " -> updateButton",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "manualDownload",
+        "source_string": "Manual download",
+        "translation": "Manual download",
+        "context": " -> manualDownload",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "buttonRefresh",
+        "source_string": "Refresh",
+        "translation": "Refresh",
+        "context": " -> buttonRefresh",
+        "labels": null,
+        "max_length": null
+    }
+]
