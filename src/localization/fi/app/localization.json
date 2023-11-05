@@ -1,0 +1,18 @@
+[
+    {
+        "identifier": "passwordKeeperDataFile",
+        "source_string": "Password Keeper Data File",
+        "translation": "Password Keeper datatiedosto",
+        "context": " -> passwordKeeperDataFile",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "newFileName",
+        "source_string": "new_database.pkd",
+        "translation": "uusi_tietokanta.pkd",
+        "context": " -> newFileName",
+        "labels": null,
+        "max_length": null
+    }
+]
