@@ -1,0 +1,122 @@
+[
+    {
+        "identifier": "newEntry",
+        "source_string": "New entry",
+        "translation": "Uusi merkintä",
+        "context": " -> newEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "modifyEntry",
+        "source_string": "Modify entry: {{entry.name}}",
+        "translation": "Muokkaa merkintää: {{entry.name}}",
+        "context": " -> modifyEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "name",
+        "source_string": "Name",
+        "translation": "Nimi",
+        "context": " -> name",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "domain",
+        "source_string": "Domain",
+        "translation": "Toimialue",
+        "context": " -> domain",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "userName",
+        "source_string": "User name",
+        "translation": "Käyttäjänimi",
+        "context": " -> userName",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "password",
+        "source_string": "Password",
+        "translation": "Salasana",
+        "context": " -> password",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "notes",
+        "source_string": "Notes",
+        "translation": "Muistiinpanot",
+        "context": " -> notes",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "otpAuthUrl",
+        "source_string": "OTP / 2FA authentication URL",
+        "translation": "OTP- / 2FA-autentikoinnin URL",
+        "context": " -> otpAuthUrl",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "otpAuthKey",
+        "source_string": "OTP / 2FA key",
+        "translation": "OTP- / 2FA-avain",
+        "context": " -> otpAuthKey",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "tag",
+        "source_string": "Tag",
+        "translation": "Tunniste",
+        "context": " -> tag",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "tags",
+        "source_string": "Tags",
+        "translation": "Tunnisteet",
+        "context": " -> tags",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "useMarkdown",
+        "source_string": "Use Markdown",
+        "translation": "Käytä Markdown:ia",
+        "context": " -> useMarkdown",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "entryNotesEdit",
+        "source_string": "Edit notes",
+        "translation": "Muokkaa muistiinpanoja",
+        "context": " -> entryNotesEdit",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "entryNotesPreview",
+        "source_string": "Preview notes",
+        "translation": "Esikatsele muistiinpanoja",
+        "context": " -> entryNotesPreview",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "monoSpacedFont",
+        "source_string": "Mono-spaced font",
+        "translation": "Tasavälinen kirjasin",
+        "context": " -> monoSpacedFont",
+        "labels": null,
+        "max_length": null
+    }
+]
