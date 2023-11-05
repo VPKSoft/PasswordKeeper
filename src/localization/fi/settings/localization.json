@@ -1,0 +1,90 @@
+[
+    {
+        "identifier": "settings",
+        "source_string": "Settings",
+        "translation": "Asetukset",
+        "context": " -> settings",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "theme",
+        "source_string": "Theme",
+        "translation": "Teema",
+        "context": " -> theme",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "saveFailed",
+        "source_string": "Failed to save the settings.",
+        "translation": "Asetusten tallennus epäonnistui.",
+        "context": " -> saveFailed",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "saveSuccess",
+        "source_string": "Settings were saved successfully.",
+        "translation": "Asetukset tallennettiin onnistuneesti.",
+        "context": " -> saveSuccess",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "themeChangeFailFileUnsaved",
+        "source_string": "Theme change didn't succeed as the unsaved changes to the file would have been lost in case of application reload.",
+        "translation": "Teeman vaihto ei onnistunut koska tiedostossa on tallentamattomia muutoksia ja sovelluksen uudelleenlataus olisi kadottanut ne.",
+        "context": " -> themeChangeFailFileUnsaved",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "lockTimeoutMinutes",
+        "source_string": "Lock timeout (minutes)",
+        "translation": "Lukituksen aikakatkaisu (minuuttia)",
+        "context": " -> lockTimeoutMinutes",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "failedUnlockExitCount",
+        "source_string": "Exit program after failed password attempts",
+        "translation": "Sulje ohjelma virheellisten salasanan syöttökertojen jälkeen",
+        "context": " -> failedUnlockExitCount",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "saveWindowPosition",
+        "source_string": "Save window position",
+        "translation": "Tallenna ikkunan sijainti",
+        "context": " -> saveWindowPosition",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "filePreferences",
+        "source_string": "File preferences",
+        "translation": "Tiedoston ominaisuudet",
+        "context": " -> filePreferences",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "defaultUseMonoSpacedFontOnNotes",
+        "source_string": "Use mono-spaced font by default on notes",
+        "translation": "Käytä tasavälistä fonttia oletuksena muistiinpanoissa",
+        "context": " -> defaultUseMonoSpacedFontOnNotes",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "defaultUseMarkdownOnNotes",
+        "source_string": "Use Markdown by default on notes",
+        "translation": "Käytä Markdown:ia oletuksena muistiinpanoissa",
+        "context": " -> defaultUseMarkdownOnNotes",
+        "labels": null,
+        "max_length": null
+    }
+]
