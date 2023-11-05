@@ -1,0 +1,122 @@
+[
+    {
+        "identifier": "fileOpenFail",
+        "source_string": "File open failed with message '{{msg}}'.",
+        "translation": "Tiedoston avaaminen epäonistui viestillä '{{msg}}'.",
+        "context": " -> fileOpenFail",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileSaveFail",
+        "source_string": "File save failed with message '{{msg}}'.",
+        "translation": "Tiedoston tallennus epäonnistui viestillä '{{msg}}'.",
+        "context": " -> fileSaveFail",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "queryDeleteCategory",
+        "source_string": "Delete category '{{category}}'? All the contained entries will be deleted as well.",
+        "translation": "Poistetaanko kategoria '{{category}}'? Kaikki sen sisältämät merkinnät poistetaan myös.",
+        "context": " -> queryDeleteCategory",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "queryDeleteEntry",
+        "source_string": "Delete entry '{{entry}}'?",
+        "translation": "Poistetaanko merkintä '{{entry}}'?",
+        "context": " -> queryDeleteEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileChangedSaveQuery",
+        "source_string": "File '{{file}}'' has been changed. Do you want to save the changes?",
+        "translation": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?",
+        "context": " -> fileChangedSaveQuery",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileChangedTitle",
+        "source_string": "File has been changed",
+        "translation": "Tiedosto on muuttunut",
+        "context": " -> fileChangedTitle",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "programLockedClickToUnlock",
+        "source_string": "The program is locked. Click the view to unlock.",
+        "translation": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus.",
+        "context": " -> programLockedClickToUnlock",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "passwordFailLockWarning",
+        "source_string": "Invalid password. The software will exit after {{lockAfter}} failed attempts.",
+        "translation": "Virheellinen salasana. Ohjelma lopetetaan {{lockAfter}} virheellisen yrityksen jälkeen.",
+        "context": " -> passwordFailLockWarning",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "otpAuthKeyGenFailed",
+        "source_string": "The OTP key generation failed.",
+        "translation": "OTP-avaimen luonti epäonnistui.",
+        "context": " -> otpAuthKeyGenFailed",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "qrCodeImageReadFailed",
+        "source_string": "The QR code image data read failed with message '{{message}}'.",
+        "translation": "QR-koodin kuvan dataluku epäonnistui viestillä: '{{message}}'.",
+        "context": " -> qrCodeImageReadFailed",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "dragDropFilesHere",
+        "source_string": "Drag and drop your file here or",
+        "translation": "Raahaa ja pudota tiedosto tähän tai",
+        "context": " -> dragDropFilesHere",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "pasteFromClipboard",
+        "source_string": "Paste file data from clipboard or",
+        "translation": "Liitä tiedosto leikepöydältä tai",
+        "context": " -> pasteFromClipboard",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "uploadFile",
+        "source_string": "Upload a file",
+        "translation": "Valitse tiedosto",
+        "context": " -> uploadFile",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "qrSuccess",
+        "source_string": "QR code read successfully.",
+        "translation": "QR-koodi luettu onnistuneesti.",
+        "context": " -> qrSuccess",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "filePreferences",
+        "source_string": "File preferences",
+        "translation": "Tiedoston ominaisuudet",
+        "context": " -> filePreferences",
+        "labels": null,
+        "max_length": null
+    }
+]
