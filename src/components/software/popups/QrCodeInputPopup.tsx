@@ -154,13 +154,15 @@ const QrCodeInputPopup = ({
         >
             <div className={classNames(QrCodeInputPopupStyled.name, className)}>
                 <div id="reader" />
-                <DragDropFileStyled //
-                    onFileChange={onFilesUpdated}
-                    multiple={false}
-                    dragDropFileHereText={lm("dragDropFilesHere")}
-                    pasteFileText={lm("pasteFromClipboard")}
-                    uploadFileText={lm("uploadFile")}
-                />
+                {visible && (
+                    <DragDropFileStyled //
+                        onFileChange={onFilesUpdated}
+                        multiple={false}
+                        dragDropFileHereText={lm("dragDropFilesHere")}
+                        pasteFileText={lm("pasteFromClipboard")}
+                        uploadFileText={lm("uploadFile")}
+                    />
+                )}
                 <div className="Popup-ButtonRow">
                     <Button //
                         text={lu("ok")}
