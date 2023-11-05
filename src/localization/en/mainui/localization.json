@@ -1,0 +1,194 @@
+[
+    {
+        "identifier": "password",
+        "source_string": "Password",
+        "translation": "Password",
+        "context": " -> password",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "newEntry",
+        "source_string": "New entry",
+        "translation": "New entry",
+        "context": " -> newEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "modifyEntry",
+        "source_string": "Modify entry: {{entry.name}}",
+        "translation": "Modify entry: {{entry.name}}",
+        "context": " -> modifyEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "cancel",
+        "source_string": "Cancel",
+        "translation": "Cancel",
+        "context": " -> cancel",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "ok",
+        "source_string": "Ok",
+        "translation": "Ok",
+        "context": " -> ok",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "close",
+        "source_string": "Close",
+        "translation": "Close",
+        "context": " -> close",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "maximize",
+        "source_string": "Maximize",
+        "translation": "Maximize",
+        "context": " -> maximize",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "minimize",
+        "source_string": "Minimize",
+        "translation": "Minimize",
+        "context": " -> minimize",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "copyClipboard",
+        "source_string": "Copy to clipboard",
+        "translation": "Copy to clipboard",
+        "context": " -> copyClipboard",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "clipboardCopySuccess",
+        "source_string": "Copied to clipboard",
+        "translation": "Copied to clipboard",
+        "context": " -> clipboardCopySuccess",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "clipboardCopyFailed",
+        "source_string": "Failed to copy to clipboard",
+        "translation": "Failed to copy to clipboard",
+        "context": " -> clipboardCopyFailed",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "generatePassword",
+        "source_string": "Generate password",
+        "translation": "Generate password",
+        "context": " -> generatePassword",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "hidePassword",
+        "source_string": "Hide password",
+        "translation": "Hide password",
+        "context": " -> hidePassword",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "showPassword",
+        "source_string": "Show password",
+        "translation": "Show password",
+        "context": " -> showPassword",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "renameCategory",
+        "source_string": "Rename category",
+        "translation": "Rename category",
+        "context": " -> renameCategory",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "addCategory",
+        "source_string": "Add category",
+        "translation": "Add category",
+        "context": " -> addCategory",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "andMode",
+        "source_string": "Search mode: AND",
+        "translation": "Search mode: AND",
+        "context": " -> andMode",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "orMode",
+        "source_string": "Search mode: OR",
+        "translation": "Search mode: OR",
+        "context": " -> orMode",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "searchLabel",
+        "source_string": "Search",
+        "translation": "Search",
+        "context": " -> searchLabel",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "clearSearch",
+        "source_string": "Clear search",
+        "translation": "Clear search",
+        "context": " -> clearSearch",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "qrCodeTitle",
+        "source_string": "Read QR code from image",
+        "translation": "Read QR code from image",
+        "context": " -> qrCodeTitle",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "readQrCodeTitle",
+        "source_string": "Read QR code",
+        "translation": "Read QR code",
+        "context": " -> readQrCodeTitle",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "displayQrCodeTitle",
+        "source_string": "View QR code",
+        "translation": "View QR code",
+        "context": " -> displayQrCodeTitle",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "qrCodePopupTitle",
+        "source_string": "QR code",
+        "translation": "QR code",
+        "context": " -> qrCodePopupTitle",
+        "labels": null,
+        "max_length": null
+    }
+]
