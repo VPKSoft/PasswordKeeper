@@ -1,0 +1,122 @@
+[
+    {
+        "identifier": "fileOpenFail",
+        "source_string": "File open failed with message '{{msg}}'.",
+        "translation": "File open failed with message '{{msg}}'.",
+        "context": " -> fileOpenFail",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileSaveFail",
+        "source_string": "File save failed with message '{{msg}}'.",
+        "translation": "File save failed with message '{{msg}}'.",
+        "context": " -> fileSaveFail",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "queryDeleteCategory",
+        "source_string": "Delete category '{{category}}'? All the contained entries will be deleted as well.",
+        "translation": "Delete category '{{category}}'? All the contained entries will be deleted as well.",
+        "context": " -> queryDeleteCategory",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "queryDeleteEntry",
+        "source_string": "Delete entry '{{entry}}'?",
+        "translation": "Delete entry '{{entry}}'?",
+        "context": " -> queryDeleteEntry",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileChangedSaveQuery",
+        "source_string": "File '{{file}}'' has been changed. Do you want to save the changes?",
+        "translation": "File '{{file}}'' has been changed. Do you want to save the changes?",
+        "context": " -> fileChangedSaveQuery",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileChangedTitle",
+        "source_string": "File has been changed",
+        "translation": "File has been changed",
+        "context": " -> fileChangedTitle",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "programLockedClickToUnlock",
+        "source_string": "The program is locked. Click the view to unlock.",
+        "translation": "The program is locked. Click the view to unlock.",
+        "context": " -> programLockedClickToUnlock",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "passwordFailLockWarning",
+        "source_string": "Invalid password. The software will exit after {{lockAfter}} failed attempts.",
+        "translation": "Invalid password. The software will exit after {{lockAfter}} failed attempts.",
+        "context": " -> passwordFailLockWarning",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "otpAuthKeyGenFailed",
+        "source_string": "The OTP key generation failed.",
+        "translation": "The OTP key generation failed.",
+        "context": " -> otpAuthKeyGenFailed",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "qrCodeImageReadFailed",
+        "source_string": "The QR code image data read failed with message '{{message}}'.",
+        "translation": "The QR code image data read failed with message '{{message}}'.",
+        "context": " -> qrCodeImageReadFailed",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "dragDropFilesHere",
+        "source_string": "Drag and drop your file here or",
+        "translation": "Drag and drop your file here or",
+        "context": " -> dragDropFilesHere",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "pasteFromClipboard",
+        "source_string": "Paste file data from clipboard or",
+        "translation": "Paste file data from clipboard or",
+        "context": " -> pasteFromClipboard",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "uploadFile",
+        "source_string": "Upload a file",
+        "translation": "Upload a file",
+        "context": " -> uploadFile",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "qrSuccess",
+        "source_string": "QR code read successfully.",
+        "translation": "QR code read successfully.",
+        "context": " -> qrSuccess",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "filePreferences",
+        "source_string": "File preferences",
+        "translation": "File preferences",
+        "context": " -> filePreferences",
+        "labels": null,
+        "max_length": null
+    }
+]
