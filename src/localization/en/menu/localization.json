@@ -1,0 +1,146 @@
+[
+    {
+        "identifier": "fileNew",
+        "source_string": "New",
+        "translation": "New",
+        "context": " -> fileNew",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileOpen",
+        "source_string": "Open",
+        "translation": "Open",
+        "context": " -> fileOpen",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileSaveAs",
+        "source_string": "Save As",
+        "translation": "Save As",
+        "context": " -> fileSaveAs",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "appExit",
+        "source_string": "Exit",
+        "translation": "Exit",
+        "context": " -> appExit",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "itemAdd",
+        "source_string": "Add item",
+        "translation": "Add item",
+        "context": " -> itemAdd",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "itemAddCategory",
+        "source_string": "Add category",
+        "translation": "Add category",
+        "context": " -> itemAddCategory",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "itemEdit",
+        "source_string": "Edit",
+        "translation": "Edit",
+        "context": " -> itemEdit",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "itemDelete",
+        "source_string": "Delete",
+        "translation": "Delete",
+        "context": " -> itemDelete",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "menuTools",
+        "source_string": "Tools",
+        "translation": "Tools",
+        "context": " -> menuTools",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "menuSettings",
+        "source_string": "Settings",
+        "translation": "Settings",
+        "context": " -> menuSettings",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "menuFile",
+        "source_string": "File",
+        "translation": "File",
+        "context": " -> menuFile",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "menuItems",
+        "source_string": "Items",
+        "translation": "Items",
+        "context": " -> menuItems",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileSave",
+        "source_string": "Save",
+        "translation": "Save",
+        "context": " -> fileSave",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "about",
+        "source_string": "About",
+        "translation": "About",
+        "context": " -> about",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "lockView",
+        "source_string": "Lock view",
+        "translation": "Lock view",
+        "context": " -> lockView",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "fileClose",
+        "source_string": "Close file",
+        "translation": "Close file",
+        "context": " -> fileClose",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "help",
+        "source_string": "Help",
+        "translation": "Help",
+        "context": " -> help",
+        "labels": null,
+        "max_length": null
+    },
+    {
+        "identifier": "filePreferences",
+        "source_string": "File preferences",
+        "translation": "File preferences",
+        "context": " -> filePreferences",
+        "labels": null,
+        "max_length": null
+    }
+]
