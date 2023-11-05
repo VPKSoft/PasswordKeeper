@@ -26,10 +26,12 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { ScrollView, TabPanel, TextArea } from "devextreme-react";
-import { ValueChangedEvent } from "devextreme/ui/text_area";
+import dxTextArea, { InitializedEvent, ValueChangedEvent } from "devextreme/ui/text_area";
 import { Item as TabItem } from "devextreme-react/tab-panel";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
+import { usePasteImageMarkdown } from "../../hooks/UsePasteImageMarkdown";
+import { useDocumentReady } from "../../hooks/UseDocumentReady";
 import { MarkDownViewStyled } from "./MarkDownView";
 
 /**
@@ -38,10 +40,12 @@ import { MarkDownViewStyled } from "./MarkDownView";
 type MarkdownTextEditorProps = {
     /** The markdown text value. */
     markDown: string | undefined;
-    /** A callback to store the changed markdown value. */
-    setMarkDown: (value: string | undefined) => void;
     /** A value indicating whether to use monospaced font in the markdown editor. */
     monospacedFont?: boolean;
+    /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
+    imagePasteEnabled: boolean;
+    /** A callback to store the changed markdown value. */
+    setMarkDown: (value: string | undefined) => void;
 } & CommonProps;
 
 /**
@@ -53,9 +57,15 @@ const MarkdownTextEditor = ({
     className, //
     markDown,
     monospacedFont,
+    imagePasteEnabled,
     setMarkDown,
 }: MarkdownTextEditorProps) => {
     const le = useLocalize("entries");
+    const textAreaRef = React.useRef<dxTextArea>();
+    const [textAreaElement, setTextAreaElement] = React.useState<HTMLTextAreaElement | null>(null);
+    const [initialized, setInitialized] = React.useState(false);
+
+    usePasteImageMarkdown(textAreaElement, imagePasteEnabled);
 
     const onValueChanged = React.useCallback(
         (e: ValueChangedEvent) => {
@@ -63,6 +73,20 @@ const MarkdownTextEditor = ({
         },
         [setMarkDown]
     );
+
+    const textAreaInitialized = React.useCallback((e: InitializedEvent) => {
+        setInitialized(true);
+        textAreaRef.current = e.component;
+    }, []);
+
+    const getTextAreaElement = React.useCallback(() => {
+        const elem = (textAreaRef.current?.element().querySelectorAll(".dx-texteditor-input")[0] ?? null) as HTMLTextAreaElement | null;
+        if (elem) {
+            setTextAreaElement(elem);
+        }
+    }, []);
+
+    useDocumentReady(getTextAreaElement, [initialized]);
 
     return (
         <TabPanel //
@@ -76,6 +100,7 @@ const MarkdownTextEditor = ({
                     readOnly={false}
                     value={markDown}
                     onValueChanged={onValueChanged}
+                    onInitialized={textAreaInitialized}
                 />
             </TabItem>
             <TabItem //

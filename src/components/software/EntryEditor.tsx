@@ -450,6 +450,7 @@ const EntryEditor = ({
                                 setMarkDown={setMarkDown}
                                 monospacedFont={monoSpacedFont}
                                 className="EntryEditor-TextArea"
+                                imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible}
                             />
                         )
                     ) : (
