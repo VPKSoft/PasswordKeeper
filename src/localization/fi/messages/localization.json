@@ -1,10 +1,10 @@
 {
     "fileOpenFail": "Tiedoston avaaminen epäonistui viestillä '{{msg}}'.",
     "fileSaveFail": "Tiedoston tallennus epäonnistui viestillä '{{msg}}'.",
-    "queryDeleteEntry": "Poistetaanko merkintä '{{entry}}'?",
     "queryDeleteCategory": "Poistetaanko kategoria '{{category}}'? Kaikki sen sisältämät merkinnät poistetaan myös.",
-    "fileChangedTitle": "Tiedosto on muuttunut",
+    "queryDeleteEntry": "Poistetaanko merkintä '{{entry}}'?",
     "fileChangedSaveQuery": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?",
+    "fileChangedTitle": "Tiedosto on muuttunut",
     "programLockedClickToUnlock": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus.",
     "passwordFailLockWarning": "Virheellinen salasana. Ohjelma lopetetaan {{lockAfter}} virheellisen yrityksen jälkeen.",
     "otpAuthKeyGenFailed": "OTP-avaimen luonti epäonnistui.",

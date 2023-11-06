@@ -29,29 +29,30 @@ import { initReactI18next, useTranslation } from "react-i18next";
 import fiMessages from "devextreme/localization/messages/fi.json";
 import enMessages from "devextreme/localization/messages/en.json";
 import { loadMessages, locale as dxLocale } from "devextreme/localization";
-import localizationEnMainUI from "./localization/mainui/en.json";
-import localizationFiMainUI from "./localization/mainui/fi.json";
 
-import localizationEnEntries from "./localization/entries/en.json";
-import localizationFiEntries from "./localization/entries/fi.json";
+import localizationEnMainUI from "./localization/en/mainui/localization.json";
+import localizationFiMainUI from "./localization/fi/mainui/localization.json";
 
-import localizationEnApp from "./localization/app/en.json";
-import localizationFiApp from "./localization/app/fi.json";
+import localizationEnEntries from "./localization/en/entries/localization.json";
+import localizationFiEntries from "./localization/fi/entries/localization.json";
 
-import localizationEnCommon from "./localization/common/en.json";
-import localizationFiCommon from "./localization/common/fi.json";
+import localizationEnApp from "./localization/en/app/localization.json";
+import localizationFiApp from "./localization/fi/app/localization.json";
 
-import localizationEnMessages from "./localization/messages/en.json";
-import localizationFiMessages from "./localization/messages/fi.json";
+import localizationEnCommon from "./localization/en/common/localization.json";
+import localizationFiCommon from "./localization/fi/common/localization.json";
 
-import localizationEnMenu from "./localization/menu/en.json";
-import localizationFiMenu from "./localization/menu/fi.json";
+import localizationEnMessages from "./localization/en/messages/localization.json";
+import localizationFiMessages from "./localization/fi/messages/localization.json";
 
-import localizationEnSettings from "./localization/settings/en.json";
-import localizationFiSettings from "./localization/settings/fi.json";
+import localizationEnMenu from "./localization/en/menu/localization.json";
+import localizationFiMenu from "./localization/fi/menu/localization.json";
 
-import localizationEnUpdates from "./localization/updates/en.json";
-import localizationFiUpdates from "./localization/updates/fi.json";
+import localizationEnSettings from "./localization/en/settings/localization.json";
+import localizationFiSettings from "./localization/fi/settings/localization.json";
+
+import localizationEnUpdates from "./localization/en/updates/localization.json";
+import localizationFiUpdates from "./localization/fi/updates/localization.json";
 
 // Create a structure for the localization data: LocaleCode.CategoryName.
 const resources = {

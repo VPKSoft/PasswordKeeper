@@ -1,10 +1,10 @@
 {
-    "domain": "Toimialue",
+    "newEntry": "Uusi merkintä",
     "modifyEntry": "Muokkaa merkintää: {{entry.name}}",
     "name": "Nimi",
-    "newEntry": "Uusi merkintä",
-    "password": "Salasana",
+    "domain": "Toimialue",
     "userName": "Käyttäjänimi",
+    "password": "Salasana",
     "notes": "Muistiinpanot",
     "otpAuthUrl": "OTP- / 2FA-autentikoinnin URL",
     "otpAuthKey": "OTP- / 2FA-avain",

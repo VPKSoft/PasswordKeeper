@@ -6,14 +6,14 @@
     "fileName": "Tiedostonimi",
     "saveFile": "Tallenna tiedosto",
     "saveFileAs": "Tallenna tiedosto nimellä",
-    "information": "Tietoja",
-    "yes": "Kyllä",
-    "cancel": "Peruuta",
     "confirm": "Vahvistus",
+    "information": "Tietoja",
     "warning": "Varoitus",
+    "yes": "Kyllä",
     "no": "Ei",
+    "cancel": "Peruuta",
     "about": "Tietoja",
-    "copyright": "Tekijänoikeus",
     "license": "Lisenssi",
+    "copyright": "Tekijänoikeus",
     "language": "Kieli"
 }
