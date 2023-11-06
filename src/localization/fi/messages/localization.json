@@ -1,0 +1,17 @@
+{
+    "fileOpenFail": "Tiedoston avaaminen epäonistui viestillä '{{msg}}'.",
+    "fileSaveFail": "Tiedoston tallennus epäonnistui viestillä '{{msg}}'.",
+    "queryDeleteCategory": "Poistetaanko kategoria '{{category}}'? Kaikki sen sisältämät merkinnät poistetaan myös.",
+    "queryDeleteEntry": "Poistetaanko merkintä '{{entry}}'?",
+    "fileChangedSaveQuery": "Tiedosto '{{file}}' on muuttunut. Haluatko tallentaa muutokset?",
+    "fileChangedTitle": "Tiedosto on muuttunut",
+    "programLockedClickToUnlock": "Ohjelma on lukittu. Klikkaa näkymää poistaaksesi lukitus.",
+    "passwordFailLockWarning": "Virheellinen salasana. Ohjelma lopetetaan {{lockAfter}} virheellisen yrityksen jälkeen.",
+    "otpAuthKeyGenFailed": "OTP-avaimen luonti epäonnistui.",
+    "qrCodeImageReadFailed": "QR-koodin kuvan dataluku epäonnistui viestillä: '{{message}}'.",
+    "dragDropFilesHere": "Raahaa ja pudota tiedosto tähän tai",
+    "pasteFromClipboard": "Liitä tiedosto leikepöydältä tai",
+    "uploadFile": "Valitse tiedosto",
+    "qrSuccess": "QR-koodi luettu onnistuneesti.",
+    "filePreferences": "Tiedoston ominaisuudet"
+}
