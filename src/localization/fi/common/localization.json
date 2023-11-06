@@ -1,0 +1,19 @@
+{
+    "retypePassword": "Syötä salasana uudelleen",
+    "givePassword": "Anna salasana",
+    "selectFileOpen": "Valitse avattava tiedosto",
+    "openFile": "Avaa tiedosto…",
+    "fileName": "Tiedostonimi",
+    "saveFile": "Tallenna tiedosto",
+    "saveFileAs": "Tallenna tiedosto nimellä",
+    "confirm": "Vahvistus",
+    "information": "Tietoja",
+    "warning": "Varoitus",
+    "yes": "Kyllä",
+    "no": "Ei",
+    "cancel": "Peruuta",
+    "about": "Tietoja",
+    "license": "Lisenssi",
+    "copyright": "Tekijänoikeus",
+    "language": "Kieli"
+}

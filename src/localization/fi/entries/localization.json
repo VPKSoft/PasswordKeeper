@@ -1,0 +1,17 @@
+{
+    "newEntry": "Uusi merkintä",
+    "modifyEntry": "Muokkaa merkintää: {{entry.name}}",
+    "name": "Nimi",
+    "domain": "Toimialue",
+    "userName": "Käyttäjänimi",
+    "password": "Salasana",
+    "notes": "Muistiinpanot",
+    "otpAuthUrl": "OTP- / 2FA-autentikoinnin URL",
+    "otpAuthKey": "OTP- / 2FA-avain",
+    "tag": "Tunniste",
+    "tags": "Tunnisteet",
+    "useMarkdown": "Käytä Markdown:ia",
+    "entryNotesEdit": "Muokkaa muistiinpanoja",
+    "entryNotesPreview": "Esikatsele muistiinpanoja",
+    "monoSpacedFont": "Tasavälinen kirjasin"
+}
