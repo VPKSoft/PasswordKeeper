@@ -16,7 +16,7 @@ export default defineConfig({
   // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
   // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`
   // env variables
-  envPrefix: ['VITE_', 'TAURI_'],
+  envPrefix: ['VITE_', 'TAURI_PLATFORM', 'TAURI_ARCH', 'TAURI_FAMILY', 'TAURI_PLATFORM_VERSION', 'TAURI_PLATFORM_TYPE', 'TAURI_DEBUG'],
   build: {
     // Tauri uses Chromium on Windows and WebKit on macOS and Linux
     target: process.env.TAURI_PLATFORM === 'windows' ? 'chrome105' : 'safari13',
