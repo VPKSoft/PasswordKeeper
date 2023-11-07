@@ -96,6 +96,6 @@ Well, that was background noise - the reasons:
 
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
 
-* Locaalization powered by [Crowdin](https://crowdin.com) (for Open-source project)
+* Localization powered by [Crowdin](https://crowdin.com) (for Open-source project)
 
   <img src="https://github.com/VPKSoft/PasswordKeeper/assets/40712699/0dc92fca-9763-4376-bd05-70c1c5c92780" width="200px" />
