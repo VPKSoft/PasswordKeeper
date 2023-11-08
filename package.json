@@ -23,7 +23,7 @@
         "eslint-plugin-prefer-arrow": "^1.2.3",
         "eslint-plugin-prettier": "^5.0.1",
         "eslint-plugin-react": "^7.33.2",
-        "eslint-plugin-unicorn": "^48.0.1",
+        "eslint-plugin-unicorn": "^49.0.0",
         "gauth-decode": "^0.1.0",
         "html-react-parser": "^4.2.10",
         "html5-qrcode": "^2.3.8",
