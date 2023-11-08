@@ -25,7 +25,7 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-unicorn": "^49.0.0",
         "gauth-decode": "^0.1.0",
-        "html-react-parser": "^4.2.10",
+        "html-react-parser": "^5.0.6",
         "html5-qrcode": "^2.3.8",
         "i18next": "^23.6.0",
         "marked": "^9.1.5",
