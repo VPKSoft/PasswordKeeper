@@ -52,6 +52,8 @@ type EditEntryPopupProps = {
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /** Occurs when the popup has been closed. */
+    useHtmlOnNotes?: boolean;
+    /** An optional font definition for the notes area. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
 
@@ -69,6 +71,7 @@ const EditEntryPopup = ({
     defaultUseMarkdown,
     defaultUseMonospacedFont,
     notesFont,
+    useHtmlOnNotes,
     onClose,
 }: EditEntryPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
@@ -149,6 +152,7 @@ const EditEntryPopup = ({
                     defaultUseMarkdown={defaultUseMarkdown}
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
                     notesFont={notesFont}
+                    useHtmlOnNotes={useHtmlOnNotes}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //

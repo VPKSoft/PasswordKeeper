@@ -69,6 +69,8 @@ type EntryEditorProps = {
     defaultUseMarkdown?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
+    /** A value indicating whether to use HTML on entry editing and rendering. */
+    useHtmlOnNotes?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /**

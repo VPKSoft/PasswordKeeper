@@ -699,6 +699,7 @@ const App = ({ className }: AppProps) => {
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                     />
                 </div>
                 {editEntry !== null && (
