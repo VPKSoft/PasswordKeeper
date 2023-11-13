@@ -33,10 +33,13 @@ import { CommonProps } from "../Types";
  * The props for the {@link EntryEditorTextArea} component.
  */
 type EntryEditorTextAreaProps = {
+    /** A value indicating whether the editor is in read-only mode. E.g. display item mode. */
     readOnly: boolean | undefined;
+    /** The current value of the text editor. */
     value: string | undefined;
     /** A value indicating whether to use monospaced font in the markdown editor. */
     monospacedFont?: boolean;
+    /** Occurs when the {@link EntryEditorTextArea} value has been changed. */
     onValueChanged?: (e: ValueChangedEvent) => void;
 } & CommonProps;
 

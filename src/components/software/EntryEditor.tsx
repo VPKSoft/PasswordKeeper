@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { Button, CheckBox, ScrollView, TagBox, TextBox } from "devextreme-react";
+import { Button, CheckBox, TagBox, TextBox } from "devextreme-react";
 import { ValueChangedEvent as CheckBoxValueChangedEvent } from "devextreme/ui/check_box";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
@@ -35,11 +35,9 @@ import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
-import { MarkDownViewStyled } from "../reusable/MarkDownView";
-import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
 import { useCssStyle } from "../../hooks/UseCssStyle";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
-import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
+import { EntryNotesEditorStyled } from "./EntryNotesEditor";
 
 /**
  * The props for the {@link EntryEditor} component.
@@ -101,6 +99,7 @@ const EntryEditor = ({
     allTags,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
+    useHtmlOnNotes,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
@@ -179,14 +178,6 @@ const EntryEditor = ({
     const onPasswordChanged = React.useCallback(
         (e: TextBoxValueChangedEvent) => {
             onValueChanged(e, "password");
-        },
-        [onValueChanged]
-    );
-
-    // The item notes was changed.
-    const onNotesChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onValueChanged(e, "notes");
         },
         [onValueChanged]
     );
@@ -419,51 +410,34 @@ const EntryEditor = ({
                             )}
                         </tbody>
                     </table>
-                    <div className="Notes-labelArea">
-                        <div className="dx-field-item-label-text">{le("notes")}</div>
-                        {!readOnly && (
-                            <CheckBox //
-                                text={le("useMarkdown")}
-                                onValueChanged={onUseMarkdownChanged}
-                                value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
-                            />
-                        )}
-                        {!readOnly && (
-                            <CheckBox //
-                                text={le("monoSpacedFont")}
-                                onValueChanged={onMonospacedFontChanged}
-                                value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
-                            />
-                        )}
-                    </div>
-                    {(entry?.useMarkdown ?? defaultUseMarkdown) === true ? (
-                        readOnly ? (
-                            <ScrollView //
-                                className="EntryEditor-TextArea"
-                            >
-                                <MarkDownViewStyled //
-                                    markDown={entry?.notes}
-                                    monospacedFont={monoSpacedFont}
+                    {!useHtmlOnNotes && (
+                        <div className="Notes-labelArea">
+                            <div className="dx-field-item-label-text">{le("notes")}</div>
+                            {!readOnly && (
+                                <CheckBox //
+                                    text={le("useMarkdown")}
+                                    onValueChanged={onUseMarkdownChanged}
+                                    value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
                                 />
-                            </ScrollView>
-                        ) : (
-                            <MarkdownTextEditorStyled //
-                                markDown={entry?.notes}
-                                setMarkDown={setMarkDown}
-                                monospacedFont={monoSpacedFont}
-                                className="EntryEditor-TextArea"
-                                imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible}
-                            />
-                        )
-                    ) : (
-                        <EntryEditorTextAreaStyled //
-                            readOnly={readOnly}
-                            value={entry?.notes}
-                            className={classNames("EntryEditor-TextArea")}
-                            onValueChanged={onNotesChanged}
-                            monospacedFont={monoSpacedFont}
-                        />
+                            )}
+                            {!readOnly && (
+                                <CheckBox //
+                                    text={le("monoSpacedFont")}
+                                    onValueChanged={onMonospacedFontChanged}
+                                    value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
+                                />
+                            )}
+                        </div>
                     )}
+                    <EntryNotesEditorStyled //
+                        entry={entry}
+                        onNotesChanged={setMarkDown}
+                        useHtmlOnNotes={useHtmlOnNotes}
+                        defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
+                        defaultUseMonospacedFont={monoSpacedFont}
+                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible}
+                        readOnly={readOnly}
+                    />
                     <QrCodeInputPopupStyled //
                         visible={qrCodeVisible && !hideQrAuthPopup}
                         onClose={qrCodePopupClose}
@@ -491,13 +465,6 @@ const StyledEntryEditor = styled(EntryEditor)`
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-    }
-    .EntryEditor-TextArea {
-        margin-top: 10px;
-        margin-bottom: 10px;
-        width: 100%;
-        height: 100%;
-        min-height: 0px;
     }
     .OTPAuth {
         display: flex;
