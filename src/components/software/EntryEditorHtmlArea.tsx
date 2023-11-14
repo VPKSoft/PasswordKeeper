@@ -29,6 +29,7 @@ import { ValueChangedEvent } from "devextreme/ui/html_editor";
 import ScrollView from "devextreme-react/scroll-view";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
+import { invoke } from "@tauri-apps/api";
 import { CommonProps } from "../Types";
 import { HtmlEditor } from "../compound/HtmlEditorCompound";
 
@@ -58,6 +59,19 @@ const EntryEditorHtmlArea = ({
     monospacedFont,
     onValueChanged,
 }: EntryEditorHtmlAreaProps) => {
+    const [fontFamilies, setFontFamilies] = React.useState<Array<string>>();
+
+    React.useEffect(() => {
+        void invoke("get_font_families_data").then(values => {
+            const valueResult = values as unknown as StringListResult;
+            if (valueResult.error) {
+                setFontFamilies(fontValues);
+            } else {
+                setFontFamilies(valueResult.value);
+            }
+        });
+    }, []);
+
     // For unresolved reason the prop does not affect if used directly with styled components.
     // This is possibly a DevExtreme bug with the TextArea component.
     const style = React.useMemo(() => {
@@ -100,7 +114,7 @@ const EntryEditorHtmlArea = ({
                 <HtmlEditor.Toolbar.Item name="separator" />
                 <HtmlEditor.Toolbar.Item name="header" acceptedValues={headerValues} options={headerOptions} />
                 <HtmlEditor.Toolbar.Item name="size" acceptedValues={sizeValues} options={headerOptions} />
-                <HtmlEditor.Toolbar.Item name="font" acceptedValues={fontValues} options={headerOptions} />
+                <HtmlEditor.Toolbar.Item name="font" acceptedValues={fontFamilies} options={headerOptions} />
                 <HtmlEditor.Toolbar.Item name="bold" />
                 <HtmlEditor.Toolbar.Item name="italic" />
                 <HtmlEditor.Toolbar.Item name="strike" />
@@ -123,6 +137,11 @@ const headerValues = [false, 1, 2, 3, 4, 5];
 const sizeValues = ["8pt", "10pt", "12pt", "14pt", "18pt", "24pt", "36pt"];
 const headerOptions = { inputAttr: { "aria-label": "Header" } };
 const fontValues = ["Arial", "Courier New", "Georgia", "Impact", "Lucida Console", "Tahoma", "Times New Roman", "Verdana"];
+
+type StringListResult = {
+    value: Array<string>;
+    error: boolean;
+};
 
 const EntryEditorHtmlAreaStyled = styled(EntryEditorHtmlArea)`
     .EntryEditorHtmlArea-TextArea {
