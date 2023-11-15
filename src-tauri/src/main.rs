@@ -30,11 +30,13 @@ SOFTWARE.
 use auth2fa::{gen_secret_otpauth, Auth2FAResult};
 use config::{get_app_config, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
+use fonts::get_font_families;
 use serde::{Deserialize, Serialize};
 
 mod auth2fa;
 mod config;
 mod encryption;
+mod fonts;
 
 /// Run the Tauri application.
 #[tokio::main]
@@ -45,6 +47,7 @@ async fn main() {
             save_file,
             load_file,
             load_settings,
+            get_font_families_data,
             save_settings,
             gen_otpauth,
         ])
@@ -65,6 +68,32 @@ struct StringResult {
     value: String,
     /// A value indicating whether the `load_file` function succeeded.
     error: bool,
+}
+
+#[derive(Serialize, Deserialize)]
+struct StringListResult {
+    value: Vec<String>,
+    error: bool,
+}
+
+/// Loads the system font families for the frontend in alphabetic order.
+///
+/// # Returns
+/// A `StringListResult` value with the font families and a flag indicating whether an error occurred.
+#[tauri::command]
+async fn get_font_families_data() -> StringListResult {
+    let result = match get_font_families() {
+        Ok(family_vec) => StringListResult {
+            error: false,
+            value: family_vec,
+        },
+        Err(_) => StringListResult {
+            error: true,
+            value: Vec::new(),
+        },
+    };
+
+    result
 }
 
 /// Loads the application settings requested by the frontend.

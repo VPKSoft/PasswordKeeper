@@ -129,6 +129,8 @@ type FileOptions = {
     notesFont?: CssFont;
     /** A value indicating whether to use monospaced font by default on entry editing and rendering. */
     useMonospacedFont?: boolean;
+    /** A value indicating whether to use HTML on entry editing and rendering. */
+    useHtmlOnNotes?: boolean;
 };
 
 /**

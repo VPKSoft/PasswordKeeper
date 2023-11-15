@@ -29,6 +29,7 @@ confy = "0.5.1"
 serde_derive = "1.0.162"
 totp-rs = { version = "5.0.2", features = ["otpauth"] }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+font-kit = "0.11.0"
 
 [features]
 # by default Tauri runs in production mode

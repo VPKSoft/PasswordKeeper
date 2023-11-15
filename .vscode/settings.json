@@ -10,9 +10,16 @@
     ],
     "cSpell.words": [
         "devextreme",
+        "dompurify",
         "Kautonen",
+        "Lucida",
         "Petteri",
+        "Tahoma",
         "tauri",
-        "unlisten"
+        "unlisten",
+        "Verdana"
+    ],
+    "rust-analyzer.linkedProjects": [
+        ".\\src-tauri\\Cargo.toml"
     ]
 }

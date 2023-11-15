@@ -74,7 +74,7 @@
             "active": true,
             "endpoints": ["https://github.com/VPKSoft/PasswordKeeper/releases/latest/download/latest.json"],
             "dialog": false,
-            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDg2M0I2RkIxREUwNTAxNjAKUldSZ0FRWGVzVzg3aHNOTklsY1lSZGZYVEtSUjlBQ0JCZzhrTE5ETG5VbS9YcEFWcUY5c3BSWkQK",
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk5OTJGNzcwODZBOEQ2RkMKUldUODFxaUdjUGVTbVpaTGgrcmFFRW1tTnMzdGp2c0Q2VlMxaCs2Qzl4elpaYlhKNGNzZGttdHgK",
             "windows": {
                 "installMode": "passive"
             }

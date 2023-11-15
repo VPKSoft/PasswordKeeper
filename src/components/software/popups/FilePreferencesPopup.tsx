@@ -94,6 +94,20 @@ const FilePreferencesPopup = ({
         setFileOptionsInternal(f => ({ ...f, useMarkdownOnNotes: value ?? false }));
     }, []);
 
+    const onUseHtmlChanged = React.useCallback(
+        (value: boolean | null) => {
+            const options = { ...fileOptionsInternal };
+            options.useHtmlOnNotes = value ?? false;
+            if (value) {
+                options.useMonospacedFont = false;
+                options.useMarkdownOnNotes = false;
+            }
+
+            setFileOptionsInternal(options);
+        },
+        [fileOptionsInternal]
+    );
+
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
         setUserAccepted(true);
@@ -130,6 +144,7 @@ const FilePreferencesPopup = ({
                                 <CheckBox //
                                     value={fileOptionsInternal?.useMonospacedFont ?? false}
                                     onValueChange={onMonospacedFontChanged}
+                                    disabled={fileOptionsInternal?.useHtmlOnNotes ?? false}
                                 />
                             </td>
                         </tr>
@@ -141,7 +156,20 @@ const FilePreferencesPopup = ({
                             <td>
                                 <CheckBox //
                                     value={fileOptionsInternal?.useMarkdownOnNotes ?? false}
+                                    disabled={fileOptionsInternal?.useHtmlOnNotes ?? false}
                                     onValueChange={onUseMarkdownChanged}
+                                />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div className="dx-field-item-label-text">{ls("useHtmlIOnNotes")}</div>
+                            </td>
+                            <td>
+                                <CheckBox //
+                                    value={fileOptionsInternal?.useHtmlOnNotes ?? false}
+                                    onValueChange={onUseHtmlChanged}
                                 />
                             </td>
                         </tr>
