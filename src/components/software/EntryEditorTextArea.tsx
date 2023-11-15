@@ -44,7 +44,7 @@ type EntryEditorTextAreaProps = {
 } & CommonProps;
 
 /**
- * A component for editing anf viewing plain text notes.
+ * A component for editing and viewing plain text notes.
  * @param param0 The component props: {@link EntryEditorTextAreaProps}.
  * @returns A component.
  */
