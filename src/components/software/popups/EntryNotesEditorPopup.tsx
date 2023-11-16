@@ -68,8 +68,8 @@ const EntryNotesEditorPopup = ({
 }: EntryNotesEditorPopupProps) => {
     const [notes, setNotes] = React.useState<string>();
 
-    const lc = useLocalize("common");
     const lu = useLocalize("ui");
+    const le = useLocalize("entries");
 
     // Raise the onClose if the popup is closed via the "X" button or is canceled.
     const onHiding = React.useCallback(() => {
@@ -87,12 +87,12 @@ const EntryNotesEditorPopup = ({
 
     return (
         <Popup //
-            title={lc("about")}
+            title={le("editNotes")}
             showCloseButton={true}
             visible={visible}
             dragEnabled={true}
             resizeEnabled={true}
-            height={500}
+            height={700}
             width={700}
             showTitle={true}
             onHiding={onHiding}

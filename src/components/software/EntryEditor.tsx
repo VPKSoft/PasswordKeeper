@@ -106,6 +106,8 @@ const EntryEditor = ({
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
+    const [noteEditorOpen, setNoteEditorOpen] = React.useState(false);
+
     const countDownColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
 
     const le = useLocalize("entries");
@@ -289,12 +291,13 @@ const EntryEditor = ({
         return result;
     }, [entry?.tags]);
 
-    const [noteEditorOpen, setNoteEditorOpen] = React.useState(false);
-
+    // A call back to open the separate notes editor upon user interaction.
     const editNotesClick = React.useCallback(() => {
         setNoteEditorOpen(true);
     }, []);
 
+    // A callback to close the separate notes editor based on the user interaction
+    // and possibly update the note value.
     const onNotesEditorClose = React.useCallback(
         (userAccepted: boolean, notes?: string | undefined) => {
             if (userAccepted) {
@@ -452,25 +455,25 @@ const EntryEditor = ({
                         useHtmlOnNotes={useHtmlOnNotes}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
-                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible}
+                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
                         readOnly={readOnly}
                     />
                     <QrCodeInputPopupStyled //
-                        visible={qrCodeVisible && !hideQrAuthPopup}
+                        visible={qrCodeVisible && !hideQrAuthPopup && visible}
                         onClose={qrCodePopupClose}
                     />
                     <DisplayQrCodePopupStyled //
-                        visible={qrCodePopupVisible}
+                        visible={qrCodePopupVisible && visible}
                         onClose={qrCodePopupDisplayClose}
                         qrUrl={entry?.otpAuthKey}
                     />
                     <StyledAEntryNotesEditorPopup
-                        visible={noteEditorOpen}
+                        visible={noteEditorOpen && visible}
                         entry={entry}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
                         useHtmlOnNotes={useHtmlOnNotes}
-                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible}
+                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
                         onClose={onNotesEditorClose}
                     />
                 </div>
