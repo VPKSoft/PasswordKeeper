@@ -26,6 +26,7 @@ type EntryNotesEditorProps = {
     useHtmlOnNotes?: boolean;
     /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
     imagePasteEnabled: boolean;
+    /** Occurs when the notes value has been changed. */
     onNotesChanged: (value: string | undefined) => void;
 } & CommonProps;
 

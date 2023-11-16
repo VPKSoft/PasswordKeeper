@@ -38,6 +38,7 @@ import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { useCssStyle } from "../../hooks/UseCssStyle";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryNotesEditorStyled } from "./EntryNotesEditor";
+import { StyledAEntryNotesEditorPopup } from "./popups/EntryNotesEditorPopup";
 
 /**
  * The props for the {@link EntryEditor} component.
@@ -105,6 +106,8 @@ const EntryEditor = ({
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
+    const [noteEditorOpen, setNoteEditorOpen] = React.useState(false);
+
     const countDownColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
 
     const le = useLocalize("entries");
@@ -279,6 +282,7 @@ const EntryEditor = ({
         setQrCodePopupVisible(false);
     }, [entry]);
 
+    // Memoize the current file-wide tags usable in entry tag box.
     const tags = React.useMemo(() => {
         const result = entry?.tags?.split("|") ?? undefined;
         if (result?.length === 1 && result[0] === "") {
@@ -286,6 +290,23 @@ const EntryEditor = ({
         }
         return result;
     }, [entry?.tags]);
+
+    // A call back to open the separate notes editor upon user interaction.
+    const editNotesClick = React.useCallback(() => {
+        setNoteEditorOpen(true);
+    }, []);
+
+    // A callback to close the separate notes editor based on the user interaction
+    // and possibly update the note value.
+    const onNotesEditorClose = React.useCallback(
+        (userAccepted: boolean, notes?: string | undefined) => {
+            if (userAccepted) {
+                setMarkDown(notes);
+            }
+            setNoteEditorOpen(false);
+        },
+        [setMarkDown]
+    );
 
     // Memoize the disabled value for the view QR code button.
     const displayQrCodeDisabled = React.useMemo(() => !(entry?.otpAuthKey ?? "").startsWith("otpauth"), [entry?.otpAuthKey]);
@@ -410,42 +431,50 @@ const EntryEditor = ({
                             )}
                         </tbody>
                     </table>
-                    {!useHtmlOnNotes && (
-                        <div className="Notes-labelArea">
-                            <div className="dx-field-item-label-text">{le("notes")}</div>
-                            {!readOnly && (
-                                <CheckBox //
-                                    text={le("useMarkdown")}
-                                    onValueChanged={onUseMarkdownChanged}
-                                    value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
-                                />
-                            )}
-                            {!readOnly && (
-                                <CheckBox //
-                                    text={le("monoSpacedFont")}
-                                    onValueChanged={onMonospacedFontChanged}
-                                    value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
-                                />
-                            )}
-                        </div>
-                    )}
+                    <div className="Notes-labelArea">
+                        <div className={classNames("dx-field-item-label-text", "Label-center")}>{le("notes")}</div>
+                        {!readOnly && !useHtmlOnNotes && (
+                            <CheckBox //
+                                text={le("useMarkdown")}
+                                onValueChanged={onUseMarkdownChanged}
+                                value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
+                            />
+                        )}
+                        {!readOnly && !useHtmlOnNotes && (
+                            <CheckBox //
+                                text={le("monoSpacedFont")}
+                                onValueChanged={onMonospacedFontChanged}
+                                value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
+                            />
+                        )}
+                        {!readOnly && <Button icon="edit" onClick={editNotesClick} />}
+                    </div>
                     <EntryNotesEditorStyled //
                         entry={entry}
                         onNotesChanged={setMarkDown}
                         useHtmlOnNotes={useHtmlOnNotes}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
-                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible}
+                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
                         readOnly={readOnly}
                     />
                     <QrCodeInputPopupStyled //
-                        visible={qrCodeVisible && !hideQrAuthPopup}
+                        visible={qrCodeVisible && !hideQrAuthPopup && visible}
                         onClose={qrCodePopupClose}
                     />
                     <DisplayQrCodePopupStyled //
-                        visible={qrCodePopupVisible}
+                        visible={qrCodePopupVisible && visible}
                         onClose={qrCodePopupDisplayClose}
                         qrUrl={entry?.otpAuthKey}
+                    />
+                    <StyledAEntryNotesEditorPopup
+                        visible={noteEditorOpen && visible}
+                        entry={entry}
+                        defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
+                        defaultUseMonospacedFont={monoSpacedFont}
+                        useHtmlOnNotes={useHtmlOnNotes}
+                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
+                        onClose={onNotesEditorClose}
                     />
                 </div>
             )}
@@ -461,7 +490,13 @@ const StyledEntryEditor = styled(EntryEditor)`
         display: flex;
         flex-direction: row;
     }
+    .Label-center {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+    }
     .Notes-labelArea {
+        margin-right: 3px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
