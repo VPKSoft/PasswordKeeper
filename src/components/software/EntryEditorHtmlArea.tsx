@@ -95,7 +95,6 @@ const EntryEditorHtmlArea = ({
             valueType="html"
             className={classNames(EntryEditorHtmlArea.name, className, "EntryEditorHtmlArea-TextArea")}
             onValueChanged={onValueChangedCallback}
-            height={300}
         >
             <HtmlEditor.Toolbar>
                 <HtmlEditor.Toolbar.Item name="undo" />
