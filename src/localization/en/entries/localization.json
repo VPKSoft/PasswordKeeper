@@ -13,5 +13,6 @@
     "useMarkdown": "Use Markdown",
     "entryNotesEdit": "Edit notes",
     "entryNotesPreview": "Preview notes",
-    "monoSpacedFont": "Mono-spaced font"
+    "monoSpacedFont": "Mono-spaced font",
+    "editNotes": "Edit notes"
 }
