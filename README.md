@@ -1,7 +1,7 @@
 # PasswordKeeper
 A software to store login information into an encrypted file. 
 
-[![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml)
+[![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml) [![Crowdin](https://badges.crowdin.net/passwordkeeper/localized.svg)](https://crowdin.com/project/passwordkeeper)
 
 ![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/c4e0893b-32b0-4d27-9051-55e31a2dc271)
 
@@ -92,20 +92,10 @@ Well, that was background noise - the reasons:
 5. Programming is a nice hobby 🤓
 
 # Thanks to
-* [Tauri](https://tauri.app)
-* [Node.js](https://nodejs.org)
-* [React](https://react.dev)
-* [Font Awesome *Free*](https://fontawesome.com/search?o=r&m=free)
-* [Weblate](https://weblate.org)
-* [i18next](https://www.i18next.com)
-* [React Countdown Circle Timer](https://www.npmjs.com/package/react-countdown-circle-timer)
-* [Html5-QRCode](https://www.npmjs.com/package/html5-qrcode)
-* [totp-rs](https://crates.io/crates/totp-rs)
-* [qrcode](https://www.npmjs.com/package/qrcode)
-* [google-authenticator-exporter](https://github.com/krissrex/google-authenticator-exporter)
-* [protobufjs](https://www.npmjs.com/package/protobufjs)
-* [html-react-parser](https://www.npmjs.com/package/html-react-parser)
-* [DOMPurify](https://www.npmjs.com/package/dompurify)
-* [Marked](https://www.npmjs.com/package/marked)
+[Tauri](https://tauri.app), [Node.js](https://nodejs.org), [React](https://react.dev), [Font Awesome *Free*](https://fontawesome.com/search?o=r&m=free), [Weblate](https://weblate.org), [i18next](https://www.i18next.com), [React Countdown Circle Timer](https://www.npmjs.com/package/react-countdown-circle-timer), [Html5-QRCode](https://www.npmjs.com/package/html5-qrcode), [totp-rs](https://crates.io/crates/totp-rs), [qrcode](https://www.npmjs.com/package/qrcode), [google-authenticator-exporter](https://github.com/krissrex/google-authenticator-exporter), [protobufjs](https://www.npmjs.com/package/protobufjs), [html-react-parser](https://www.npmjs.com/package/html-react-parser), [DOMPurify](https://www.npmjs.com/package/dompurify), [Marked](https://www.npmjs.com/package/marked)
 
 * *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
+
+* Localization powered by [Crowdin](https://crowdin.com) (for Open-source project)
+
+  <img src="https://github.com/VPKSoft/PasswordKeeper/assets/40712699/0dc92fca-9763-4376-bd05-70c1c5c92780" width="200px" />

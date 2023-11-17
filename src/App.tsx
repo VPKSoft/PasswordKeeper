@@ -168,6 +168,13 @@ const App = ({ className }: AppProps) => {
         [setTimeoutEnabled]
     );
 
+    // Enable the time out hook if the view was unlocked.
+    React.useEffect(() => {
+        if (settingsRef.current && !viewLocked) {
+            setTimeoutEnabled(settingsRef.current.lock_timeout > 0);
+        }
+    }, [setTimeoutEnabled, viewLocked]);
+
     // Load the settings from the setting file.
     React.useEffect(() => {
         void loadSettings().then(f => {
@@ -622,6 +629,12 @@ const App = ({ className }: AppProps) => {
         setFilePreferencesVisible(false);
     }, []);
 
+    // Set the file as updated if the data source is updated via entry list. E.g. ordering might have changed.
+    const onEntryListChanged = React.useCallback((dataSource: DataEntry[]) => {
+        setDataSource(dataSource);
+        setFileChanged(true);
+    }, []);
+
     // The file preferences was requested to be modified.
     const filePreferencesClick = React.useCallback(() => {
         setFilePreferencesVisible(true);
@@ -677,7 +690,7 @@ const App = ({ className }: AppProps) => {
                         searchValue={searchTextBoxValue}
                         treeListRef={treeListRef}
                         dataSource={dataSource}
-                        setDataSource={setDataSource}
+                        setDataSource={onEntryListChanged}
                         className="App-itemsView-list"
                         setEntry={setEntry}
                     />
@@ -692,6 +705,7 @@ const App = ({ className }: AppProps) => {
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                     />
                 </div>
                 {editEntry !== null && (
@@ -704,6 +718,7 @@ const App = ({ className }: AppProps) => {
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                     />
                 )}
                 {editEntry !== null && (

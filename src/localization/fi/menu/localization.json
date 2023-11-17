@@ -1,0 +1,20 @@
+{
+    "fileNew": "Uusi",
+    "fileOpen": "Avaa",
+    "fileSaveAs": "Tallenna nimellä",
+    "appExit": "Poistu",
+    "itemAdd": "Lisää merkintä",
+    "itemAddCategory": "Lisää kategoria",
+    "itemEdit": "Muokkaa",
+    "itemDelete": "Poista",
+    "menuTools": "Työkalut",
+    "menuSettings": "Asetukset",
+    "menuFile": "Tiedosto",
+    "menuItems": "Merkinnät",
+    "fileSave": "Tallenna",
+    "about": "Tietoja",
+    "lockView": "Lukitse näkymä",
+    "fileClose": "Sulje tiedosto",
+    "help": "Apu",
+    "filePreferences": "Tiedoston ominaisuudet"
+}

@@ -1,0 +1,17 @@
+{
+    "fileOpenFail": "File open failed with message '{{msg}}'.",
+    "fileSaveFail": "File save failed with message '{{msg}}'.",
+    "queryDeleteCategory": "Delete category '{{category}}'? All the contained entries will be deleted as well.",
+    "queryDeleteEntry": "Delete entry '{{entry}}'?",
+    "fileChangedSaveQuery": "File '{{file}}'' has been changed. Do you want to save the changes?",
+    "fileChangedTitle": "File has been changed",
+    "programLockedClickToUnlock": "The program is locked. Click the view to unlock.",
+    "passwordFailLockWarning": "Invalid password. The software will exit after {{lockAfter}} failed attempts.",
+    "otpAuthKeyGenFailed": "The OTP key generation failed.",
+    "qrCodeImageReadFailed": "The QR code image data read failed with message '{{message}}'.",
+    "dragDropFilesHere": "Drag and drop your file here or",
+    "pasteFromClipboard": "Paste file data from clipboard or",
+    "uploadFile": "Upload a file",
+    "qrSuccess": "QR code read successfully.",
+    "filePreferences": "File preferences"
+}
