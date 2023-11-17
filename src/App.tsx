@@ -629,6 +629,12 @@ const App = ({ className }: AppProps) => {
         setFilePreferencesVisible(false);
     }, []);
 
+    // Set the file as updated if the data source is updated via entry list. E.g. ordering might have changed.
+    const onEntryListChanged = React.useCallback((dataSource: DataEntry[]) => {
+        setDataSource(dataSource);
+        setFileChanged(true);
+    }, []);
+
     // The file preferences was requested to be modified.
     const filePreferencesClick = React.useCallback(() => {
         setFilePreferencesVisible(true);
@@ -684,7 +690,7 @@ const App = ({ className }: AppProps) => {
                         searchValue={searchTextBoxValue}
                         treeListRef={treeListRef}
                         dataSource={dataSource}
-                        setDataSource={setDataSource}
+                        setDataSource={onEntryListChanged}
                         className="App-itemsView-list"
                         setEntry={setEntry}
                     />
