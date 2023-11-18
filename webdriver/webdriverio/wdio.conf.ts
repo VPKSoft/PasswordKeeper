@@ -1,8 +1,6 @@
-import { spawn, spawnSync, execSync } from "node:child_process";
-import { cwd, stdin, stdout } from "node:process";
+import { spawn } from "node:child_process";
 import * as os from "node:os";
 import * as path from "node:path";
-import { join } from "node:path";
 
 // keep track of the `tauri-driver` child process
 let tauriDriver;
