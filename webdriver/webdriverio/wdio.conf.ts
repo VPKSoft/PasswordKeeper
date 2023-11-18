@@ -13,6 +13,7 @@ export const config = {
     hostname: "127.0.0.1",
     port: 4_444,
     path: "/",
+    headless: true,
     capabilities: [
         {
             maxInstances: 1,
