@@ -49,6 +49,7 @@ jobs:
         if: matrix.platform == 'ubuntu-20.04'
         run: |
           cd webdriver/webdriverio
+          npm i
           ./run_e2e.sh
 
       - name: E2E Windows
@@ -57,5 +58,6 @@ jobs:
           Invoke-WebRequest -URI https://msedgedriver.azureedge.net/121.0.2227.0/edgedriver_win64.zip -OutFile $Env:temp\edgedriver_win64.zip
           Expand-Archive -Path $Env:temp\edgedriver_win64.zip -DestinationPath C:\Windows\SysWOW64
           cd webdriver\webdriverio
+          npm i
           .\run_e2e.ps1
   
