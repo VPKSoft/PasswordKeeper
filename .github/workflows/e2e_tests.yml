@@ -41,9 +41,12 @@ jobs:
           node-version: 20
           cache: 'npm' # Set this to npm, yarn or pnpm.
 
-      - name: Install frontend dependencies
-        # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: npm install # Change this to npm, yarn or pnpm.
+      - name: init install folder (Windows)
+        if: matrix.platform == 'windows-latest'
+        run: ${{ github.workspace }}\init.ps1
+      - name: init install folder (Linux & Mac)
+        if: matrix.platform == 'ubuntu-20.04' || matrix.platform == 'macos-latest'
+        run: ${{ github.workspace }}/init.sh                
                 
       - name: E2E Linux
         if: matrix.platform == 'ubuntu-20.04'
