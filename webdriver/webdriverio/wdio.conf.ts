@@ -19,7 +19,7 @@ export const config = {
         {
             maxInstances: 1,
             "tauri:options": {
-                application: `../../src-tauri/target/release/${isWin ? "PasswordKeeper$.exe" : "password-keeper"}`,
+                application: `../../src-tauri/target/release/${isWin ? "PasswordKeeper.exe" : "password-keeper"}`,
             },
         },
     ],
