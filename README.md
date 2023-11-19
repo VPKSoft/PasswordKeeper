@@ -2,6 +2,7 @@
 A software to store login information into an encrypted file. 
 
 [![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml) [![Crowdin](https://badges.crowdin.net/passwordkeeper/localized.svg)](https://crowdin.com/project/passwordkeeper)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper?ref=badge_shield)
 
 ![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/c4e0893b-32b0-4d27-9051-55e31a2dc271)
 
@@ -99,3 +100,7 @@ Well, that was background noise - the reasons:
 * Localization powered by [Crowdin](https://crowdin.com) (for Open-source project)
 
   <img src="https://github.com/VPKSoft/PasswordKeeper/assets/40712699/0dc92fca-9763-4376-bd05-70c1c5c92780" width="200px" />
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper?ref=badge_large)
