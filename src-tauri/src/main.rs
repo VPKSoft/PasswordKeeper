@@ -27,6 +27,7 @@ SOFTWARE.
     windows_subsystem = "windows"
 )]
 
+use arboard::Clipboard;
 use auth2fa::{gen_secret_otpauth, Auth2FAResult};
 use config::{get_app_config, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
@@ -50,14 +51,52 @@ async fn main() {
             get_font_families_data,
             save_settings,
             gen_otpauth,
+            clear_clipboard,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
+/// Saves the specified JSON data into a file encrypted with the specified password.
+///
+/// # Arguments
+/// * `json_data` - The JSON data to encrypt into the file contents.
+/// * `file_name` - The file name to save the data into.
+/// * `password` - The password to use for the data encryption.
+///
+/// # Returns
+/// * `bool` value indicating whether the save operation was successful.
 #[tauri::command]
 async fn save_file(json_data: String, file_name: String, password: String) -> bool {
     let result = !encrypt_small_file(&file_name, &password, &json_data).is_err();
+    result
+}
+
+/// Sets the clipboard text to an empty `String` if the specified `current_supposed_value` matches the current clipboard content as `String`.
+///
+/// # Arguments
+/// * `current_supposed_value` - the `String` value the clipboard is supposed to contain in order to clear the clipboard value.
+///
+/// # Returns
+/// `true` if the clipboard data was successfully reset; `false` otherwise.
+#[tauri::command]
+async fn clear_clipboard(current_supposed_value: String) -> bool {
+    let mut clipboard = Clipboard::new().unwrap();
+
+    let current_text = match clipboard.get_text() {
+        Ok(text) => text,
+        Err(_) => "".to_string(),
+    };
+
+    let mut result = false;
+
+    if current_text == current_supposed_value {
+        result = match clipboard.set_text("".to_string()) {
+            Ok(_) => true,
+            Err(_) => false,
+        };
+    }
+
     result
 }
 
