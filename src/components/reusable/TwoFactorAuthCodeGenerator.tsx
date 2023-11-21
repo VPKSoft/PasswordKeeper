@@ -33,6 +33,7 @@ import { Auth2Fa, CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { cssRgbToHex } from "../../utilities/ColorConversion";
 import { useTimeSecond } from "../../hooks/UseTimeSecond";
+import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
 
 /**
  * The props for the {@link TwoFactorAuthCodeGenerator} component.
@@ -105,6 +106,7 @@ const TwoFactorAuthCodeGenerator = ({
                 .writeText(twoFactorResult.key)
                 .then(() => {
                     notify(lu("clipboardCopySuccess"), "success", 5_000);
+                    clipboardNotifyOther();
                 })
                 .catch(() => {
                     notify(lu("clipboardCopyFailed"), "error", 5_000);

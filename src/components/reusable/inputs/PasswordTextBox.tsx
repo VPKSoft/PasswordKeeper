@@ -31,6 +31,7 @@ import { styled } from "styled-components";
 import notify from "devextreme/ui/notify";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
+import { clipboardNotifyOther } from "../../../hooks/UseCaptureClipboardCopy";
 
 /**
  * The props for the {@link PasswordTextBox} component.
@@ -124,6 +125,7 @@ const PasswordTextBox = ({
                 .writeText(text)
                 .then(() => {
                     notify(lu("clipboardCopySuccess"), "success", 5_000);
+                    clipboardNotifyOther();
                 })
                 .catch(() => {
                     notify(lu("clipboardCopyFailed"), "error", 5_000);

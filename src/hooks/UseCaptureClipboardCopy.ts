@@ -44,20 +44,33 @@ type OnClipboardCopy = (source: ClipboardEventSource) => void;
 /**
  * A custom hook for capturing and reporting clipboard copy events for the current {@link document}.
  * @param onClipboardCopy A callback which is raised when the clipboard event occurs.
+ * @returns The current clipboard text value and a callback to reset the clipboard value.
  */
-const useCaptureClipboardCopy = (onClipboardCopy: OnClipboardCopy) => {
+const useCaptureClipboardCopy = (onClipboardCopy?: OnClipboardCopy): [string, () => void] => {
+    const [clipboardValue, setClipboardValue] = React.useState<string>("");
+
+    const resetClipboardValue = React.useCallback(() => {
+        return navigator.clipboard
+            .readText()
+            .then(setClipboardValue)
+            .catch(() => setClipboardValue(""));
+    }, []);
+
     const contextMenu = React.useRef<boolean>(false);
     const fromKeyboard = React.useRef<boolean>(false);
     const clipboardCopyEvent = React.useCallback(() => {
-        if (contextMenu.current) {
-            onClipboardCopy(ClipboardEventSource.ContextMenu);
-        } else if (fromKeyboard.current) {
-            onClipboardCopy(ClipboardEventSource.Keyboard);
-        } else {
-            onClipboardCopy(ClipboardEventSource.Other);
-        }
-        contextMenu.current = false;
-        fromKeyboard.current = false;
+        void navigator.clipboard.readText().then(value => {
+            setClipboardValue(value);
+            if (contextMenu.current) {
+                onClipboardCopy?.(ClipboardEventSource.ContextMenu);
+            } else if (fromKeyboard.current) {
+                onClipboardCopy?.(ClipboardEventSource.Keyboard);
+            } else {
+                onClipboardCopy?.(ClipboardEventSource.Other);
+            }
+            contextMenu.current = false;
+            fromKeyboard.current = false;
+        });
     }, [onClipboardCopy]);
 
     const keyboardEvent = React.useCallback((e: KeyboardEvent) => {
@@ -70,12 +83,19 @@ const useCaptureClipboardCopy = (onClipboardCopy: OnClipboardCopy) => {
         contextMenu.current = true;
     }, []);
 
+    const clipboardNotifyOther = React.useCallback(() => {
+        contextMenu.current = false;
+        fromKeyboard.current = false;
+        clipboardCopyEvent();
+    }, [clipboardCopyEvent]);
+
     React.useEffect(() => {
         contextMenu.current = false;
         fromKeyboard.current = false;
         document.addEventListener("copy", clipboardCopyEvent);
         document.addEventListener("keydown", keyboardEvent);
         document.addEventListener("contextmenu", contextMenuEvent);
+        document.addEventListener("clipboardOther", clipboardNotifyOther);
 
         return () => {
             contextMenu.current = false;
@@ -83,10 +103,20 @@ const useCaptureClipboardCopy = (onClipboardCopy: OnClipboardCopy) => {
             document.removeEventListener("copy", clipboardCopyEvent);
             document.removeEventListener("keydown", keyboardEvent);
             document.removeEventListener("contextmenu", contextMenuEvent);
+            document.removeEventListener("clipboardOther", clipboardNotifyOther);
         };
-    }, [clipboardCopyEvent, contextMenuEvent, keyboardEvent]);
+    }, [clipboardCopyEvent, clipboardNotifyOther, contextMenuEvent, keyboardEvent]);
+
+    return [clipboardValue, resetClipboardValue];
 };
 
-export { useCaptureClipboardCopy };
+/**
+ * Dispatches an event to which the {@link useCaptureClipboardCopy} hook will react with {@link ClipboardEventSource.Other} value as callback.
+ */
+const clipboardNotifyOther = () => {
+    document.dispatchEvent(new CustomEvent("clipboardOther"));
+};
+
+export { useCaptureClipboardCopy, clipboardNotifyOther };
 export { ClipboardEventSource };
 export type { OnClipboardCopy };
