@@ -16,3 +16,9 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/webdriver/webdriverio" # Location of package manifests
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10

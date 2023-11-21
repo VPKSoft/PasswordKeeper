@@ -33,6 +33,7 @@ import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
+import { invoke } from "@tauri-apps/api";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
@@ -58,6 +59,7 @@ import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay
 import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 import { useCssStyle } from "./hooks/UseCssStyle";
+import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 
 /**
  * The props for the {@link App} component.
@@ -110,6 +112,26 @@ const App = ({ className }: AppProps) => {
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
+
+    // Reset clipboard functionality.
+    const [clipboardValue, resetClipboard] = useCaptureClipboardCopy();
+
+    // Clear the clipboard when the 15 seconds has elapsed.
+    const clearClipboard = React.useCallback(() => {
+        void invoke("clear_clipboard", { currentSupposedValue: clipboardValue }).then(() => {
+            resetClipboard();
+        });
+    }, [clipboardValue, resetClipboard]);
+
+    // Have the useTimeout hook raise a callback if the 15 seconds has elapsed to clear the clipboard.
+    const [clipboardTimeOut, resetClipboardTimeOut] = useTimeout(15, clearClipboard, TimeInterval.Seconds);
+
+    // The clipboard value changed. Reset the useTimeout hook and set it enabled or disabled
+    // based on the clipboard value.
+    React.useEffect(() => {
+        resetClipboardTimeOut();
+        clipboardTimeOut(clipboardValue !== "");
+    }, [clipboardTimeOut, clipboardValue, resetClipboardTimeOut]);
 
     // A call back to lock the main window and close the popups if any.
     const lockView = React.useCallback(() => {
