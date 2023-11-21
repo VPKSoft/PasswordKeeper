@@ -6,6 +6,7 @@ import QRCode from "qrcode";
 import notify from "devextreme/ui/notify";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
+import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
 
 /**
  * The props for the {@link DisplayQrCodePopup} component.
@@ -91,6 +92,7 @@ const DisplayQrCodePopup = ({
                         .write([new ClipboardItem({ "image/png": pngBlob })])
                         .then(() => {
                             notify(lu("clipboardCopySuccess"), "success", 5_000);
+                            clipboardNotifyOther();
                         })
                         .catch(() => {
                             notify(lu("clipboardCopyFailed"), "error", 5_000);
