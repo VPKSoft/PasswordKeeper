@@ -22,44 +22,45 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import "./App.css";
-import classNames from "classnames";
-import { appWindow } from "@tauri-apps/api/window";
-import notify from "devextreme/ui/notify";
-import { exit } from "@tauri-apps/api/process";
-import { ask } from "@tauri-apps/api/dialog";
-import dxTreeList, { Node } from "devextreme/ui/tree_list";
-import { styled } from "styled-components";
-import { open } from "@tauri-apps/api/shell";
-import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
 import { invoke } from "@tauri-apps/api";
-import { Locales, setLocale, useLocalize } from "./i18n";
-import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
-import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
-import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
-import { setTheme } from "./utilities/ThemeUtils";
-import { useSecureStorage } from "./hooks/UseSecureStorage";
-import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
-import { Settings, loadSettings, saveSettings } from "./types/Settings";
-import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
+import { ask } from "@tauri-apps/api/dialog";
+import { exit } from "@tauri-apps/api/process";
+import { open } from "@tauri-apps/api/shell";
+import { appWindow } from "@tauri-apps/api/window";
+import classNames from "classnames";
+import notify from "devextreme/ui/notify";
+import { TreeExpandedKeysType } from "primereact/tree";
+import * as React from "react";
+import { styled } from "styled-components";
+import { StateFlags, restoreStateCurrent, saveWindowState } from "tauri-plugin-window-state-api";
+import "./App.css";
 import { CommonProps } from "./components/Types";
-import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
-import { StyledOpenSaveFilePopup } from "./components/software/popups/OpenSaveFilePopup";
-import { StyledEditEntryPopup } from "./components/software/popups/EditEntryPopup";
 import { StyledAppMenuToolbar } from "./components/app/AppMenuToolbar";
 import { StyledTitle } from "./components/app/WindowTitle";
-import { StyledPasswordList } from "./components/reusable/PasswordList";
-import { StyledEntryEditor } from "./components/software/EntryEditor";
-import { StyledEditCategoryPopup } from "./components/software/popups/EditCategoryPopup";
-import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
-import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
-import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
-import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
+import { StyledPasswordList } from "./components/reusable/PasswordList";
+import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
+import { StyledEntryEditor } from "./components/software/EntryEditor";
+import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
+import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
+import { StyledEditCategoryPopup } from "./components/software/popups/EditCategoryPopup";
+import { StyledEditEntryPopup } from "./components/software/popups/EditEntryPopup";
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
-import { useCssStyle } from "./hooks/UseCssStyle";
+import { StyledOpenSaveFilePopup } from "./components/software/popups/OpenSaveFilePopup";
+import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
+import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
+import { useCssStyle } from "./hooks/UseCssStyle";
+import { useSecureStorage } from "./hooks/UseSecureStorage";
+import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
+import { Locales, setLocale, useLocalize } from "./i18n";
+import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
+import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
+import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
+import { Settings, loadSettings, saveSettings } from "./types/Settings";
+import { setTheme } from "./utilities/ThemeUtils";
+import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
+const primeStyle = () => import("primereact/resources/themes/lara-light-cyan/theme.css");
 
 /**
  * The props for the {@link App} component.
@@ -104,11 +105,14 @@ const App = ({ className }: AppProps) => {
     const [isNewFile, setIsNewFile] = React.useState(true);
     const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
+    const [expandedKeys, setExpandedKeys] = React.useState<TreeExpandedKeysType | undefined>();
 
-    const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
+    const expandedKeysRef = React.useRef<TreeExpandedKeysType>({});
     const textColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
     const backColor = useCssStyle("color", "#5bbec3", null, "dx-theme-border-color-as-text-color");
+
+    void primeStyle();
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -151,8 +155,9 @@ const App = ({ className }: AppProps) => {
         setPreferencesVisible(false);
 
         // Collapse the tree. The categories are allowed to show.
-        collapseTree(treeListRef?.current);
-    }, []);
+        expandedKeysRef.current = expandedKeys ?? {};
+        setExpandedKeys({});
+    }, [expandedKeys]);
 
     // A callback to lock the view after a time interval has elapsed.
     const onViewLockTimeout = React.useCallback(() => {
@@ -554,21 +559,8 @@ const App = ({ className }: AppProps) => {
 
     // Expands the tree list selection and restores the selected state upon unlocking the view.
     const expandTreeListSelection = React.useCallback(async () => {
-        const key = treeListRef.current?.getSelectedRowKeys()[0] as number | undefined;
-        if (key) {
-            const item = dataSource.find(f => f.id === key);
-
-            if (item) {
-                if (item.parentId !== -1) {
-                    await treeListRef.current?.expandRow(item.parentId);
-                }
-                await treeListRef.current?.expandRow(key);
-                await treeListRef.current?.navigateToRow(key);
-
-                setEntry(item);
-            }
-        }
-    }, [dataSource]);
+        setExpandedKeys(expandedKeysRef.current);
+    }, []);
 
     // A callback to unlock the view locked with an overlay.
     // If an existing file is opened a password dialog is displayed instead to unlock the view.
@@ -710,8 +702,9 @@ const App = ({ className }: AppProps) => {
                 <div id="mainView" className="App-itemsView">
                     <StyledPasswordList //
                         searchValue={searchTextBoxValue}
-                        treeListRef={treeListRef}
                         dataSource={dataSource}
+                        expandedKeys={expandedKeys}
+                        setExpandedKeys={setExpandedKeys}
                         setDataSource={onEntryListChanged}
                         className="App-itemsView-list"
                         setEntry={setEntry}
@@ -806,21 +799,6 @@ const App = ({ className }: AppProps) => {
             </div>
         </>
     );
-};
-
-/**
- * Collapses a {@link dxTreeList} using array of {@link DataEntry} items as a data source.
- * @param tree The tree list to collapse.
- */
-const collapseTree = (tree: dxTreeList | undefined) => {
-    if (tree) {
-        tree.forEachNode((f: Node<DataEntry>) => {
-            // Only collapse the parent nodes.
-            if (f.data?.parentId === -1) {
-                void tree.collapseRow(f.key);
-            }
-        });
-    }
 };
 
 const searchBoxValueEmpty: SearchTextBoxValue = { value: "", searchMode: SearchMode.Or };

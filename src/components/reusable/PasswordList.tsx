@@ -1,15 +1,36 @@
-import * as React from "react";
-import applyChanges from "devextreme/data/apply_changes";
-import { TreeList } from "devextreme-react";
-import { Column, RowDragging, Selection } from "devextreme-react/tree-list";
-import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, SelectionChangedEvent, SavingEvent, InitializedEvent } from "devextreme/ui/tree_list";
-import { Template } from "devextreme-react/core/template";
+/*
+MIT License
+
+Copyright (c) 2023 Petteri Kautonen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
 import classNames from "classnames";
+import { ScrollPanel } from "primereact/scrollpanel";
+import { Tree, TreeDragDropEvent, TreeExpandedEvent, TreeExpandedKeysType, TreeSelectionEvent } from "primereact/tree";
+import { TreeNode } from "primereact/treenode";
+import * as React from "react";
 import { styled } from "styled-components";
-import { useLocalize } from "../../i18n";
-import { DataEntry } from "../../types/PasswordEntry";
-import { CommonProps, DxFilter } from "../Types";
-import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
+import { DataEntry, SearchKeys } from "../../types/PasswordEntry";
+import { CommonProps } from "../Types";
+import { SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
  * The props for the {@link PasswordList} component.
@@ -19,12 +40,14 @@ type PasswordListProps = {
     dataSource: DataEntry[];
     /** A search value for filtering the password list. */
     searchValue: SearchTextBoxValue;
-    /** The ref for the component's TreeList component. */
-    treeListRef?: React.MutableRefObject<dxTreeList | undefined>;
+    /** The expanded keys of the {@link Tree}. */
+    expandedKeys: TreeExpandedKeysType | undefined;
     /** Occurs when the selected item has been changed. */
     setEntry: (value: DataEntry | null) => void;
     /** A callback to pass the changed data source to the parent component. */
     setDataSource: (dataSource: DataEntry[]) => void;
+    /** Sets the expanded keys of the {@link Tree}. */
+    setExpandedKeys: (value: TreeExpandedKeysType | undefined) => void;
 } & CommonProps;
 
 /**
@@ -37,155 +60,132 @@ const PasswordList = ({
     className, //
     dataSource,
     searchValue,
-    treeListRef,
+    expandedKeys,
     setEntry,
     setDataSource,
+    setExpandedKeys,
 }: PasswordListProps) => {
-    const le = useLocalize("entries");
+    const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
+    const treeRef = React.useRef<Tree>(null);
 
-    // Order the data by setting the SortOrder and ParentId properties.
-    const onReorder = React.useCallback(
-        (e: unknown) => {
-            if (dataSource) {
-                setDataSource(reorderData(e as RowDraggingReorderEvent, dataSource));
-            }
+    // Memoize a node structure of the data source.
+    const nodes = React.useMemo(() => {
+        const parents = dataSource.filter(f => f.parentId === -1);
+        const children = dataSource.filter(f => f.parentId !== -1);
+        const result = parents.map(f => createNode(f, children));
+        return result;
+    }, [dataSource]);
+
+    // Set the selected item on selection change.
+    const onSelectionChange = React.useCallback(
+        (event: TreeSelectionEvent) => {
+            setSelectedItem(event.value as string | null);
+            const found = dataSource.find(f => f.id.toString() === event.value?.toString()) ?? null;
+            setEntry(found);
         },
-        [dataSource, setDataSource]
+        [dataSource, setEntry]
     );
 
-    // Raise the setEntry callback when the TreeList selection has been changed.
-    const onSelectionChanged = React.useCallback(
-        (e: SelectionChangedEvent<DataEntry>) => {
-            const selected = e.selectedRowsData.length > 0 ? e.selectedRowsData[0] : null;
-            setEntry(selected);
-        },
-        [setEntry]
-    );
-
-    // A custom save to disallow direct prop value mutation.
-    const onSaving = React.useCallback(
-        (e: SavingEvent) => {
-            e.cancel = true;
-            const newData = applyChanges(dataSource, e.changes, { immutable: true });
-            setDataSource(newData);
-        },
-        [dataSource, setDataSource]
-    );
-
-    // Save the ref for the tree list.
-    const onInitialized = React.useCallback(
-        (e: InitializedEvent) => {
-            if (treeListRef) {
-                treeListRef.current = e.component;
-            }
-        },
-        [treeListRef]
-    );
-
-    // Update the TreeList filter when the filter value changes.
+    // Filter the tree list when the search text changes.
     React.useEffect(() => {
-        const filter = createFilterExpression(searchValue);
-        if (filter) {
-            treeListRef?.current?.filter(filter);
-        } else {
-            treeListRef?.current?.clearFilter();
-        }
-    }, [searchValue, treeListRef]);
+        treeRef?.current?.filter(searchValue.value);
+    }, [searchValue, treeRef]);
+
+    // Handle the expanded keys change.
+    const onToggle = React.useCallback(
+        (e: TreeExpandedEvent) => {
+            setExpandedKeys(e.value);
+        },
+        [setExpandedKeys]
+    );
+
+    // Handle the drag & drop operation of the password list.
+    const onDragDrop = React.useCallback(
+        (e: TreeDragDropEvent) => {
+            const result = dragDropDataSource(e.dropNode.data, e.dragNode.data, dataSource);
+            if (Array.isArray(result)) {
+                setDataSource(result);
+            }
+        },
+        [dataSource, setDataSource]
+    );
 
     return (
-        <TreeList //
-            className={classNames(PasswordList.name, className)}
-            dataSource={dataSource}
-            keyExpr="id"
-            parentIdExpr="parentId"
-            rootValue={-1}
-            onInitialized={onInitialized}
-            showRowLines={true}
-            showBorders={true}
-            onSelectionChanged={onSelectionChanged}
-            onSaving={onSaving}
-        >
-            <Selection mode="single" />
-            <RowDragging //
-                allowReordering={true}
-                onReorder={onReorder}
-                onDragChange={onDragChange}
-                allowDropInsideItem={true}
-            />
-            <Column //
-                dataField="parentId"
-                cellTemplate="columnTypeTemplate"
-                caption=""
-                width={90}
-                allowSorting={false}
-            />
-            <Column //
-                dataField="name"
-                caption={le("name")}
-                dataType="string"
-                calculateFilterExpression={createFilterExpression}
-                allowSorting={false}
-            />
-            <Template name="columnTypeTemplate" render={renderColumnType} />
-        </TreeList>
+        <ScrollPanel className={classNames(PasswordList.name, className)}>
+            <Tree //
+                ref={treeRef}
+                className="PasswordList-tree"
+                value={nodes}
+                selectionMode="single"
+                selectionKeys={selectedItem}
+                onSelectionChange={onSelectionChange}
+                filterBy={filterBy}
+                filterMode="strict"
+                filter={true}
+                expandedKeys={expandedKeys}
+                onToggle={onToggle}
+                onDragDrop={onDragDrop}
+                dragdropScope="passwordList"
+            ></Tree>
+        </ScrollPanel>
     );
 };
 
-/**
- * Creates a DevExtreme filter expression of the specified filter value.
- * @param value A {@link SearchTextBoxValue} with the search text and and the filter combination mode.
- * @returns A filter for the DevExtreme or undefined if the value was empty.
- */
-const createFilterExpression = (value: SearchTextBoxValue) => {
-    const terms = value.value.split(" ");
-    const result: DxFilter<DataEntry> = [];
-
-    const orMode = value.searchMode === SearchMode.Or;
-
-    for (const term of terms) {
-        if (term.trim() === "") {
-            continue;
-        }
-        result.push(
-            [
-                ["name", "contains", term], //
-                "or",
-                ["domain", "contains", term],
-                "or",
-                ["address", "contains", term],
-                "or",
-                ["userName", "contains", term],
-                "or",
-                ["notes", "contains", term],
-                "or",
-                ["password", "contains", term],
-                "or",
-                ["tags", "contains", term],
-            ],
-            orMode ? "or" : "and"
-        );
-    }
-    result.pop();
-
-    return result.length === 0 ? "" : (result as unknown as string);
-};
+/** The definition for filtering the password list {@link Tree} */
+const filterBy = SearchKeys.map(f => "data." + f).join(",");
 
 /**
- * The type for the {@link TreeList} column {@link Template} rendering callback.
+ * Creates a {@link TreeNode} from the specified entry and data source.
+ * @param value The value to create a {@link TreeNode} from.
+ * @param values The data source to use for possible node children.
+ * @returns A {@link TreeNode} created from the specified {@link DataEntry}.
  */
-type RenderColumnData = {
-    row: {
-        data: DataEntry;
+const createNode = (value: DataEntry, values: DataEntry[]) => {
+    const result: TreeNode = {
+        label: value.name,
+        id: value.id.toString(),
+        key: value.id,
+        icon: isGroup(value) ? "fa-regular fa-folder-open" : "fa-solid fa-tag",
+        children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values)) : undefined,
+        selectable: true,
+        data: value,
     };
+
+    return result;
 };
 
 /**
- * Renders the icon to the {@link PasswordList} component.
- * @param {RenderColumnData} e The column data passed to the callback.
- * @returns {JSX.Element} for the column cell contents.
+ * Handles the drag and drop of the {@link PasswordList}.
+ * @param target The target {@link DataEntry} for the drag and drop operation.
+ * @param source The source {@link DataEntry} for the drag and drop operation.
+ * @param dataSource The current data source.
+ * @returns A new data source with the items reordered based on the drag and drop operation or {@link undefined} if nothing was done to the passed data source.
  */
-const renderColumnType = (e: RenderColumnData) => {
-    return e.row.data.parentId === -1 ? <div className="fas fa-folder PasswordList-imageCell" /> : <div className="fas fa-tag App-itemsWiew-list-imageCell" />;
+const dragDropDataSource = (target: DataEntry, source: DataEntry, dataSource: DataEntry[]) => {
+    if (target.parentId === -1 && source.parentId === -1 && target.id !== source.id) {
+        const newDataSource = [...dataSource];
+        const targetIndex = newDataSource.findIndex(f => f.id === target.id);
+        const sourceIndex = newDataSource.findIndex(f => f.id === source.id);
+        newDataSource[targetIndex] = source;
+        newDataSource[sourceIndex] = target;
+        return newDataSource;
+    }
+
+    if (target.parentId === -1 && source.parentId !== -1) {
+        const newDataSource = [...dataSource];
+        const sourceIndex = newDataSource.findIndex(f => f.id === source.id);
+        newDataSource[sourceIndex] = { ...source, parentId: target.id };
+        return newDataSource;
+    }
+
+    if (target.parentId !== -1 && source.parentId !== -1 && target.id !== source.id) {
+        const newDataSource = [...dataSource];
+        const targetIndex = newDataSource.findIndex(f => f.id === target.id);
+        const sourceIndex = newDataSource.findIndex(f => f.id === source.id);
+        newDataSource[targetIndex] = { ...source, parentId: target.parentId };
+        newDataSource[sourceIndex] = target;
+        return newDataSource;
+    }
 };
 
 /**
@@ -197,65 +197,13 @@ const isGroup = (entry: DataEntry) => {
     return entry.parentId === -1;
 };
 
-/**
- * Validate the drag change of the {@link TreeList} for the {@link PasswordList} component.
- * @param {RowDraggingChangeEvent} e The event data for the row dragging event.
- */
-const onDragChange = (data: unknown) => {
-    const e = data as RowDraggingChangeEvent;
-    const visibleRows = e.component.getVisibleRows();
-
-    const sourceNode = visibleRows[e.fromIndex].node;
-    const targetNode = visibleRows[e.toIndex].node;
-
-    if (
-        targetNode.data.id === sourceNode.data.id || // Can not drag to it self.
-        (e.dropInsideItem && !isGroup(targetNode.data)) || // Can not drag an item into a non-group.
-        (e.dropInsideItem && isGroup(sourceNode.data)) || // Can not draw group into an item.
-        // Can not drop item into a group if it is not being dropped inside a group.
-        (isGroup(targetNode.data) && !isGroup(sourceNode.data) && !e.dropInsideItem) ||
-        // Cannot drop group inside another group.
-        (isGroup(sourceNode.data) && isGroup(targetNode.data) && e.dropInsideItem) ||
-        // Can not drop group outside a non-group item.
-        (isGroup(sourceNode.data) && !isGroup(targetNode.data) && !e.dropInsideItem)
-    ) {
-        e.cancel = true;
-        return;
-    }
-};
-
-/**
- * Reorders the data source items after the {@link RowDragging} onReorder event.
- * @param {RowDraggingChangeEvent} e The event data for the row dragging event.
- * @param {Array<DataEntry>} dataSource The current data source of the {@link TreeList}.
- * @returns {Array<DataEntry>} The reordered data source.
- */
-const reorderData = (e: RowDraggingReorderEvent, dataSource: Array<DataEntry>) => {
-    const sourceData = e.itemData;
-    const targetIndex = dataSource.findIndex(i => i.id === e.itemData.id);
-
-    const visibleRows = e.component.getVisibleRows() as unknown as { data: DataEntry; node: Node<DataEntry> }[];
-    const targetNode: Node<DataEntry> = visibleRows[e.toIndex].node;
-    let sourceIndex = dataSource.findIndex(i => i.id === targetNode.key);
-
-    if (e.fromIndex > e.toIndex && targetIndex < sourceIndex) {
-        sourceIndex = sourceIndex - 1;
-    }
-
-    const newItem: DataEntry = e.dropInsideItem ? { ...sourceData, parentId: targetNode.key } : { ...sourceData, parentId: targetNode.parent?.key ?? -1 };
-
-    let newData = dataSource;
-    newData = [...dataSource.slice(0, targetIndex), ...dataSource.slice(targetIndex + 1)];
-    newData = [...newData.slice(0, sourceIndex), newItem, ...newData.slice(sourceIndex)];
-
-    return newData;
-};
-
 const StyledPasswordList = styled(PasswordList)`
-    .PasswordList-imageCell {
-        display: flex;
-        align-items: center;
-        flex-flow: column;
+    .PasswordList-tree {
+        width: 100%;
+        height: 100%;
+    }
+    .p-tree-filter-container {
+        display: none;
     }
 `;
 

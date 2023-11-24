@@ -25,17 +25,20 @@ SOFTWARE.
 import * as React from "react";
 import ReactDOM from "react-dom/client";
 import { StyleSheetManager } from "styled-components";
+import { PrimeReactProvider } from "primereact/api";
 import { StyledApp } from "./App";
 
 const shouldForwardProp = () => true;
 
 ReactDOM.createRoot(document.querySelector("#root") as HTMLElement).render(
     <React.StrictMode>
-        <StyleSheetManager //
-            enableVendorPrefixes
-            shouldForwardProp={shouldForwardProp}
-        >
-            <StyledApp />
-        </StyleSheetManager>
+        <PrimeReactProvider>
+            <StyleSheetManager //
+                enableVendorPrefixes
+                shouldForwardProp={shouldForwardProp}
+            >
+                <StyledApp />
+            </StyleSheetManager>
+        </PrimeReactProvider>
     </React.StrictMode>
 );

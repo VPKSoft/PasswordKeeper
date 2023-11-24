@@ -109,6 +109,11 @@ type DataEntry = {
     useMonospacedFont?: boolean;
 };
 
+type EntryKeys = keyof DataEntry;
+
+/** The valid keys for searching in the {@link DataEntry} type. */
+const SearchKeys: Array<EntryKeys> = ["name", "domain", "address", "userName", "password", "notes", "otpAuthKey", "tags"];
+
 /**
  * An additional generic metadata to save along the password items.
  */
@@ -151,5 +156,5 @@ const isGeneralEntry = <T>(value: DataEntry | GeneralEntry<T>): value is General
     return (value as GeneralEntry<T>).type !== undefined;
 };
 
-export { isDataEntry, isGeneralEntry, makeFont };
+export { isDataEntry, isGeneralEntry, makeFont, SearchKeys };
 export type { DataEntry, GeneralEntry, FileData, FileOptions, CssFont };
