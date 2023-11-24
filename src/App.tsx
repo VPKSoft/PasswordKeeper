@@ -39,7 +39,6 @@ import { StyledAppMenuToolbar } from "./components/app/AppMenuToolbar";
 import { StyledTitle } from "./components/app/WindowTitle";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
 import { StyledPasswordList } from "./components/reusable/PasswordList";
-import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
 import { StyledEntryEditor } from "./components/software/EntryEditor";
 import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
@@ -103,7 +102,7 @@ const App = ({ className }: AppProps) => {
     const [saveChangedFileQueryVisible, setSaveChangedFileQueryVisible] = React.useState(false);
     const [fileCloseRequested, setFileCloseRequested] = React.useState(false);
     const [isNewFile, setIsNewFile] = React.useState(true);
-    const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
+    const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<string>("");
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
     const [expandedKeys, setExpandedKeys] = React.useState<TreeExpandedKeysType | undefined>();
 
@@ -145,7 +144,7 @@ const App = ({ className }: AppProps) => {
         setEntry(null);
 
         // Reset the search box.
-        setSearchTextBoxValue(searchBoxValueEmpty);
+        setSearchTextBoxValue("");
 
         // Hide the dialogs.
         setFileSaveOpenQueryOpen(false);
@@ -800,8 +799,6 @@ const App = ({ className }: AppProps) => {
         </>
     );
 };
-
-const searchBoxValueEmpty: SearchTextBoxValue = { value: "", searchMode: SearchMode.Or };
 
 const StyledApp = styled(App)`
     height: 100%;

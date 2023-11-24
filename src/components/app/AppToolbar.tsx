@@ -30,7 +30,7 @@ import classNames from "classnames";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
-import { SearchTextBoxValue, StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
+import { StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
 
 /**
  * The props for the {@link AppToolbar} component.
@@ -39,9 +39,9 @@ export type AppToolbarProps = {
     /** The currently selected {@link DataEntry} item. */
     entry: DataEntry | undefined;
     /** A search value for filtering the password list. */
-    searchValue: SearchTextBoxValue;
+    searchValue: string;
     /** Occurs when the value of the search input has been changed. */
-    searchValueChanged?: (value: SearchTextBoxValue) => void;
+    searchValueChanged?: (value: string) => void;
     /** Occurs when the save file item was clicked. */
     saveFileClick: () => void;
     /** Occurs when the save file as item was clicked. */

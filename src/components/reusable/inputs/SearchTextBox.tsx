@@ -23,34 +23,24 @@ SOFTWARE.
 */
 
 import classNames from "classnames";
-import Button from "devextreme-react/button";
-import TextBox from "devextreme-react/text-box";
-import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
+import { InitializedEvent } from "devextreme/ui/text_box";
+import { InputText } from "primereact/inputtext";
 import * as React from "react";
 import { styled } from "styled-components";
+import { Button } from "primereact/button";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
-
-export enum SearchMode {
-    Or,
-    And,
-}
-
-export type SearchTextBoxValue = {
-    value: string;
-    searchMode: SearchMode;
-};
 
 /**
  * The props for the {@link SearchTextBox} component.
  */
 type SearchTextBoxProps = {
     /** The current value of the text box. */
-    value: SearchTextBoxValue;
+    value: string;
     /** Occurs when the {@link TextBox} value has been changed. */
-    onValueChanged?: (value: SearchTextBoxValue) => void;
+    onValueChanged?: (value: string) => void;
     /** Occurs when a key was pressed on the {@link TextBox}. */
-    onKeyDown?: (e: KeyDownEvent) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     /** Occurs when the {@link TextBox} was initialized. */
     onInitialized?: (e: InitializedEvent) => void;
 } & CommonProps;
@@ -63,67 +53,37 @@ type SearchTextBoxProps = {
 const SearchTextBox = ({
     className, //
     value,
-    onInitialized: onInitializedCallback,
     onValueChanged,
     onKeyDown,
 }: SearchTextBoxProps) => {
-    const textBoxRef = React.useRef<dxTextBox>();
-
     const lu = useLocalize("ui");
 
-    // Save the TextBox ref and delegate a new callback with the same parameters.
-    const onInitialized = React.useCallback(
-        (e: InitializedEvent) => {
-            onInitializedCallback?.(e);
-            textBoxRef.current = e.component;
-        },
-        [onInitializedCallback]
-    );
-
-    // Memoize the tooltip for the password visibility toggle
-    // button based on the value whether to display the password.
-    const modeToggleHint = React.useMemo(() => {
-        return value.searchMode === SearchMode.Or ? lu("orMode") : lu("andMode");
-    }, [lu, value.searchMode]);
-
-    const toggleMode = React.useCallback(() => {
-        onValueChanged?.({ ...value, searchMode: value.searchMode === SearchMode.Or ? SearchMode.And : SearchMode.Or });
-    }, [onValueChanged, value]);
-
     const clearClick = React.useCallback(() => {
-        onValueChanged?.({ value: "", searchMode: value.searchMode });
-    }, [onValueChanged, value.searchMode]);
+        onValueChanged?.("");
+    }, [onValueChanged]);
 
     const textBoxValueChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
-            onValueChanged?.({ value: e.value as string, searchMode: value.searchMode });
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged?.(e.target.value);
         },
-        [onValueChanged, value.searchMode]
+        [onValueChanged]
     );
 
     return (
         <div className={classNames(SearchTextBox.name, className)}>
             <div className="SearchTextBox-label">{lu("searchLabel")}</div>
-            <TextBox //
-                onInitialized={onInitialized}
+            <InputText //
                 className="SearchTextBox-textBox"
-                value={value.value}
-                onValueChanged={textBoxValueChanged}
-                onKeyDown={onKeyDown}
-                valueChangeEvent="keyup blur change input focusout keydown"
+                value={value}
+                onChange={textBoxValueChanged}
+                onKeyDownCapture={onKeyDown}
             />
             <Button //
-                text={`${value.searchMode === SearchMode.Or ? "/" : "&"}`}
-                className="SearchTextBox-buttonAndOr"
-                onClick={toggleMode}
-                hint={modeToggleHint}
-            />
-            <Button //
-                icon="clear"
+                icon="fa-solid fa-circle-xmark"
                 className="SearchTextBox-button"
                 onClick={clearClick}
-                hint={lu("clearSearch")}
-                disabled={value.value === ""}
+                tooltip={lu("clearSearch")}
+                disabled={value === ""}
             />
         </div>
     );
@@ -138,11 +98,6 @@ const StyledSearchTextBox = styled(SearchTextBox)`
     .SearchTextBox-button {
         margin-left: 6px;
         font-weight: bolder;
-    }
-    .SearchTextBox-buttonAndOr {
-        margin-left: 6px;
-        font-weight: bolder;
-        width: 100px;
     }
     .SearchTextBox-label {
         display: flex;

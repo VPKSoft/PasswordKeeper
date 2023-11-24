@@ -30,7 +30,6 @@ import * as React from "react";
 import { styled } from "styled-components";
 import { DataEntry, SearchKeys } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
-import { SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
  * The props for the {@link PasswordList} component.
@@ -39,7 +38,7 @@ type PasswordListProps = {
     /** The data source for the component. */
     dataSource: DataEntry[];
     /** A search value for filtering the password list. */
-    searchValue: SearchTextBoxValue;
+    searchValue: string;
     /** The expanded keys of the {@link Tree}. */
     expandedKeys: TreeExpandedKeysType | undefined;
     /** Occurs when the selected item has been changed. */
@@ -88,7 +87,7 @@ const PasswordList = ({
 
     // Filter the tree list when the search text changes.
     React.useEffect(() => {
-        treeRef?.current?.filter(searchValue.value);
+        treeRef?.current?.filter(searchValue);
     }, [searchValue, treeRef]);
 
     // Handle the expanded keys change.
