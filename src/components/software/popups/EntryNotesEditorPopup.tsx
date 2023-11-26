@@ -71,6 +71,10 @@ const EntryNotesEditorPopup = ({
     const lu = useLocalize("ui");
     const le = useLocalize("entries");
 
+    React.useEffect(() => {
+        setNotes(entry?.notes);
+    }, [entry?.notes]);
+
     // Raise the onClose if the popup is closed via the "X" button or is canceled.
     const onHiding = React.useCallback(() => {
         if (visible) {
