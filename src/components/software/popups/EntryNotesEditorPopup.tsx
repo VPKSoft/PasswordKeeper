@@ -71,6 +71,7 @@ const EntryNotesEditorPopup = ({
     const lu = useLocalize("ui");
     const le = useLocalize("entries");
 
+    // Update the state when the entry changes.
     React.useEffect(() => {
         setNotes(entry?.notes);
     }, [entry?.notes]);
