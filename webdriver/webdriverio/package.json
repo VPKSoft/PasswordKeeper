@@ -6,7 +6,7 @@
         "test": "wdio run wdio.conf.ts"
     },
     "dependencies": {
-        "@wdio/cli": "^8.23.1",
+        "@wdio/cli": "^8.24.1",
         "ts-node": "^10.9.1"
     },
     "devDependencies": {
