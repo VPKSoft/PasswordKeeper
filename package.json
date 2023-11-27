@@ -47,7 +47,7 @@
         "@types/node": "^20.10.0",
         "@types/qrcode": "^1.5.5",
         "@types/react": "^18.2.38",
-        "@types/react-dom": "^18.2.15",
+        "@types/react-dom": "^18.2.17",
         "@types/styled-components": "^5.1.30",
         "@vitejs/plugin-react-swc": "^3.5.0",
         "eslint-plugin-import": "^2.29.0",
