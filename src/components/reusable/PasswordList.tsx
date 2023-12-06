@@ -6,6 +6,9 @@ import dxTreeList, { Node, RowDraggingChangeEvent, RowDraggingReorderEvent, Sele
 import { Template } from "devextreme-react/core/template";
 import classNames from "classnames";
 import { styled } from "styled-components";
+import type { DataNode, EventDataNode } from "antd/es/tree";
+import Tree from "antd/es/tree/Tree";
+import Icon, { FolderOpenOutlined, TagsOutlined } from "@ant-design/icons";
 import { useLocalize } from "../../i18n";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps, DxFilter } from "../Types";
@@ -43,6 +46,13 @@ const PasswordList = ({
 }: PasswordListProps) => {
     const le = useLocalize("entries");
 
+    const treeData = React.useMemo(() => {
+        const parents = dataSource.filter(f => f.parentId === -1);
+        const children = dataSource.filter(f => f.parentId !== -1);
+        const result = parents.map(f => createNode(f, children));
+        return result;
+    }, [dataSource]);
+
     // Order the data by setting the SortOrder and ParentId properties.
     const onReorder = React.useCallback(
         (e: unknown) => {
@@ -55,9 +65,20 @@ const PasswordList = ({
 
     // Raise the setEntry callback when the TreeList selection has been changed.
     const onSelectionChanged = React.useCallback(
-        (e: SelectionChangedEvent<DataEntry>) => {
-            const selected = e.selectedRowsData.length > 0 ? e.selectedRowsData[0] : null;
-            setEntry(selected);
+        (
+            _,
+            info: {
+                event: "select";
+                selected: boolean;
+                node: EventDataNode<DataNode>;
+                selectedNodes: DataNode[];
+                nativeEvent: MouseEvent;
+            }
+        ) => {
+            const selected = info.selectedNodes.length > 0 ? (info.selectedNodes[0] as DataNode & { data: DataEntry }) : null;
+            if (selected?.data) {
+                setEntry(selected?.data);
+            }
         },
         [setEntry]
     );
@@ -93,42 +114,33 @@ const PasswordList = ({
     }, [searchValue, treeListRef]);
 
     return (
-        <TreeList //
+        <Tree //
             className={classNames(PasswordList.name, className)}
-            dataSource={dataSource}
-            keyExpr="id"
-            parentIdExpr="parentId"
-            rootValue={-1}
-            onInitialized={onInitialized}
-            showRowLines={true}
-            showBorders={true}
-            onSelectionChanged={onSelectionChanged}
-            onSaving={onSaving}
-        >
-            <Selection mode="single" />
-            <RowDragging //
-                allowReordering={true}
-                onReorder={onReorder}
-                onDragChange={onDragChange}
-                allowDropInsideItem={true}
-            />
-            <Column //
-                dataField="parentId"
-                cellTemplate="columnTypeTemplate"
-                caption=""
-                width={90}
-                allowSorting={false}
-            />
-            <Column //
-                dataField="name"
-                caption={le("name")}
-                dataType="string"
-                calculateFilterExpression={createFilterExpression}
-                allowSorting={false}
-            />
-            <Template name="columnTypeTemplate" render={renderColumnType} />
-        </TreeList>
+            showIcon
+            defaultExpandAll
+            treeData={treeData}
+            onSelect={onSelectionChanged}
+        />
     );
+};
+
+/**
+ * Creates a {@link TreeNode} from the specified entry and data source.
+ * @param value The value to create a {@link TreeNode} from.
+ * @param values The data source to use for possible node children.
+ * @returns A {@link TreeNode} created from the specified {@link DataEntry}.
+ */
+const createNode = (value: DataEntry, values: DataEntry[]) => {
+    const result: DataNode & { data: DataEntry } = {
+        title: value.name,
+        key: value.id.toString(),
+        icon: isGroup(value) ? <FolderOpenOutlined /> : <TagsOutlined />,
+        children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values)) : undefined,
+        selectable: true,
+        data: value,
+    };
+
+    return result;
 };
 
 /**

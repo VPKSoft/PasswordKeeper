@@ -12,9 +12,11 @@
         "lint": "eslint --max-warnings=0 --config ./.eslintrc.cjs --ext .tsx,.ts ./src/"
     },
     "dependencies": {
+        "@ant-design/icons": "^5.2.6",
         "@tauri-apps/api": "^1.4.0",
         "@typescript-eslint/eslint-plugin": "^6.11.0",
         "@vitejs/plugin-react": "^4.2.0",
+        "antd": "^5.11.4",
         "classnames": "^2.3.2",
         "devextreme": "^23.1.6",
         "devextreme-react": "^23.1.6",
