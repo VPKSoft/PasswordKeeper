@@ -55,7 +55,7 @@ const MarkDownView = ({
             return null;
         }
 
-        const markDownAsHtml = DOMPurify.sanitize(marked.parse(markDown));
+        const markDownAsHtml = DOMPurify.sanitize(marked.parse(markDown) as string);
         return parse(markDownAsHtml);
     }, [markDown]);
 
