@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@wdio/cli": "^8.24.6",
-        "ts-node": "^10.9.1"
+        "ts-node": "^10.9.2"
     },
     "devDependencies": {
         "@wdio/local-runner": "^8.24.6",
