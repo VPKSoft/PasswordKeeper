@@ -10,7 +10,7 @@
         "ts-node": "^10.9.2"
     },
     "devDependencies": {
-        "@wdio/local-runner": "^8.26.1",
+        "@wdio/local-runner": "^8.26.3",
         "@wdio/mocha-framework": "^8.26.3",
         "@wdio/spec-reporter": "^8.26.3",
         "typescript": "^5.3.3"
