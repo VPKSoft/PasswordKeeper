@@ -29,7 +29,7 @@
         "html-react-parser": "^5.0.7",
         "html5-qrcode": "^2.3.8",
         "i18next": "^23.7.11",
-        "marked": "^11.0.1",
+        "marked": "^11.1.0",
         "prettier": "^3.1.1",
         "qrcode": "^1.5.3",
         "react": "^18.2.0",
