@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import Menu from "devextreme-react/menu";
+import { Menu } from "devextreme-react/menu";
 import classNames from "classnames";
 import { styled } from "styled-components";
 import { ItemClickEvent } from "devextreme/ui/menu";
