@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import TextArea from "devextreme-react/text-area";
+import { TextArea } from "devextreme-react/text-area";
 import { ValueChangedEvent } from "devextreme/ui/text_area";
 import { CommonProps } from "../Types";
 

@@ -23,8 +23,8 @@ SOFTWARE.
 */
 
 import classNames from "classnames";
-import Button from "devextreme-react/button";
-import TextBox from "devextreme-react/text-box";
+import { Button } from "devextreme-react/button";
+import { TextBox } from "devextreme-react/text-box";
 import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
 import { styled } from "styled-components";
