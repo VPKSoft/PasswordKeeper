@@ -26,7 +26,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { ValueChangedEvent } from "devextreme/ui/html_editor";
-import ScrollView from "devextreme-react/scroll-view";
+import { ScrollView } from "devextreme-react/scroll-view";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
 import { CommonProps } from "../Types";

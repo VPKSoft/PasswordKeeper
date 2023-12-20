@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import Popup from "devextreme-react/popup";
+import { Popup } from "devextreme-react/popup";
 import { Button, CheckBox } from "devextreme-react";
 import { CommonProps } from "../../Types";
 import { FileOptions } from "../../../types/PasswordEntry";
