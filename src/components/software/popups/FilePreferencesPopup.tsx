@@ -118,7 +118,7 @@ const FilePreferencesPopup = ({
                             </td>
                             <td>
                                 <Checkbox //
-                                    value={fileOptionsInternal?.useMonospacedFont ?? false}
+                                    checked={fileOptionsInternal?.useMonospacedFont ?? false}
                                     onChange={onMonospacedFontChanged}
                                     disabled={fileOptionsInternal?.useHtmlOnNotes ?? false}
                                 />
@@ -131,7 +131,7 @@ const FilePreferencesPopup = ({
                             </td>
                             <td>
                                 <Checkbox //
-                                    value={fileOptionsInternal?.useMarkdownOnNotes ?? false}
+                                    checked={fileOptionsInternal?.useMarkdownOnNotes ?? false}
                                     disabled={fileOptionsInternal?.useHtmlOnNotes ?? false}
                                     onChange={onUseMarkdownChanged}
                                 />
@@ -144,7 +144,7 @@ const FilePreferencesPopup = ({
                             </td>
                             <td>
                                 <Checkbox //
-                                    value={fileOptionsInternal?.useHtmlOnNotes ?? false}
+                                    checked={fileOptionsInternal?.useHtmlOnNotes ?? false}
                                     onChange={onUseHtmlChanged}
                                 />
                             </td>
