@@ -23,16 +23,16 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup, ScrollView } from "devextreme-react";
 import classNames from "classnames";
 import { getName, getVersion } from "@tauri-apps/api/app";
 import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
+import { Button, Modal, Tooltip } from "antd";
+import { ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
 import { useTauriUpdater } from "../../../hooks/UseTauriUpdater";
-
 /**
  * The props for the {@link AboutPopup} component.
  */
@@ -68,13 +68,6 @@ const AboutPopup = ({
         });
     }, []);
 
-    // Raise the onClose if the popup is closed via the "X" button.
-    const onHiding = React.useCallback(() => {
-        if (visible) {
-            onClose();
-        }
-    }, [onClose, visible]);
-
     // Open the www.vpksoft.net URL when the corresponding component is clicked.
     const openVPKSoftUrl = React.useCallback(() => {
         void open("https://www.vpksoft.net");
@@ -91,23 +84,19 @@ const AboutPopup = ({
     }, []);
 
     return (
-        <Popup //
+        <Modal //
             title={lc("about")}
-            showCloseButton={true}
-            visible={visible}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={500}
+            onOk={onClose}
+            open={visible}
             width={700}
-            showTitle={true}
-            onHiding={onHiding}
+            footer={null}
+            onCancel={onClose}
         >
             <div className={classNames(AboutPopup.name, className)}>
                 <div className="Popup-versionText">{`${appName}, ${lc("copyright")} © 2023 VPKSoft, v.${appVersion}`}</div>
                 <div className="Popup-licenseText">{lc("license")}</div>
-                <ScrollView className="Popup-licenseView">
-                    <div className="Popup-licenseContent">
-                        {`MIT License
+                <div className="Popup-licenseContent">
+                    {`MIT License
 
 Copyright (c) 2023 Petteri Kautonen
 
@@ -129,8 +118,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE."
                 `}
-                    </div>
-                </ScrollView>
+                </div>
                 <div className="LogoImages">
                     <img src={LogoImage} className="LogoImage" onClick={openVPKSoftUrl} />
 
@@ -147,19 +135,26 @@ SOFTWARE."
 
                     <div className="Popup-UpdateNotify-text">{`v.${manifest?.version ?? appVersion}`}</div>
                     <div>
-                        <Button className="Popup-UpdateNotify-button" icon="refresh" hint={ud("buttonRefresh")} onClick={reCheck}></Button>
-                        <Button className="Popup-UpdateNotify-button" icon="download" hint={ud("updateButton")} onClick={update} disabled={!shouldUpdate}></Button>
-                        <Button className="Popup-UpdateNotify-button" text={ud("manualDownload")} onClick={manualDownloadClick} />
+                        <Tooltip title={ud("buttonRefresh")}>
+                            <Button className="Popup-UpdateNotify-button" icon={<ReloadOutlined />} onClick={reCheck}></Button>
+                        </Tooltip>
+                        <Tooltip title={ud("updateButton")}>
+                            <Button className="Popup-UpdateNotify-button" icon={<DownloadOutlined />} onClick={update} disabled={!shouldUpdate}></Button>
+                        </Tooltip>
+                        <Button className="Popup-UpdateNotify-button" onClick={manualDownloadClick}>
+                            {ud("manualDownload")}
+                        </Button>
                     </div>
                 </div>
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lc("Ok")}
                         onClick={onClose}
-                    />
+                    >
+                        {lc("Ok")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
@@ -167,6 +162,7 @@ const StyledAboutPopup = styled(AboutPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-height: 500px;
     .Popup-versionText {
         font-weight: bolder;
         margin-bottom: 10px;
@@ -175,12 +171,10 @@ const StyledAboutPopup = styled(AboutPopup)`
         font-weight: bolder;
         margin-bottom: 10px;
     }
-    .Popup-licenseView {
-        height: 100%;
-        font-family: monospace;
-    }
     .Popup-licenseContent {
         white-space: pre-wrap;
+        overflow: auto;
+        font-family: monospace;
     }
     .Popup-UpdateNotify {
         justify-content: space-between;
