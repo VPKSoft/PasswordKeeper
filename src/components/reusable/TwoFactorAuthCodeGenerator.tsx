@@ -28,12 +28,12 @@ import classNames from "classnames";
 import { ColorHex, CountdownCircleTimer, TimeProps } from "react-countdown-circle-timer";
 import { invoke } from "@tauri-apps/api/tauri";
 import { Button } from "devextreme-react";
-import notify from "devextreme/ui/notify";
 import { Auth2Fa, CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { cssRgbToHex } from "../../utilities/ColorConversion";
 import { useTimeSecond } from "../../hooks/UseTimeSecond";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
+import { useNotify } from "./Notify";
 
 /**
  * The props for the {@link TwoFactorAuthCodeGenerator} component.
@@ -56,6 +56,7 @@ const TwoFactorAuthCodeGenerator = ({
     otpAuthUrl,
 }: TwoFactorAuthCodeGeneratorProps) => {
     const lu = useLocalize("ui");
+    const [contextHolder, notification] = useNotify();
 
     const [durationStart, setDurationStart] = React.useState(0);
     const [reset, setReset] = React.useState(false);
@@ -105,14 +106,14 @@ const TwoFactorAuthCodeGenerator = ({
             navigator.clipboard
                 .writeText(twoFactorResult.key)
                 .then(() => {
-                    notify(lu("clipboardCopySuccess"), "success", 5_000);
+                    notification("success", lu("clipboardCopySuccess"), 5_000);
                     clipboardNotifyOther();
                 })
                 .catch(() => {
-                    notify(lu("clipboardCopyFailed"), "error", 5_000);
+                    notification("error", lu("clipboardCopyFailed"), 5_000);
                 });
         }
-    }, [lu, twoFactorResult]);
+    }, [lu, notification, twoFactorResult]);
 
     // A callback when the CountdownCircleTimer completes.
     const onComplete = React.useCallback(() => ({ shouldRepeat: true, delay: 1 }), []);
@@ -134,6 +135,7 @@ const TwoFactorAuthCodeGenerator = ({
         <div //
             className={classNames(TwoFactorAuthCodeGeneratorStyled.name, className)}
         >
+            {contextHolder}
             <CountdownCircleTimer //
                 isPlaying={true}
                 duration={durationStart}

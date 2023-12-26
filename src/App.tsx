@@ -26,7 +26,6 @@ import * as React from "react";
 import "./App.css";
 import classNames from "classnames";
 import { appWindow } from "@tauri-apps/api/window";
-import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
 import dxTreeList, { Node } from "devextreme/ui/tree_list";
@@ -60,6 +59,7 @@ import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPass
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 import { useCssStyle } from "./hooks/UseCssStyle";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
+import { useNotify } from "./components/reusable/Notify";
 
 /**
  * The props for the {@link App} component.
@@ -76,6 +76,8 @@ const App = ({ className }: AppProps) => {
     const la = useLocalize("app");
     const lm = useLocalize("messages");
     const ls = useLocalize("settings");
+
+    const [contextHolder, notification] = useNotify();
 
     const [entry, setEntry] = React.useState<DataEntry | null>(null);
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
@@ -240,12 +242,12 @@ const App = ({ className }: AppProps) => {
                         }
                     } else {
                         // Something went wrong with the file save. Display the error message.
-                        notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                        notification("error", lm("fileSaveFail", undefined, f.errorMessage), 5);
                     }
                 });
             }
         }
-    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, notification, saveFileAsCallback]);
 
     // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
@@ -363,12 +365,12 @@ const App = ({ className }: AppProps) => {
         const lockAfter = (settingsRef.current?.failed_unlock_attempts ?? 0) - failed;
         if (lockAfter > 0) {
             // Notify about the erroneous password.
-            notify(lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), "warning", 5_000);
+            notification("warning", lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), 5);
         } else {
             // The count exceeded, exit the software.
             void exit(0);
         }
-    }, [lm, passwordFailedCount]);
+    }, [lm, notification, passwordFailedCount]);
 
     // The file popup was closed. If the user accepted the popup.
     // Depending on the popup mode and user input either open an existing file or save new file.
@@ -390,7 +392,7 @@ const App = ({ className }: AppProps) => {
                             setFileOptions(f.dataOptions);
                         } else {
                             // The file load failed with most probable reason being an invalid password.
-                            notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            notification("error", lm("fileOpenFail", undefined, { msg: f.errorMessage }), 5);
                             // Increase the failed password count, whatever the failure reason is.
                             increaseFileLockFail();
                         }
@@ -416,14 +418,14 @@ const App = ({ className }: AppProps) => {
                             }
                         } else {
                             // Some error occurred saving the file, report the save failure.
-                            notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            notification("error", lm("fileSaveFail", undefined, { msg: f.errorMessage }), 5);
                         }
                     });
                 }
             }
             setFileSaveOpenQueryOpen(false);
         },
-        [dataSource, dataTags, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, setFilePassword]
+        [dataSource, dataTags, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, notification, setFilePassword]
     );
 
     // The exit application menu was chosen.
@@ -524,22 +526,22 @@ const App = ({ className }: AppProps) => {
                         if (fileChanged) {
                             // If the file is changed, notify the user that the theme change
                             // failed as it requires the window to be refreshed.
-                            notify({ message: ls("themeChangeFailFileUnsaved"), width: 300, shading: true, displayTime: 5_000, type: "warning" }, { position: "bottom center", direction: "up-push" });
-                            notify({ message: ls("saveSuccess"), width: 300, shading: true, displayTime: 5_000, type: "success" }, { position: "bottom center", direction: "up-push" });
+                            notification("warning", ls("themeChangeFailFileUnsaved"), 5);
+                            notification("success", ls("saveSuccess"), 5);
                         } else {
                             // The theme change requires a window reload.
                             window.location.reload();
-                            notify(ls("saveSuccess"), "success", 5_000);
+                            notification("success", ls("saveSuccess"), 5);
                         }
                     } else {
                         // Notify of an error while trying to save the changes.
-                        notify(ls("saveFailed"), "error", 5_000);
+                        notification("error", ls("saveFailed"), 5);
                     }
                 });
             }
             setPreferencesVisible(false);
         },
-        [applySettings, fileChanged, ls]
+        [applySettings, fileChanged, ls, notification]
     );
 
     // Display the about popup.
@@ -670,6 +672,7 @@ const App = ({ className }: AppProps) => {
     // Render the main view.
     return (
         <>
+            {contextHolder}
             <StyledTitle //
                 title={title}
                 onClose={fileSaveQueryAbortCloseCallback}
