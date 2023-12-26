@@ -28,11 +28,11 @@ import classNames from "classnames";
 import { Button, Popup } from "devextreme-react";
 import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import { invoke } from "@tauri-apps/api/tauri";
-import notify from "devextreme/ui/notify";
 import { decodeMigrationUriData, makeOtpAuthKey } from "gauth-decode";
 import { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
 import { useLocalize } from "../../../i18n";
+import { useNotify } from "../../reusable/Notify";
 
 /**
  * The props for the {@link QrCodeInputPopup} component.
@@ -55,6 +55,7 @@ const QrCodeInputPopup = ({
 }: QrCodeInputPopupProps) => {
     const [userAccepted, setUserAccepted] = React.useState(false);
     const [otpAuthPath, setOtpAuthPath] = React.useState("");
+    const [contextHolder, notification] = useNotify();
 
     const lm = useLocalize("messages");
     const lu = useLocalize("ui");
@@ -95,35 +96,35 @@ const QrCodeInputPopup = ({
                                     if (otpData.length > 0) {
                                         setOtpAuthPath(makeOtpAuthKey(otpData[0]));
                                         if (otpData.length !== 1) {
-                                            notify(lm("qrMoreThan1"), "warning", 5_000);
+                                            notification("warning", lm("qrMoreThan1"), 5_000);
                                         }
-                                        notify(lm("qrSuccess"), "success", 5_000);
+                                        notification("success", lm("qrSuccess"), 5_000);
                                     } else {
-                                        notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                        notification("error", lm("otpAuthKeyGenFailed"), 5_000);
                                     }
                                 });
                             } else {
-                                notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                notification("error", lm("otpAuthKeyGenFailed"), 5_000);
                             }
                         } catch {
-                            notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                            notification("error", lm("otpAuthKeyGenFailed"), 5_000);
                         }
                     } else {
                         void invoke<Auth2Fa>("gen_otpauth", { otpauth: decodedText }).then((f: Auth2Fa) => {
                             if (f.success) {
-                                notify(lm("qrSuccess"), "success", 5_000);
+                                notification("success", lm("qrSuccess"), 5_000);
                                 setOtpAuthPath(decodedText);
                             } else {
-                                notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                notification("error", lm("otpAuthKeyGenFailed"), 5_000);
                             }
                         });
                     }
                 })
                 .catch(error => {
-                    notify(lm("qrCodeImageReadFailed", undefined, { message: error }));
+                    notification("error", lm("qrCodeImageReadFailed", undefined, { message: error }), 5_000);
                 });
         },
-        [lm]
+        [lm, notification]
     );
 
     // The OK button was clicked.
@@ -154,6 +155,7 @@ const QrCodeInputPopup = ({
         >
             <div className={classNames(QrCodeInputPopupStyled.name, className)}>
                 <div id="reader" />
+                {contextHolder}
                 {visible && (
                     <DragDropFileStyled //
                         onFileChange={onFilesUpdated}

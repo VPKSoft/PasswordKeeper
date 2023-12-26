@@ -28,10 +28,10 @@ import { TextBox } from "devextreme-react/text-box";
 import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
 import { styled } from "styled-components";
-import notify from "devextreme/ui/notify";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { clipboardNotifyOther } from "../../../hooks/UseCaptureClipboardCopy";
+import { useNotify } from "../Notify";
 
 /**
  * The props for the {@link PasswordTextBox} component.
@@ -75,7 +75,7 @@ const PasswordTextBox = ({
     onKeyDown,
 }: PasswordTextBoxProps) => {
     const [displayPassword, setDisplayPassword] = React.useState(initialShowPassword ?? false);
-
+    const [contextHolder, notification] = useNotify();
     const lu = useLocalize("ui");
 
     const textBoxRef = React.useRef<dxTextBox>();
@@ -124,14 +124,14 @@ const PasswordTextBox = ({
             navigator.clipboard
                 .writeText(text)
                 .then(() => {
-                    notify(lu("clipboardCopySuccess"), "success", 5_000);
+                    notification("success", lu("clipboardCopySuccess"), 5_000);
                     clipboardNotifyOther();
                 })
                 .catch(() => {
-                    notify(lu("clipboardCopyFailed"), "error", 5_000);
+                    notification("error", lu("clipboardCopyFailed"), 5_000);
                 });
         }
-    }, [lu]);
+    }, [lu, notification]);
 
     // Memoize the tooltip for the password visibility toggle
     // button based on the value whether to display the password.
@@ -141,6 +141,7 @@ const PasswordTextBox = ({
 
     return (
         <div className={classNames(PasswordTextBox.name, className)}>
+            {contextHolder}
             <TextBox //
                 onInitialized={onInitialized}
                 readOnly={readonly}

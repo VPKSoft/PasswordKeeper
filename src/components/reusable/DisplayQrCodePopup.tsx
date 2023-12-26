@@ -3,10 +3,10 @@ import { styled } from "styled-components";
 import classNames from "classnames";
 import { Popup } from "devextreme-react";
 import QRCode from "qrcode";
-import notify from "devextreme/ui/notify";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
+import { useNotify } from "./Notify";
 
 /**
  * The props for the {@link DisplayQrCodePopup} component.
@@ -36,16 +36,20 @@ const DisplayQrCodePopup = ({
 }: DisplayQrCodePopupProps) => {
     const [shown, setShown] = React.useState(false);
     const lu = useLocalize("ui");
+    const [contextHolder, notification] = useNotify();
 
     // A callback to display a toast for a possible error with QR code generation.
-    const qrCodeError = React.useCallback((error: Error | null | undefined) => {
-        // The callback is also called with null value so disregard that.
-        if ((error ?? undefined) === undefined) {
-            return;
-        }
+    const qrCodeError = React.useCallback(
+        (error: Error | null | undefined) => {
+            // The callback is also called with null value so disregard that.
+            if ((error ?? undefined) === undefined) {
+                return;
+            }
 
-        notify(error, "error", 5_000);
-    }, []);
+            notification("error", error, 5_000);
+        },
+        [notification]
+    );
 
     // Draw the QR code to the canvas element.
     React.useEffect(() => {
@@ -91,18 +95,18 @@ const DisplayQrCodePopup = ({
                     navigator.clipboard
                         .write([new ClipboardItem({ "image/png": pngBlob })])
                         .then(() => {
-                            notify(lu("clipboardCopySuccess"), "success", 5_000);
+                            notification("success", lu("clipboardCopySuccess"), 5_000);
                             clipboardNotifyOther();
                         })
                         .catch(() => {
-                            notify(lu("clipboardCopyFailed"), "error", 5_000);
+                            notification("error", lu("clipboardCopyFailed"), 5_000);
                         });
                 } else {
-                    notify(lu("clipboardCopyFailed"), "error", 5_000);
+                    notification("error", lu("clipboardCopyFailed"), 5_000);
                 }
             });
         }
-    }, [lu]);
+    }, [lu, notification]);
 
     return (
         <Popup //
@@ -114,6 +118,7 @@ const DisplayQrCodePopup = ({
             onShown={popupShown}
             width={width}
         >
+            {contextHolder}
             <div className={classNames(DisplayQrCodePopup.name, className)}>
                 <canvas //
                     id="canvas"
