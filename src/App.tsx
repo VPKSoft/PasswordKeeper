@@ -321,8 +321,10 @@ const App = ({ className }: AppProps) => {
         (userAccepted: boolean, entry?: DataEntry | undefined) => {
             // If the popup was accepted and there is something set in the entry...
             if (userAccepted && entry !== undefined) {
+                console.log(entry);
                 // ...update the data source and re-set the state variables.
                 setDataSource(updateDataSource(dataSource, entry));
+                console.log(dataSource);
                 setFileChanged(true);
                 setEditEntry(null);
             }

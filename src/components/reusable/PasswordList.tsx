@@ -41,7 +41,9 @@ const PasswordList = ({
         parents = parents.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
         children = children.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
 
-        if (searchValue.value.trim() !== "") {
+        const searching = searchValue.value.trim() !== "";
+
+        if (searching) {
             switch (searchValue.searchMode) {
                 case SearchMode.And: {
                     children = children.filter(f => filterAnd(f, searchValue.value));
@@ -58,7 +60,10 @@ const PasswordList = ({
                 }
             }
         }
-        const result = parents.map(f => createNode(f, children)).filter(f => f.children && f.children.length > 0);
+        let result = parents.map(f => createNode(f, children));
+        if (searching) {
+            result = result.filter(f => f.children && f.children.length > 0);
+        }
 
         return result;
     }, [dataSource, searchValue]);
