@@ -8,7 +8,6 @@ import { DataEntry } from "../../types/PasswordEntry";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
 import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
-import { EntryEditorHtmlAreaStyled } from "./EntryEditorHtmlArea";
 
 /**
  * The props for the {@link EntryNotesEditor} component.
@@ -22,8 +21,6 @@ type EntryNotesEditorProps = {
     defaultUseMarkdown?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
-    /** A value indicating whether to use HTML on entry editing and rendering. */
-    useHtmlOnNotes?: boolean;
     /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
     imagePasteEnabled: boolean;
     /** Occurs when the notes value has been changed. */
@@ -41,7 +38,6 @@ const EntryNotesEditor = ({
     readOnly = true,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
-    useHtmlOnNotes,
     imagePasteEnabled,
     onNotesChanged,
 }: EntryNotesEditorProps) => {
@@ -58,18 +54,6 @@ const EntryNotesEditor = ({
     );
 
     const content = React.useMemo(() => {
-        if (useHtmlOnNotes) {
-            return (
-                <EntryEditorHtmlAreaStyled //
-                    readOnly={readOnly}
-                    value={entry?.notes}
-                    className={classNames("EntryNotesEditor-TextArea")}
-                    onValueChanged={onNotesChanged}
-                    monospacedFont={monoSpacedFont}
-                />
-            );
-        }
-
         if ((entry?.useMarkdown ?? defaultUseMarkdown) === true) {
             return readOnly ? (
                 <ScrollView //
@@ -100,7 +84,7 @@ const EntryNotesEditor = ({
                 monospacedFont={monoSpacedFont}
             />
         );
-    }, [defaultUseMarkdown, entry?.notes, entry?.useMarkdown, imagePasteEnabled, monoSpacedFont, onNotesChanged, onNotesChangedCallback, readOnly, useHtmlOnNotes]);
+    }, [defaultUseMarkdown, entry?.notes, entry?.useMarkdown, imagePasteEnabled, monoSpacedFont, onNotesChanged, onNotesChangedCallback, readOnly]);
 
     return (
         <div //

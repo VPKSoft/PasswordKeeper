@@ -138,7 +138,8 @@ const FilePreferencesPopup = ({
                             </td>
                         </tr>
 
-                        <tr>
+                        {/* This might come back when a decision is made of a HTML text editor, perhaps: verbun, https://github.com/ozanyurtsever/verbum
+                            <tr>
                             <td>
                                 <div className="dx-field-item-label-text">{ls("useHtmlIOnNotes")}</div>
                             </td>
@@ -148,7 +149,7 @@ const FilePreferencesPopup = ({
                                     onChange={onUseHtmlChanged}
                                 />
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
                 <div className="Popup-ButtonRow">

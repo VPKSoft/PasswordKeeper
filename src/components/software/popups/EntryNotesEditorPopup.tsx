@@ -44,8 +44,6 @@ type EntryNotesEditorPopupProps = {
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
     /** A value indicating whether to use HTML on entry editing and rendering. */
-    useHtmlOnNotes?: boolean;
-    /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
     imagePasteEnabled: boolean;
     /**
      * A callback which occurs when the popup is closed.
@@ -62,7 +60,6 @@ const EntryNotesEditorPopup = ({
     entry,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
-    useHtmlOnNotes,
     imagePasteEnabled,
     onClose,
 }: EntryNotesEditorPopupProps) => {
@@ -108,7 +105,6 @@ const EntryNotesEditorPopup = ({
                     entry={entry}
                     defaultUseMarkdown={defaultUseMarkdown}
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
-                    useHtmlOnNotes={useHtmlOnNotes}
                     imagePasteEnabled={imagePasteEnabled}
                     onNotesChanged={setNotes}
                 />

@@ -71,8 +71,6 @@ type EntryEditorProps = {
     defaultUseMarkdown?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
-    /** A value indicating whether to use HTML on entry editing and rendering. */
-    useHtmlOnNotes?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /**
@@ -103,7 +101,6 @@ const EntryEditor = ({
     allTags,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
-    useHtmlOnNotes,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
@@ -442,14 +439,14 @@ const EntryEditor = ({
                     </table>
                     <div className="Notes-labelArea">
                         <div className={classNames("dx-field-item-label-text", "Label-center")}>{le("notes")}</div>
-                        {!readOnly && !useHtmlOnNotes && (
+                        {!readOnly && (
                             <CheckBox //
                                 text={le("useMarkdown")}
                                 onValueChanged={onUseMarkdownChanged}
                                 value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
                             />
                         )}
-                        {!readOnly && !useHtmlOnNotes && (
+                        {!readOnly && (
                             <CheckBox //
                                 text={le("monoSpacedFont")}
                                 onValueChanged={onMonospacedFontChanged}
@@ -461,7 +458,6 @@ const EntryEditor = ({
                     <EntryNotesEditorStyled //
                         entry={entry}
                         onNotesChanged={setMarkDown}
-                        useHtmlOnNotes={useHtmlOnNotes}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
@@ -481,7 +477,6 @@ const EntryEditor = ({
                         entry={entry}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
-                        useHtmlOnNotes={useHtmlOnNotes}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
                         onClose={onNotesEditorClose}
                     />
