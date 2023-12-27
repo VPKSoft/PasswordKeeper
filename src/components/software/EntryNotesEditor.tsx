@@ -2,7 +2,6 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { ScrollView } from "devextreme-react";
-import { number } from "prop-types";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";

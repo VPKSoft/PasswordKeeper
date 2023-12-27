@@ -77,7 +77,7 @@ const PasswordList = ({
         if (searchValue.value.trim() !== "" && treeData.length > 0) {
             setExpandedKeys(treeData.map(f => f.key.toString()));
         }
-    }, [searchValue, treeData]);
+    }, [searchValue, setExpandedKeys, treeData]);
 
     // Raise the setEntry callback when the TreeList selection has been changed.
     const onSelectionChanged = React.useCallback(
@@ -99,9 +99,12 @@ const PasswordList = ({
         [setEntry]
     );
 
-    const onExpand = React.useCallback((expandedKeys: React.Key[]) => {
-        setExpandedKeys(expandedKeys as string[]);
-    }, []);
+    const onExpand = React.useCallback(
+        (expandedKeys: React.Key[]) => {
+            setExpandedKeys(expandedKeys as string[]);
+        },
+        [setExpandedKeys]
+    );
 
     return (
         <Tree //

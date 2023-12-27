@@ -109,7 +109,7 @@ const MarkdownTextEditor = ({
                 ),
             },
         ];
-    }, []);
+    }, [le, markDown, monospacedFont, onValueChanged]);
 
     return (
         <Tabs //

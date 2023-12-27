@@ -23,10 +23,9 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup } from "devextreme-react";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { DataEntry } from "../../../types/PasswordEntry";
@@ -109,13 +108,15 @@ const EntryNotesEditorPopup = ({
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onHiding}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
         </Modal>

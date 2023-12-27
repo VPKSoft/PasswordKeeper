@@ -28,7 +28,6 @@ import classNames from "classnames";
 import { appWindow } from "@tauri-apps/api/window";
 import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
-import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
@@ -797,21 +796,6 @@ const App = ({ className }: AppProps) => {
             </div>
         </>
     );
-};
-
-/**
- * Collapses a {@link dxTreeList} using array of {@link DataEntry} items as a data source.
- * @param tree The tree list to collapse.
- */
-const collapseTree = (tree: dxTreeList | undefined) => {
-    if (tree) {
-        tree.forEachNode((f: Node<DataEntry>) => {
-            // Only collapse the parent nodes.
-            if (f.data?.parentId === -1) {
-                void tree.collapseRow(f.key);
-            }
-        });
-    }
 };
 
 const searchBoxValueEmpty: SearchTextBoxValue = { value: "", searchMode: SearchMode.Or };
