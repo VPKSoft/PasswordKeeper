@@ -25,13 +25,10 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { CheckBox, TagBox, TextBox } from "devextreme-react";
-import { ValueChangedEvent as CheckBoxValueChangedEvent } from "devextreme/ui/check_box";
-import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
-import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPen, faQrcode } from "@fortawesome/free-solid-svg-icons";
-import { Button, Tooltip } from "antd";
+import { Button, Checkbox, Input, InputRef, Tooltip } from "antd";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CssFont, DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
@@ -39,6 +36,7 @@ import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { useCssStyle } from "../../hooks/UseCssStyle";
+import { TagBox } from "../reusable/inputs/TagBox";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryNotesEditorStyled } from "./EntryNotesEditor";
 import { StyledAEntryNotesEditorPopup } from "./popups/EntryNotesEditorPopup";
@@ -60,7 +58,7 @@ type EntryEditorProps = {
     /** A value indicating whether the copy password to clipboard is visible. */
     showCopyButton?: boolean;
     /** A ref to the item name text box. */
-    nameTextBoxRef?: React.MutableRefObject<dxTextBox | undefined>;
+    nameTextBoxRef?: React.RefObject<InputRef>;
     /** A value indicating if the 2FA QR-code popup should be hidden. */
     hideQrAuthPopup: boolean;
     /** All the tags contained within the current file. */
@@ -71,8 +69,6 @@ type EntryEditorProps = {
     defaultUseMarkdown?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
-    /** A value indicating whether to use HTML on entry editing and rendering. */
-    useHtmlOnNotes?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /**
@@ -103,7 +99,6 @@ const EntryEditor = ({
     allTags,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
-    useHtmlOnNotes,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
@@ -142,14 +137,14 @@ const EntryEditor = ({
     // A value change callback to handle the changes of all the text boxes
     // within the component.
     const onValueChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent, name: keyof DataEntry) => {
+        (e: string, name: keyof DataEntry) => {
             if (readOnly || (entry ?? null) === null) {
                 return;
             }
 
             if (entry) {
                 const newValue: DataEntry = { ...entry };
-                newValue[name] = e.value as never;
+                newValue[name] = e as never;
                 onEntryChanged?.(newValue);
             }
         },
@@ -158,24 +153,24 @@ const EntryEditor = ({
 
     // The item name was changed.
     const onNameChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onValueChanged(e, "name");
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged(e.target.value, "name");
         },
         [onValueChanged]
     );
 
     // The item domain value was changed.
     const onDomainChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onValueChanged(e, "domain");
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged(e.target.value, "domain");
         },
         [onValueChanged]
     );
 
     // The item user name was changed.
     const onUserNameChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onValueChanged(e, "userName");
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged(e.target.value, "userName");
         },
         [onValueChanged]
     );
@@ -194,18 +189,18 @@ const EntryEditor = ({
 
     // The use markdown flag value changed. Update the value.
     const onUseMarkdownChanged = React.useCallback(
-        (e: CheckBoxValueChangedEvent) => {
+        (e: CheckboxChangeEvent) => {
             if (entry) {
-                onEntryChanged?.({ ...entry, useMarkdown: e.value });
+                onEntryChanged?.({ ...entry, useMarkdown: e.target.checked });
             }
         },
         [entry, onEntryChanged]
     );
 
     const onMonospacedFontChanged = React.useCallback(
-        (e: CheckBoxValueChangedEvent) => {
+        (e: CheckboxChangeEvent) => {
             if (entry) {
-                onEntryChanged?.({ ...entry, useMonospacedFont: e.value });
+                onEntryChanged?.({ ...entry, useMonospacedFont: e.target.checked });
             }
         },
         [entry, onEntryChanged]
@@ -227,26 +222,16 @@ const EntryEditor = ({
 
     // The OTPAuth / 2FA key changed, update the value.
     const onOTPAuthChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onValueChanged(e, "otpAuthKey");
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged(e.target.value, "otpAuthKey");
         },
         [onValueChanged]
     );
 
-    // Save the ref to the name TextBox if the ref prop is defined.
-    const onNameTextBoxInitialized = React.useCallback(
-        (e: InitializedEvent) => {
-            if (nameTextBoxRef !== undefined) {
-                nameTextBoxRef.current = e.component;
-            }
-        },
-        [nameTextBoxRef]
-    );
-
     // Update the changed tag(s) to the entry and report any removed items.
     const onTagsValueChanged = React.useCallback(
-        (e: TagBoxValueChangedEvent) => {
-            const value: string[] = e.value ?? [];
+        (values: string[]) => {
+            const value: string[] = values;
 
             // Update the entry.
             if (entry) {
@@ -260,9 +245,8 @@ const EntryEditor = ({
 
     // A new tag was added. Report the added tag to keep the "index" in sync.
     const onCustomTagCreating = React.useCallback(
-        (e: CustomItemCreatingEvent) => {
-            e.customItem = e.text ?? null;
-            const newTag: string = e.customItem;
+        (value: string) => {
+            const newTag: string = value;
 
             // Update the entry.
             if (entry) {
@@ -329,11 +313,11 @@ const EntryEditor = ({
                                     <div className="dx-field-item-label-text">{le("name")}</div>
                                 </td>
                                 <td>
-                                    <TextBox //
+                                    <Input //
                                         readOnly={readOnly}
                                         value={entry?.name}
-                                        onValueChanged={onNameChanged}
-                                        onInitialized={onNameTextBoxInitialized}
+                                        onChange={onNameChanged}
+                                        ref={nameTextBoxRef}
                                     />
                                 </td>
                             </tr>
@@ -342,10 +326,10 @@ const EntryEditor = ({
                                     <div className="dx-field-item-label-text">{le("domain")}</div>
                                 </td>
                                 <td>
-                                    <TextBox //
+                                    <Input //
                                         readOnly={readOnly}
                                         value={entry?.domain}
-                                        onValueChanged={onDomainChanged}
+                                        onChange={onDomainChanged}
                                     />
                                 </td>
                             </tr>
@@ -354,10 +338,10 @@ const EntryEditor = ({
                                     <div className="dx-field-item-label-text">{le("userName")}</div>
                                 </td>
                                 <td>
-                                    <TextBox //
+                                    <Input //
                                         readOnly={readOnly}
                                         value={entry?.userName}
-                                        onValueChanged={onUserNameChanged}
+                                        onChange={onUserNameChanged}
                                     />
                                 </td>
                             </tr>
@@ -387,10 +371,8 @@ const EntryEditor = ({
                                         dataSource={allTags}
                                         readOnly={readOnly}
                                         value={tags}
-                                        onValueChanged={onTagsValueChanged}
                                         onCustomItemCreating={onCustomTagCreating}
-                                        acceptCustomValue={true}
-                                        searchEnabled={true}
+                                        onChange={onTagsValueChanged}
                                     />
                                 </td>
                             </tr>
@@ -400,10 +382,10 @@ const EntryEditor = ({
                                 </td>
                                 <td>
                                     <div className="OTPAuth">
-                                        <TextBox //
+                                        <Input //
                                             readOnly={true}
                                             value={entry?.otpAuthKey}
-                                            onValueChanged={onOTPAuthChanged}
+                                            onChange={onOTPAuthChanged}
                                             className="OTPAuth-textBox"
                                         />
                                         {showQrViewButton && (
@@ -442,26 +424,29 @@ const EntryEditor = ({
                     </table>
                     <div className="Notes-labelArea">
                         <div className={classNames("dx-field-item-label-text", "Label-center")}>{le("notes")}</div>
-                        {!readOnly && !useHtmlOnNotes && (
-                            <CheckBox //
-                                text={le("useMarkdown")}
-                                onValueChanged={onUseMarkdownChanged}
-                                value={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
-                            />
+                        {!readOnly && (
+                            <Checkbox //
+                                onChange={onUseMarkdownChanged}
+                                checked={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
+                                className="Label-center"
+                            >
+                                {le("useMarkdown")}
+                            </Checkbox>
                         )}
-                        {!readOnly && !useHtmlOnNotes && (
-                            <CheckBox //
-                                text={le("monoSpacedFont")}
-                                onValueChanged={onMonospacedFontChanged}
-                                value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
-                            />
+                        {!readOnly && (
+                            <Checkbox //
+                                onChange={onMonospacedFontChanged}
+                                checked={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
+                                className="Label-center"
+                            >
+                                {le("monoSpacedFont")}
+                            </Checkbox>
                         )}
                         {!readOnly && <Button icon={<FontAwesomeIcon icon={faPen} />} onClick={editNotesClick} />}
                     </div>
                     <EntryNotesEditorStyled //
                         entry={entry}
                         onNotesChanged={setMarkDown}
-                        useHtmlOnNotes={useHtmlOnNotes}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
@@ -481,7 +466,6 @@ const EntryEditor = ({
                         entry={entry}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
-                        useHtmlOnNotes={useHtmlOnNotes}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
                         onClose={onNotesEditorClose}
                     />

@@ -41,7 +41,7 @@ const useNotify = (): [React.ReactElement<unknown, string | React.JSXElementCons
         (type: NotificationType, title: string | null | undefined | Error, duration?: number) => {
             api[type]({
                 message: title instanceof Error ? title?.toString() : title,
-                duration: duration ?? 5_000,
+                duration: duration ?? 5,
             });
         },
         [api]
