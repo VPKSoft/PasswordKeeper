@@ -25,7 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { Button, InputRef, Modal, Tooltip } from "antd";
+import { Button, InputRef, Modal } from "antd";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { CssFont, DataEntry } from "../../../types/PasswordEntry";

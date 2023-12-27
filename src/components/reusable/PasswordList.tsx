@@ -16,6 +16,10 @@ type PasswordListProps = {
     dataSource: DataEntry[];
     /** A search value for filtering the password list. */
     searchValue: SearchTextBoxValue;
+    /** The expanded node keys. */
+    expandedKeys: Array<string>;
+    /** Set the expanded node keys. */
+    setExpandedKeys: (value: Array<string>) => void;
     /** Occurs when the selected item has been changed. */
     setEntry: (value: DataEntry | null) => void;
 } & CommonProps;
@@ -30,10 +34,10 @@ const PasswordList = ({
     className, //
     dataSource,
     searchValue,
+    expandedKeys,
+    setExpandedKeys,
     setEntry,
 }: PasswordListProps) => {
-    const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
-
     // Memoize a suitable data source for the Tree.
     const treeData = React.useMemo(() => {
         let parents = dataSource.filter(f => f.parentId === -1);

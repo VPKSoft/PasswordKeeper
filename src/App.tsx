@@ -106,9 +106,12 @@ const App = ({ className }: AppProps) => {
     const [isNewFile, setIsNewFile] = React.useState(true);
     const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
+    const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
 
-    const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
+    const expandedKeysRef = React.useRef<Array<string>>([]);
+    const selectedItemRef = React.useRef<DataEntry | null>(null);
+
     const textColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
     const backColor = useCssStyle("color", "#5bbec3", null, "dx-theme-border-color-as-text-color");
 
@@ -153,8 +156,10 @@ const App = ({ className }: AppProps) => {
         setPreferencesVisible(false);
 
         // Collapse the tree. The categories are allowed to show.
-        collapseTree(treeListRef?.current);
-    }, []);
+        expandedKeysRef.current = expandedKeys;
+        selectedItemRef.current = entry;
+        setExpandedKeys([]);
+    }, [entry, expandedKeys]);
 
     // A callback to lock the view after a time interval has elapsed.
     const onViewLockTimeout = React.useCallback(() => {
@@ -390,6 +395,9 @@ const App = ({ className }: AppProps) => {
                             setPasswordFailedCount(0);
                             setDataTags(f.tags);
                             setFileOptions(f.dataOptions);
+                            expandedKeysRef.current = [];
+                            selectedItemRef.current = null;
+                            setExpandedKeys([]);
                         } else {
                             // The file load failed with most probable reason being an invalid password.
                             notification("error", lm("fileOpenFail", undefined, { msg: f.errorMessage }), 5);
@@ -555,22 +563,10 @@ const App = ({ className }: AppProps) => {
     }, []);
 
     // Expands the tree list selection and restores the selected state upon unlocking the view.
-    const expandTreeListSelection = React.useCallback(async () => {
-        const key = treeListRef.current?.getSelectedRowKeys()[0] as number | undefined;
-        if (key) {
-            const item = dataSource.find(f => f.id === key);
-
-            if (item) {
-                if (item.parentId !== -1) {
-                    await treeListRef.current?.expandRow(item.parentId);
-                }
-                await treeListRef.current?.expandRow(key);
-                await treeListRef.current?.navigateToRow(key);
-
-                setEntry(item);
-            }
-        }
-    }, [dataSource]);
+    const expandTreeListSelection = React.useCallback(() => {
+        setExpandedKeys(expandedKeysRef.current);
+        setEntry(selectedItemRef.current);
+    }, []);
 
     // A callback to unlock the view locked with an overlay.
     // If an existing file is opened a password dialog is displayed instead to unlock the view.
@@ -653,12 +649,6 @@ const App = ({ className }: AppProps) => {
         setFilePreferencesVisible(false);
     }, []);
 
-    // Set the file as updated if the data source is updated via entry list. E.g. ordering might have changed.
-    const onEntryListChanged = React.useCallback((dataSource: DataEntry[]) => {
-        setDataSource(dataSource);
-        setFileChanged(true);
-    }, []);
-
     // The file preferences was requested to be modified.
     const filePreferencesClick = React.useCallback(() => {
         setFilePreferencesVisible(true);
@@ -713,11 +703,11 @@ const App = ({ className }: AppProps) => {
                 <div id="mainView" className="App-itemsView">
                     <StyledPasswordList //
                         searchValue={searchTextBoxValue}
-                        treeListRef={treeListRef}
                         dataSource={dataSource}
-                        setDataSource={onEntryListChanged}
                         className="App-itemsView-list"
                         setEntry={setEntry}
+                        expandedKeys={expandedKeys}
+                        setExpandedKeys={setExpandedKeys}
                     />
                     <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
