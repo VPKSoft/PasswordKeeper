@@ -12,6 +12,10 @@
         "lint": "eslint --max-warnings=0 --config ./.eslintrc.cjs --ext .tsx,.ts ./src/"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.5.1",
+        "@fortawesome/free-regular-svg-icons": "^6.5.1",
+        "@fortawesome/free-solid-svg-icons": "^6.5.1",
+        "@fortawesome/react-fontawesome": "^0.2.0",
         "@tauri-apps/api": "^1.5.3",
         "@typescript-eslint/eslint-plugin": "^6.15.0",
         "@vitejs/plugin-react": "^4.2.1",
