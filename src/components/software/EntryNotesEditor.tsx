@@ -2,7 +2,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { ScrollView } from "devextreme-react";
-import { ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
+import { number } from "prop-types";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
@@ -25,6 +25,8 @@ type EntryNotesEditorProps = {
     imagePasteEnabled: boolean;
     /** Occurs when the notes value has been changed. */
     onNotesChanged: (value: string | undefined) => void;
+    /** Height for the control via style. */
+    height?: string | undefined | null;
 } & CommonProps;
 
 /**
@@ -47,8 +49,8 @@ const EntryNotesEditor = ({
 
     // The item notes was changed.
     const onNotesChangedCallback = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onNotesChanged(e.value);
+        (value: string | undefined) => {
+            onNotesChanged(value);
         },
         [onNotesChanged]
     );
@@ -106,7 +108,8 @@ const EntryNotesEditorStyled = styled(EntryNotesEditor)`
         margin-bottom: 10px;
         width: 100%;
         height: 100%;
-        min-height: 0px;
+        min-height: ${props => props.height ?? "240px"};
+        resize: none;
     }
 `;
 

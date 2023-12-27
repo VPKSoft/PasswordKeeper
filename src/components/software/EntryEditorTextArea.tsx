@@ -25,8 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { TextArea } from "devextreme-react/text-area";
-import { ValueChangedEvent } from "devextreme/ui/text_area";
+import { Input } from "antd";
 import { CommonProps } from "../Types";
 
 /**
@@ -40,7 +39,7 @@ type EntryEditorTextAreaProps = {
     /** A value indicating whether to use monospaced font in the markdown editor. */
     monospacedFont?: boolean;
     /** Occurs when the {@link EntryEditorTextArea} value has been changed. */
-    onValueChanged?: (e: ValueChangedEvent) => void;
+    onValueChanged?: (value: string | undefined) => void;
 } & CommonProps;
 
 /**
@@ -61,13 +60,20 @@ const EntryEditorTextArea = ({
         return { fontFamily: monospacedFont === true ? "monospace" : "system-ui" };
     }, [monospacedFont]);
 
+    const onChange = React.useCallback(
+        (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            onValueChanged?.(e.target.value);
+        },
+        [onValueChanged]
+    );
+
     return (
-        <TextArea //
+        <Input.TextArea //
             style={style}
             readOnly={readOnly}
             value={value}
             className={classNames(EntryEditorTextArea.name, className)}
-            onValueChanged={onValueChanged}
+            onChange={onChange}
         />
     );
 };

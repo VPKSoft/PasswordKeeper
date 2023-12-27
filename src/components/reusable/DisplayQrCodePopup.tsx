@@ -45,7 +45,7 @@ const DisplayQrCodePopup = ({
                 return;
             }
 
-            notification("error", error, 5_000);
+            notification("error", error, 5);
         },
         [notification]
     );
@@ -71,14 +71,14 @@ const DisplayQrCodePopup = ({
                     navigator.clipboard
                         .write([new ClipboardItem({ "image/png": pngBlob })])
                         .then(() => {
-                            notification("success", lu("clipboardCopySuccess"), 5_000);
+                            notification("success", lu("clipboardCopySuccess"), 5);
                             clipboardNotifyOther();
                         })
                         .catch(() => {
-                            notification("error", lu("clipboardCopyFailed"), 5_000);
+                            notification("error", lu("clipboardCopyFailed"), 5);
                         });
                 } else {
-                    notification("error", lu("clipboardCopyFailed"), 5_000);
+                    notification("error", lu("clipboardCopyFailed"), 5);
                 }
             });
         }

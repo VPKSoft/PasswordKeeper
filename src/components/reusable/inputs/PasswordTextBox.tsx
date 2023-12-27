@@ -113,11 +113,11 @@ const PasswordTextBox = ({
             navigator.clipboard
                 .writeText(text)
                 .then(() => {
-                    notification("success", lu("clipboardCopySuccess"), 5_000);
+                    notification("success", lu("clipboardCopySuccess"), 5);
                     clipboardNotifyOther();
                 })
                 .catch(() => {
-                    notification("error", lu("clipboardCopyFailed"), 5_000);
+                    notification("error", lu("clipboardCopyFailed"), 5);
                 });
         }
     }, [lu, notification, value]);

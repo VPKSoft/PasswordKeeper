@@ -76,20 +76,6 @@ const FilePreferencesPopup = ({
         setFileOptionsInternal(f => ({ ...f, useMarkdownOnNotes: e.target.checked }));
     }, []);
 
-    const onUseHtmlChanged = React.useCallback(
-        (e: CheckboxChangeEvent) => {
-            const options = { ...fileOptionsInternal };
-            options.useHtmlOnNotes = e.target.checked;
-            if (e.target.checked) {
-                options.useMonospacedFont = false;
-                options.useMarkdownOnNotes = false;
-            }
-
-            setFileOptionsInternal(options);
-        },
-        [fileOptionsInternal]
-    );
-
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
         onClose(true, fileOptionsInternal);

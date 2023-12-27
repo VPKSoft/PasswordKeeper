@@ -23,10 +23,9 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup } from "devextreme-react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import dxTextBox from "devextreme/ui/text_box";
+import { Button, InputRef, Modal, Tooltip } from "antd";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { CssFont, DataEntry } from "../../../types/PasswordEntry";
@@ -52,8 +51,6 @@ type EditEntryPopupProps = {
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /** Occurs when the popup has been closed. */
-    useHtmlOnNotes?: boolean;
-    /** An optional font definition for the notes area. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
 
@@ -71,13 +68,11 @@ const EditEntryPopup = ({
     defaultUseMarkdown,
     defaultUseMonospacedFont,
     notesFont,
-    useHtmlOnNotes,
     onClose,
 }: EditEntryPopupProps) => {
-    const [userAccepted, setUserAccepted] = React.useState(false);
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
 
-    const focusTextBoxRef = React.useRef<dxTextBox>();
+    const focusTextBoxRef = React.useRef<InputRef>(null);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -90,23 +85,6 @@ const EditEntryPopup = ({
         setEntryInternal(entry);
     }, [entry]);
 
-    // Handle the visibility change callback.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose(userAccepted);
-            }
-            setUserAccepted(false);
-        },
-        [onClose, userAccepted]
-    );
-
-    // Handle the hiding callback.
-    const onHiding = React.useCallback(() => {
-        onClose(userAccepted);
-        setUserAccepted(false);
-    }, [onClose, userAccepted]);
-
     // After the component has been shown, focus the entry editor text box.
     const popupShown = React.useCallback(() => {
         focusTextBoxRef.current?.focus();
@@ -114,29 +92,32 @@ const EditEntryPopup = ({
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        setUserAccepted(true);
         onClose(true, entryInternal);
     }, [entryInternal, onClose]);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
-        setUserAccepted(false);
         onClose(false);
     }, [onClose]);
 
+    const afterOpenChange = React.useCallback(
+        (open: boolean) => {
+            if (open) {
+                popupShown();
+            }
+        },
+        [popupShown]
+    );
+
     return (
-        <Popup //
+        <Modal //
             title={title}
-            showCloseButton={true}
-            visible={visible}
-            onHiding={onHiding}
-            onVisibleChange={onVisibleChange}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={600}
+            open={visible}
             width={600}
-            showTitle={true}
-            onShown={popupShown}
+            centered
+            footer={null}
+            onCancel={onCancelClick}
+            afterOpenChange={afterOpenChange}
         >
             <div className={classNames(EditEntryPopup.name, className)}>
                 <StyledEntryEditor //
@@ -152,20 +133,21 @@ const EditEntryPopup = ({
                     defaultUseMarkdown={defaultUseMarkdown}
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
                     notesFont={notesFont}
-                    useHtmlOnNotes={useHtmlOnNotes}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onCancelClick}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
@@ -175,6 +157,7 @@ const StyledEditEntryPopup = styled(EditEntryPopup)`
     height: 100%;
     .Popup-entryEditor {
         height: 100%;
+        min-height: 0px;
     }
     .Popup-ButtonRow {
         display: flex;

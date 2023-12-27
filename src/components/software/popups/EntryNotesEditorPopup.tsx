@@ -26,6 +26,7 @@ import * as React from "react";
 import { Button, Popup } from "devextreme-react";
 import classNames from "classnames";
 import { styled } from "styled-components";
+import { Modal } from "antd";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { DataEntry } from "../../../types/PasswordEntry";
@@ -88,16 +89,13 @@ const EntryNotesEditorPopup = ({
     }, [notes, onClose, visible]);
 
     return (
-        <Popup //
+        <Modal //
             title={le("editNotes")}
-            showCloseButton={true}
-            visible={visible}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={700}
+            open={visible}
             width={700}
-            showTitle={true}
-            onHiding={onHiding}
+            footer={null}
+            centered
+            onCancel={onHiding}
         >
             <div className={classNames(EntryNotesEditorPopup.name, className)}>
                 <EntryNotesEditorStyled //
@@ -107,6 +105,7 @@ const EntryNotesEditorPopup = ({
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
                     imagePasteEnabled={imagePasteEnabled}
                     onNotesChanged={setNotes}
+                    height="550px"
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
@@ -119,7 +118,7 @@ const EntryNotesEditorPopup = ({
                     />
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
@@ -127,6 +126,7 @@ const StyledAEntryNotesEditorPopup = styled(EntryNotesEditorPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 600px;
     .Popup-ButtonRow {
         display: flex;
         width: 100%;

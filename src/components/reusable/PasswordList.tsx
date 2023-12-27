@@ -34,6 +34,7 @@ const PasswordList = ({
 }: PasswordListProps) => {
     const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
 
+    // Memoize a suitable data source for the Tree.
     const treeData = React.useMemo(() => {
         let parents = dataSource.filter(f => f.parentId === -1);
         let children = dataSource.filter(f => f.parentId !== -1);
@@ -49,6 +50,11 @@ const PasswordList = ({
 
                 case SearchMode.Or: {
                     children = children.filter(f => filterOr(f, searchValue.value));
+                    break;
+                }
+
+                default: {
+                    children = children.filter(f => filterOr(f, searchValue.value));
                 }
             }
         }
@@ -57,11 +63,10 @@ const PasswordList = ({
         return result;
     }, [dataSource, searchValue]);
 
+    // Expand all search results if any results were found.
     React.useEffect(() => {
         if (searchValue.value.trim() !== "" && treeData.length > 0) {
             setExpandedKeys(treeData.map(f => f.key.toString()));
-        } else {
-            setExpandedKeys([]);
         }
     }, [searchValue, treeData]);
 

@@ -76,32 +76,32 @@ const QrCodeInputPopup = ({
                                     if (otpData.length > 0) {
                                         setOtpAuthPath(makeOtpAuthKey(otpData[0]));
                                         if (otpData.length !== 1) {
-                                            notification("warning", lm("qrMoreThan1"), 5_000);
+                                            notification("warning", lm("qrMoreThan1"), 5);
                                         }
-                                        notification("success", lm("qrSuccess"), 5_000);
+                                        notification("success", lm("qrSuccess"), 5);
                                     } else {
-                                        notification("error", lm("otpAuthKeyGenFailed"), 5_000);
+                                        notification("error", lm("otpAuthKeyGenFailed"), 5);
                                     }
                                 });
                             } else {
-                                notification("error", lm("otpAuthKeyGenFailed"), 5_000);
+                                notification("error", lm("otpAuthKeyGenFailed"), 5);
                             }
                         } catch {
-                            notification("error", lm("otpAuthKeyGenFailed"), 5_000);
+                            notification("error", lm("otpAuthKeyGenFailed"), 5);
                         }
                     } else {
                         void invoke<Auth2Fa>("gen_otpauth", { otpauth: decodedText }).then((f: Auth2Fa) => {
                             if (f.success) {
-                                notification("success", lm("qrSuccess"), 5_000);
+                                notification("success", lm("qrSuccess"), 5);
                                 setOtpAuthPath(decodedText);
                             } else {
-                                notification("error", lm("otpAuthKeyGenFailed"), 5_000);
+                                notification("error", lm("otpAuthKeyGenFailed"), 5);
                             }
                         });
                     }
                 })
                 .catch(error => {
-                    notification("error", lm("qrCodeImageReadFailed", undefined, { message: error }), 5_000);
+                    notification("error", lm("qrCodeImageReadFailed", undefined, { message: error }), 5);
                 });
         },
         [lm, notification]
