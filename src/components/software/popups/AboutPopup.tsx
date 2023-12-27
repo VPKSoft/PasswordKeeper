@@ -91,6 +91,7 @@ const AboutPopup = ({
             width={700}
             footer={null}
             onCancel={onClose}
+            centered
         >
             <div className={classNames(AboutPopup.name, className)}>
                 <div className="Popup-versionText">{`${appName}, ${lc("copyright")} © 2023 VPKSoft, v.${appVersion}`}</div>

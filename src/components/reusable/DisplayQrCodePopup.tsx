@@ -1,8 +1,8 @@
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { Popup } from "devextreme-react";
 import QRCode from "qrcode";
+import { Modal } from "antd";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
@@ -34,7 +34,6 @@ const DisplayQrCodePopup = ({
     visible,
     onClose,
 }: DisplayQrCodePopupProps) => {
-    const [shown, setShown] = React.useState(false);
     const lu = useLocalize("ui");
     const [contextHolder, notification] = useNotify();
 
@@ -59,32 +58,9 @@ const DisplayQrCodePopup = ({
                 QRCode.toCanvas(canvas, qrUrl, { width: qrSize ?? 180 }, qrCodeError);
             }
         }
-    }, [qrCodeError, qrUrl, visible, shown, qrSize]);
-
-    // Handle the onVisibleChange callback of the Popup component.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose();
-                setShown(false);
-            }
-        },
-        [onClose]
-    );
-
-    // Handle the onHiding callback of the Popup component.
-    const onHiding = React.useCallback(() => {
-        onClose();
-        setShown(false);
-    }, [onClose]);
-
-    // Set this shown flag to allow the querySelector to find the canvas element via an effect.
-    const popupShown = React.useCallback(() => {
-        setShown(true);
-    }, []);
+    }, [qrCodeError, qrUrl, visible, qrSize]);
 
     const width = React.useMemo(() => (qrSize ?? 180) + 60, [qrSize]);
-    const height = React.useMemo(() => (qrSize ?? 180) + 120, [qrSize]);
 
     // Copy the QR code value into the clipboard.
     const copyToClipboard = React.useCallback(() => {
@@ -109,14 +85,13 @@ const DisplayQrCodePopup = ({
     }, [lu, notification]);
 
     return (
-        <Popup //
-            height={height}
+        <Modal //
             title={lu("qrCodePopupTitle")}
-            visible={visible}
-            onHiding={onHiding}
-            onVisibleChange={onVisibleChange}
-            onShown={popupShown}
+            open={visible}
             width={width}
+            centered
+            onCancel={onClose}
+            footer={null}
         >
             {contextHolder}
             <div className={classNames(DisplayQrCodePopup.name, className)}>
@@ -125,7 +100,7 @@ const DisplayQrCodePopup = ({
                     onClick={copyToClipboard}
                 />
             </div>
-        </Popup>
+        </Modal>
     );
 };
 

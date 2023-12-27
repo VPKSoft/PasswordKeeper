@@ -25,8 +25,8 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { Popup } from "devextreme-react/popup";
-import { Button, CheckBox } from "devextreme-react";
+import { Button, Modal, Checkbox } from "antd";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CommonProps } from "../../Types";
 import { FileOptions } from "../../../types/PasswordEntry";
 import { useLocalize } from "../../../i18n";
@@ -59,7 +59,6 @@ const FilePreferencesPopup = ({
     fileOptions,
     onClose,
 }: FilePreferencesPopupProps) => {
-    const [userAccepted, setUserAccepted] = React.useState(false);
     const [fileOptionsInternal, setFileOptionsInternal] = React.useState<FileOptions | undefined>(fileOptions);
     const ls = useLocalize("settings");
     const lu = useLocalize("ui");
@@ -69,36 +68,19 @@ const FilePreferencesPopup = ({
         setFileOptionsInternal(fileOptions);
     }, [fileOptions]);
 
-    // Handle the onVisibleChange callback of the Popup component.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose(userAccepted);
-            }
-            setUserAccepted(false);
-        },
-        [onClose, userAccepted]
-    );
-
-    // Handle the onHiding callback of the Popup component.
-    const onHiding = React.useCallback(() => {
-        onClose(userAccepted);
-        setUserAccepted(false);
-    }, [onClose, userAccepted]);
-
-    const onMonospacedFontChanged = React.useCallback((value: boolean | null) => {
-        setFileOptionsInternal(f => ({ ...f, useMonospacedFont: value ?? false }));
+    const onMonospacedFontChanged = React.useCallback((e: CheckboxChangeEvent) => {
+        setFileOptionsInternal(f => ({ ...f, useMonospacedFont: e.target.checked }));
     }, []);
 
-    const onUseMarkdownChanged = React.useCallback((value: boolean | null) => {
-        setFileOptionsInternal(f => ({ ...f, useMarkdownOnNotes: value ?? false }));
+    const onUseMarkdownChanged = React.useCallback((e: CheckboxChangeEvent) => {
+        setFileOptionsInternal(f => ({ ...f, useMarkdownOnNotes: e.target.checked }));
     }, []);
 
     const onUseHtmlChanged = React.useCallback(
-        (value: boolean | null) => {
+        (e: CheckboxChangeEvent) => {
             const options = { ...fileOptionsInternal };
-            options.useHtmlOnNotes = value ?? false;
-            if (value) {
+            options.useHtmlOnNotes = e.target.checked;
+            if (e.target.checked) {
                 options.useMonospacedFont = false;
                 options.useMarkdownOnNotes = false;
             }
@@ -110,28 +92,22 @@ const FilePreferencesPopup = ({
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        setUserAccepted(true);
         onClose(true, fileOptionsInternal);
     }, [fileOptionsInternal, onClose]);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
-        setUserAccepted(false);
         onClose(false);
     }, [onClose]);
 
     return (
-        <Popup //
+        <Modal //
             title={ls("filePreferences")}
-            showCloseButton={true}
-            visible={visible}
-            onHiding={onHiding}
-            onVisibleChange={onVisibleChange}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={200}
+            open={visible}
             width={600}
-            showTitle={true}
+            centered
+            footer={null}
+            onCancel={onCancelClick}
         >
             <div className={classNames(FilePreferencesPopup.name, className)}>
                 <table>
@@ -141,9 +117,9 @@ const FilePreferencesPopup = ({
                                 <div className="dx-field-item-label-text">{ls("defaultUseMonoSpacedFontOnNotes")}</div>
                             </td>
                             <td>
-                                <CheckBox //
-                                    value={fileOptionsInternal?.useMonospacedFont ?? false}
-                                    onValueChange={onMonospacedFontChanged}
+                                <Checkbox //
+                                    checked={fileOptionsInternal?.useMonospacedFont ?? false}
+                                    onChange={onMonospacedFontChanged}
                                     disabled={fileOptionsInternal?.useHtmlOnNotes ?? false}
                                 />
                             </td>
@@ -154,10 +130,10 @@ const FilePreferencesPopup = ({
                                 <div className="dx-field-item-label-text">{ls("defaultUseMarkdownOnNotes")}</div>
                             </td>
                             <td>
-                                <CheckBox //
-                                    value={fileOptionsInternal?.useMarkdownOnNotes ?? false}
+                                <Checkbox //
+                                    checked={fileOptionsInternal?.useMarkdownOnNotes ?? false}
                                     disabled={fileOptionsInternal?.useHtmlOnNotes ?? false}
-                                    onValueChange={onUseMarkdownChanged}
+                                    onChange={onUseMarkdownChanged}
                                 />
                             </td>
                         </tr>
@@ -167,9 +143,9 @@ const FilePreferencesPopup = ({
                                 <div className="dx-field-item-label-text">{ls("useHtmlIOnNotes")}</div>
                             </td>
                             <td>
-                                <CheckBox //
-                                    value={fileOptionsInternal?.useHtmlOnNotes ?? false}
-                                    onValueChange={onUseHtmlChanged}
+                                <Checkbox //
+                                    checked={fileOptionsInternal?.useHtmlOnNotes ?? false}
+                                    onChange={onUseHtmlChanged}
                                 />
                             </td>
                         </tr>
@@ -177,16 +153,18 @@ const FilePreferencesPopup = ({
                 </table>
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onCancelClick}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
@@ -194,6 +172,12 @@ const FilePreferencesPopupStyled = styled(FilePreferencesPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    .Popup-ButtonRow {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
 `;
 
 export { FilePreferencesPopupStyled };

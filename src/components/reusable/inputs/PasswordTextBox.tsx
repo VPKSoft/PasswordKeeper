@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 import classNames from "classnames";
-import { Button } from "devextreme-react/button";
-import { TextBox } from "devextreme-react/text-box";
-import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
 import { styled } from "styled-components";
+import { Button, Input, InputRef, Tooltip } from "antd";
+import { faCopy, faEye, faEyeSlash, faRotate } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { clipboardNotifyOther } from "../../../hooks/UseCaptureClipboardCopy";
@@ -50,11 +50,11 @@ type PasswordTextBoxProps = {
     /** An initial value to indicate whether the password should be visible as plain text. */
     initialShowPassword?: boolean;
     /** Occurs when the {@link TextBox} value has been changed. */
-    onValueChanged?: (e: ValueChangedEvent) => void;
+    onValueChanged?: (e: string) => void;
     /** Occurs when a key was pressed on the {@link TextBox}. */
-    onKeyDown?: (e: KeyDownEvent) => void;
-    /** Occurs when the {@link TextBox} was initialized. */
-    onInitialized?: (e: InitializedEvent) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    /** A ref top the actual input element. */
+    inputRef?: React.Ref<InputRef>;
 } & CommonProps;
 
 /**
@@ -70,15 +70,13 @@ const PasswordTextBox = ({
     hidePasswordTimeout,
     showCopyButton,
     initialShowPassword,
-    onInitialized: onInitializedCallback,
+    inputRef,
     onValueChanged,
     onKeyDown,
 }: PasswordTextBoxProps) => {
     const [displayPassword, setDisplayPassword] = React.useState(initialShowPassword ?? false);
     const [contextHolder, notification] = useNotify();
     const lu = useLocalize("ui");
-
-    const textBoxRef = React.useRef<dxTextBox>();
 
     // If the password hiding is enabled, hide the password after a specified interval.
     React.useEffect(() => {
@@ -103,23 +101,14 @@ const PasswordTextBox = ({
         setDisplayPassword(value => !value);
     }, []);
 
-    // Save the TextBox ref and delegate a new callback with the same parameters.
-    const onInitialized = React.useCallback(
-        (e: InitializedEvent) => {
-            onInitializedCallback?.(e);
-            textBoxRef.current = e.component;
-        },
-        [onInitializedCallback]
-    );
-
     // Generate a new password into the TextBox.
     const generatePasswordClick = React.useCallback(() => {
-        textBoxRef.current?.option("value", generatePassword());
-    }, []);
+        onValueChanged?.(generatePassword());
+    }, [onValueChanged]);
 
     // Copy the password value into the clipboard.
     const copyToClipboard = React.useCallback(() => {
-        const text = textBoxRef?.current?.option("value") as string | undefined;
+        const text = value;
         if (text) {
             navigator.clipboard
                 .writeText(text)
@@ -131,7 +120,7 @@ const PasswordTextBox = ({
                     notification("error", lu("clipboardCopyFailed"), 5_000);
                 });
         }
-    }, [lu, notification]);
+    }, [lu, notification, value]);
 
     // Memoize the tooltip for the password visibility toggle
     // button based on the value whether to display the password.
@@ -139,41 +128,60 @@ const PasswordTextBox = ({
         return displayPassword ? lu("hidePassword") : lu("showPassword");
     }, [displayPassword, lu]);
 
+    const onChange = React.useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged?.(e.target.value);
+        },
+        [onValueChanged]
+    );
+
     return (
         <div className={classNames(PasswordTextBox.name, className)}>
             {contextHolder}
-            <TextBox //
-                onInitialized={onInitialized}
-                readOnly={readonly}
-                mode={displayPassword ? "text" : "password"}
-                className="PasswordTextBox-textBox"
-                value={value}
-                onValueChanged={onValueChanged}
-                onKeyDown={onKeyDown}
-                valueChangeEvent="keyup blur change input focusout keydown"
-            />
-            <Button //
-                icon={displayPassword ? "fas fa-eye" : "fas fa-eye-slash"}
-                className="PasswordTextBox-button"
-                onClick={toggleDisplayPassword}
-                hint={toggleShowPasswordHint}
-            />
+            {displayPassword ? (
+                <Input //
+                    readOnly={readonly}
+                    className="PasswordTextBox-textBox"
+                    value={value}
+                    onChange={onChange}
+                    onKeyDown={onKeyDown}
+                    ref={inputRef}
+                />
+            ) : (
+                <Input.Password //
+                    readOnly={readonly}
+                    className="PasswordTextBox-textBox"
+                    value={value}
+                    onChange={onChange}
+                    onKeyDown={onKeyDown}
+                    ref={inputRef}
+                />
+            )}
+            <Tooltip title={toggleShowPasswordHint}>
+                <Button //
+                    icon={displayPassword ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
+                    className="PasswordTextBox-button"
+                    onClick={toggleDisplayPassword}
+                />
+            </Tooltip>
             {showGeneratePassword === true &&
                 readonly === false && ( //
-                    <Button //
-                        icon="fas fa-rotate"
-                        onClick={generatePasswordClick}
-                        className="PasswordTextBox-button"
-                        hint={lu("generatePassword")}
-                    />
+                    <Tooltip title={lu("generatePassword")}>
+                        <Button //
+                            icon={<FontAwesomeIcon icon={faRotate} />}
+                            onClick={generatePasswordClick}
+                            className="PasswordTextBox-button"
+                        />
+                    </Tooltip>
                 )}
             {showCopyButton && (
-                <Button //
-                    hint={lu("copyClipboard")}
-                    icon="copy"
-                    className="PasswordTextBox-button"
-                    onClick={copyToClipboard}
-                />
+                <Tooltip title={lu("copyClipboard")}>
+                    <Button //
+                        icon={<FontAwesomeIcon icon={faCopy} />}
+                        className="PasswordTextBox-button"
+                        onClick={copyToClipboard}
+                    />
+                </Tooltip>
             )}
         </div>
     );

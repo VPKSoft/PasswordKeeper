@@ -25,10 +25,13 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { Button, CheckBox, TagBox, TextBox } from "devextreme-react";
+import { CheckBox, TagBox, TextBox } from "devextreme-react";
 import { ValueChangedEvent as CheckBoxValueChangedEvent } from "devextreme/ui/check_box";
 import dxTextBox, { InitializedEvent, ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CustomItemCreatingEvent, ValueChangedEvent as TagBoxValueChangedEvent } from "devextreme/ui/tag_box";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass, faPen, faQrcode } from "@fortawesome/free-solid-svg-icons";
+import { Button, Tooltip } from "antd";
 import { CssFont, DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
@@ -179,10 +182,14 @@ const EntryEditor = ({
 
     // The item password was changed.
     const onPasswordChanged = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onValueChanged(e, "password");
+        (e: string) => {
+            if (entry) {
+                const newValue: DataEntry = { ...entry };
+                newValue["password"] = e;
+                onEntryChanged?.(newValue);
+            }
         },
-        [onValueChanged]
+        [entry, onEntryChanged]
     );
 
     // The use markdown flag value changed. Update the value.
@@ -400,19 +407,21 @@ const EntryEditor = ({
                                             className="OTPAuth-textBox"
                                         />
                                         {showQrViewButton && (
-                                            <Button //
-                                                hint={lu("displayQrCodeTitle")}
-                                                icon="find"
-                                                disabled={displayQrCodeDisabled}
-                                                onClick={displayQrCodeClick}
-                                            />
+                                            <Tooltip title={lu("displayQrCodeTitle")}>
+                                                <Button //
+                                                    icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+                                                    disabled={displayQrCodeDisabled}
+                                                    onClick={displayQrCodeClick}
+                                                />
+                                            </Tooltip>
                                         )}
-                                        <Button //
-                                            hint={lu("readQrCodeTitle")}
-                                            icon="fas fa-qrcode"
-                                            disabled={readOnly}
-                                            onClick={readQrCodeClick}
-                                        />
+                                        <Tooltip title={lu("readQrCodeTitle")}>
+                                            <Button //
+                                                icon={<FontAwesomeIcon icon={faQrcode} />}
+                                                disabled={readOnly}
+                                                onClick={readQrCodeClick}
+                                            />
+                                        </Tooltip>
                                     </div>
                                 </td>
                             </tr>
@@ -447,7 +456,7 @@ const EntryEditor = ({
                                 value={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
                             />
                         )}
-                        {!readOnly && <Button icon="edit" onClick={editNotesClick} />}
+                        {!readOnly && <Button icon={<FontAwesomeIcon icon={faPen} />} onClick={editNotesClick} />}
                     </div>
                     <EntryNotesEditorStyled //
                         entry={entry}

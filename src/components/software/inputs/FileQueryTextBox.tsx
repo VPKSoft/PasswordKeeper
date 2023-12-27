@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 import classNames from "classnames";
-import { Button } from "devextreme-react/button";
-import { TextBox } from "devextreme-react/text-box";
 import * as React from "react";
 import { styled } from "styled-components";
-import { InitializedEvent, KeyDownEvent } from "devextreme/ui/text_box";
+import { Button, Input, Tooltip } from "antd";
+import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocalize } from "../../../i18n";
 import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
 import { FileQueryMode } from "../../../types/Enums";
@@ -44,9 +44,7 @@ type FileQueryTextBoxProps = {
     /** Occurs when the value of the file name has been changed. */
     onValueChanged: (value: string | undefined) => void;
     /** Occurs when a key was pressed in the file name edit text box.  */
-    onKeyDown?: (e: KeyDownEvent) => void;
-    /** Occurs when the {@link TextBox} was initialized within the component. */
-    onInitialized?: (e: InitializedEvent) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 } & CommonProps;
 
 /**
@@ -60,7 +58,6 @@ const FileQueryTextBox = ({
     mode,
     onValueChanged,
     onKeyDown,
-    onInitialized,
 }: FileQueryTextBoxProps) => {
     const lc = useLocalize("common");
     const la = useLocalize("app");
@@ -85,19 +82,19 @@ const FileQueryTextBox = ({
 
     return (
         <div className={classNames(FileQueryTextBox.name, className)}>
-            <TextBox //
+            <Input //
                 readOnly={true}
                 className="FileQueryTextbox-textBox"
                 value={value}
                 onKeyDown={onKeyDown}
-                onInitialized={onInitialized}
             />
-            <Button //
-                icon="activefolder"
-                className="FileQueryTextbox-button"
-                onClick={selectFileClick}
-                hint={lc("selectFileOpen")}
-            />
+            <Tooltip title={lc("selectFileOpen")}>
+                <Button //
+                    icon={<FontAwesomeIcon icon={faFolderOpen} />}
+                    className="FileQueryTextbox-button"
+                    onClick={selectFileClick}
+                />
+            </Tooltip>
         </div>
     );
 };

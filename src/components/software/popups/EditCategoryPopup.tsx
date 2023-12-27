@@ -23,14 +23,12 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup, TextBox } from "devextreme-react";
 import classNames from "classnames";
-import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import { styled } from "styled-components";
+import { Button, Input, InputRef, Modal } from "antd";
 import { ModifyType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { DataEntry } from "../../../types/PasswordEntry";
-import { useFocus } from "../../../hooks/UseFocus";
 import { CommonProps } from "../../Types";
 
 /**
@@ -59,10 +57,7 @@ const EditCategoryPopup = ({
     visible,
     onClose,
 }: EditCategoryPopupProps) => {
-    const [userAccepted, setUserAccepted] = React.useState(false);
     const [categoryInternal, setCategoryInternal] = React.useState<DataEntry>(entry);
-
-    const [setFocus, textBoxInitialized] = useFocus();
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -70,36 +65,16 @@ const EditCategoryPopup = ({
     // Memoize the title for the popup based on the mode.
     const title = React.useMemo(() => (mode === ModifyType.Edit ? lu("renameCategory") : lu("addCategory")), [lu, mode]);
 
+    const inputRef = React.useRef<InputRef>(null);
+
     // Set the internal state entry.
     React.useEffect(() => {
         setCategoryInternal(entry);
     }, [entry]);
 
-    // Set the focus to the text box.
-    const onShown = React.useCallback(() => {
-        setFocus();
-    }, [setFocus]);
-
-    // Handle the visibility change callback.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose(userAccepted);
-            }
-            setUserAccepted(false);
-        },
-        [onClose, userAccepted]
-    );
-
-    // Handle the hiding callback.
-    const onHiding = React.useCallback(() => {
-        onClose(userAccepted);
-        setUserAccepted(false);
-    }, [onClose, userAccepted]);
-
     const onNameChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
-            const value: string = typeof e.value === "string" ? e.value : "";
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const value: string = typeof e.target.value === "string" ? e.target.value : "";
             setCategoryInternal({ ...categoryInternal, name: value });
         },
         [categoryInternal]
@@ -111,12 +86,10 @@ const EditCategoryPopup = ({
 
     // Listen to the text box key event to react to Escape and Return keys.
     const onKeyDown = React.useCallback(
-        (e: KeyDownEvent) => {
-            if (e.event?.key === "Escape") {
-                setUserAccepted(false);
+        (e: React.KeyboardEvent) => {
+            if (e.key === "Escape") {
                 onClose(false);
-            } else if (e.event?.key === "Enter" && validCategoryName) {
-                setUserAccepted(true);
+            } else if (e.key === "Enter" && validCategoryName) {
                 onClose(true, categoryInternal);
             }
         },
@@ -125,29 +98,30 @@ const EditCategoryPopup = ({
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        setUserAccepted(true);
         onClose(true, categoryInternal);
     }, [categoryInternal, onClose]);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
-        setUserAccepted(false);
         onClose(false);
     }, [onClose]);
 
+    // Set the focus to the text box.
+    const afterOpenChange = React.useCallback((open: boolean) => {
+        if (open) {
+            inputRef.current?.focus();
+        }
+    }, []);
+
     return (
-        <Popup //
+        <Modal //
             title={title}
-            showCloseButton={true}
-            visible={visible}
-            onHiding={onHiding}
-            onVisibleChange={onVisibleChange}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={200}
+            open={visible}
             width={600}
-            showTitle={true}
-            onShown={onShown}
+            centered
+            onCancel={onCancelClick}
+            footer={null}
+            afterOpenChange={afterOpenChange}
         >
             <div className={classNames(EditCategoryPopup.name, className)}>
                 <table>
@@ -157,12 +131,11 @@ const EditCategoryPopup = ({
                                 <div className="dx-field-item-label-text">{le("name")}</div>
                             </td>
                             <td>
-                                <TextBox //
+                                <Input //
                                     value={categoryInternal?.name}
-                                    onValueChanged={onNameChanged}
+                                    onChange={onNameChanged}
                                     onKeyDown={onKeyDown}
-                                    onInitialized={textBoxInitialized}
-                                    valueChangeEvent="keyup blur change input focusout keydown"
+                                    ref={inputRef}
                                 />
                             </td>
                         </tr>
@@ -170,17 +143,19 @@ const EditCategoryPopup = ({
                 </table>
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
                         disabled={!validCategoryName}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onCancelClick}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
