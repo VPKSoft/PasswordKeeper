@@ -23,13 +23,30 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Menu } from "devextreme-react/menu";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { ItemClickEvent } from "devextreme/ui/menu";
-import { useLocalize } from "../../i18n";
-import { DataEntry } from "../../types/PasswordEntry";
+import { Menu, MenuProps } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faCircleInfo,
+    faCircleQuestion,
+    faCircleXmark,
+    faDoorOpen,
+    faFile,
+    faFloppyDisk,
+    faFolderOpen,
+    faFolderPlus,
+    faGear,
+    faPen,
+    faSliders,
+    faSquarePlus,
+    faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
+import { MenuInfo } from "rc-menu/lib/interface";
 import { CommonProps } from "../Types";
+import { DataEntry } from "../../types/PasswordEntry";
+import { useLocalize } from "../../i18n";
 
 const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close", "help", "file_preferences"] as const;
 type ActionNames = (typeof ActionValues)[number];
@@ -54,6 +71,10 @@ type MenuData = {
     disabled?: boolean;
 };
 
+const makeKey = (action: ActionNames) => {
+    return `"menu":${action}`;
+};
+
 /**
  * Creates the application menu structure with localization for the menu item names.
  * @param localize The localization function.
@@ -62,117 +83,104 @@ type MenuData = {
  * @param isfileChanged A value indicating whether the file has been changed.
  * @returns A localized menu structure for the application.
  */
-const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined) => string, entry: DataEntry | undefined, isNewFile: boolean, isfileChanged: boolean): MenuData[] => {
-    return [
+const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined) => string, entry: DataEntry | undefined, isNewFile: boolean, isfileChanged: boolean): MenuProps["items"] => {
+    const result: MenuProps["items"] = [
         {
-            id: "1",
-            name: localize("menuFile"),
-            items: [
+            label: localize("menuFile"),
+            key: "menu:menuFile",
+            children: [
                 {
-                    id: "1_1",
-                    name: localize("fileNew"),
-                    actionName: "new",
-                    icon: "file",
+                    label: localize("fileNew"),
+                    key: makeKey("new"),
+                    icon: <FontAwesomeIcon icon={faFile} />,
                 },
                 {
-                    id: "1_2",
-                    name: localize("fileOpen"),
-                    actionName: "open",
-                    icon: "folder",
+                    key: makeKey("open"),
+                    label: localize("fileOpen"),
+                    icon: <FontAwesomeIcon icon={faFolderOpen} />,
                     disabled: isfileChanged,
                 },
                 {
-                    id: "1_3",
-                    name: localize("filePreferences"),
-                    actionName: "file_preferences",
-                    icon: "fas fa-sliders",
+                    label: localize("filePreferences"),
+                    key: makeKey("file_preferences"),
+                    icon: <FontAwesomeIcon icon={faSliders} />,
                 },
                 {
-                    id: "1_4",
-                    name: localize("fileClose"),
-                    actionName: "close",
-                    icon: "fas fa-file-circle-xmark",
+                    label: localize("fileClose"),
+                    key: makeKey("close"),
+                    icon: <FontAwesomeIcon icon={faCircleXmark} />,
                 },
                 {
-                    id: "1_5",
-                    name: localize("fileSave"),
-                    actionName: "save",
-                    icon: "save",
+                    label: localize("fileSave"),
+                    key: makeKey("save"),
+                    icon: <FontAwesomeIcon icon={faFloppyDiskSave} />,
                     disabled: isfileChanged !== true,
                 },
                 {
-                    id: "1_6",
-                    name: localize("fileSaveAs"),
-                    actionName: "saveas",
-                    icon: "fas fa-floppy-disk",
+                    label: localize("fileSaveAs"),
+                    key: makeKey("saveas"),
+                    icon: <FontAwesomeIcon icon={faFloppyDisk} />,
                 },
                 {
-                    beginGroup: true,
-                    id: "1_7",
-                    name: localize("appExit"),
-                    actionName: "exit",
-                    icon: "fas fa-door-open",
+                    label: localize("appExit"),
+                    key: makeKey("exit"),
+                    icon: <FontAwesomeIcon icon={faDoorOpen} />,
                 },
             ],
         },
         {
-            id: "2",
-            name: localize("menuItems"),
-            items: [
+            label: localize("menuItems"),
+            key: "menu:menuEdit",
+            children: [
                 {
-                    id: "2_1",
-                    name: localize("itemAdd"),
-                    actionName: "additem",
-                    icon: "add",
+                    label: localize("itemAdd"),
+                    key: makeKey("additem"),
+                    icon: <FontAwesomeIcon icon={faSquarePlus} />,
                     disabled: entry === undefined,
                 },
                 {
-                    id: "2_2",
-                    name: localize("itemAddCategory"),
-                    actionName: "addcategory",
-                    icon: "newfolder",
+                    label: localize("itemAddCategory"),
+                    key: makeKey("addcategory"),
+                    icon: <FontAwesomeIcon icon={faFolderPlus} />,
                 },
                 {
-                    id: "2_3",
-                    name: localize("itemEdit"),
-                    actionName: "edit",
-                    icon: "edit",
+                    label: localize("itemEdit"),
+                    key: makeKey("edit"),
+                    icon: <FontAwesomeIcon icon={faPen} />,
                     disabled: entry === undefined,
                 },
                 {
-                    id: "2_4",
-                    name: localize("itemDelete"),
-                    actionName: "delete",
-                    icon: "trash",
+                    label: localize("itemDelete"),
+                    key: makeKey("delete"),
+                    icon: <FontAwesomeIcon icon={faTrashCan} />,
                     disabled: entry === undefined,
                 },
             ],
         },
         {
-            id: "3",
-            name: localize("menuTools"),
-            items: [
+            key: "menu:menuTools",
+            label: localize("menuTools"),
+            children: [
                 {
-                    id: "3_1",
-                    name: localize("menuSettings"),
-                    actionName: "settings",
-                    icon: "preferences",
+                    label: localize("menuSettings"),
+                    key: makeKey("settings"),
+                    icon: <FontAwesomeIcon icon={faGear} />,
                 },
                 {
-                    id: "3_2",
-                    name: localize("help"),
-                    actionName: "help",
-                    icon: "help",
+                    label: localize("help"),
+                    key: makeKey("help"),
+                    icon: <FontAwesomeIcon icon={faCircleQuestion} />,
                 },
                 {
-                    id: "3_3",
-                    name: localize("about"),
-                    actionName: "about",
-                    icon: "info",
+                    label: localize("about"),
+                    key: makeKey("about"),
+                    icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 },
             ],
         },
     ];
+
+    return result;
 };
 
 /**
@@ -186,7 +194,7 @@ export type AppMenuProps = {
     /** A value indicating whether the current file has been changed. */
     isfileChanged: boolean;
     /** Occurs when a menu item was clicked. */
-    onItemClick: (e: ItemClickEvent) => void;
+    onItemClick: (action: ActionNames) => void;
 } & CommonProps;
 
 /**
@@ -208,13 +216,20 @@ const AppMenu = ({
         return appMenuData(lm, entry, isNewFile, isfileChanged);
     }, [entry, isNewFile, isfileChanged, lm]);
 
+    const onClick: MenuProps["onClick"] = React.useCallback(
+        (e: MenuInfo) => {
+            const key = e.key.split(":")[1] as ActionNames;
+            onItemClick(key);
+        },
+        [onItemClick]
+    );
+
     return (
         <Menu //
-            displayExpr="name"
-            orientation="horizontal"
             className={classNames(AppMenu.name, className)}
-            dataSource={menuData}
-            onItemClick={onItemClick}
+            mode="horizontal"
+            items={menuData}
+            onClick={onClick}
         />
     );
 };
@@ -225,4 +240,4 @@ const StyledAppMenu = styled(AppMenu)`
 
 export { StyledAppMenu };
 
-export type { MenuData };
+export type { MenuData, ActionNames };
