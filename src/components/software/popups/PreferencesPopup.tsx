@@ -29,7 +29,6 @@ import { Button, Checkbox, InputNumber, Modal, Select } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Locales, currentLocales, useLocalize } from "../../../i18n";
 import { Settings } from "../../../types/Settings";
-import { DxThemeNames, dxThemes } from "../../../utilities/ThemeUtils";
 import { CommonProps } from "../../Types";
 
 /**
@@ -71,23 +70,8 @@ const PreferencesPopup = ({
     const ls = useLocalize("settings");
     const lc = useLocalize("common");
 
-    // Memoize the themes as a data source used by a theme Lookup.
-    const dataSource = React.useMemo(() => {
-        const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replaceAll(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
-        return result;
-    }, []);
-
     // Memoize the popup title.
     const title = React.useMemo(() => ls("settings"), [ls]);
-
-    // Save the changed theme Lookup value into the internal state.
-    const onThemeValueChanged = React.useCallback(
-        (value: { key: string; name: string }) => {
-            const valueNew = value.key as DxThemeNames;
-            setSettingsInternal({ ...(settingsInternal ?? settings), theme: valueNew });
-        },
-        [settings, settingsInternal]
-    );
 
     // Save the locale Lookup value into the internal state.
     const onLocaleValueChanged = React.useCallback(
@@ -150,21 +134,7 @@ const PreferencesPopup = ({
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("theme")}</div>
-                            </td>
-                            <td>
-                                <Select //
-                                    className="Select-width"
-                                    options={dataSource}
-                                    fieldNames={{ label: "name", value: "key" }}
-                                    value={dataSource.find(f => f.key === settingsInternal?.theme)}
-                                    onChange={onThemeValueChanged}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className="dx-field-item-label-text">{lc("language")}</div>
+                                <div>{lc("language")}</div>
                             </td>
                             <td>
                                 <Select //
@@ -178,7 +148,7 @@ const PreferencesPopup = ({
                         </tr>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("lockTimeoutMinutes")}</div>
+                                <div>{ls("lockTimeoutMinutes")}</div>
                             </td>
                             <td>
                                 <InputNumber //
@@ -191,7 +161,7 @@ const PreferencesPopup = ({
                         </tr>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("failedUnlockExitCount")}</div>
+                                <div>{ls("failedUnlockExitCount")}</div>
                             </td>
                             <td>
                                 <InputNumber //
@@ -205,7 +175,7 @@ const PreferencesPopup = ({
 
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("saveWindowPosition")}</div>
+                                <div>{ls("saveWindowPosition")}</div>
                             </td>
                             <td>
                                 <Checkbox //

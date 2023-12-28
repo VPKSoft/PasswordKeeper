@@ -30,6 +30,10 @@ SOFTWARE.
  */
 const cssRgbToHex = (value: string, fallbackValue: string): string => {
     try {
+        if (/#(\d|[A-Fa-f]){3,6}/.test(value)) {
+            return value;
+        }
+
         const valuesSplit = value.split("(")[1].split(")")[0];
         const components = valuesSplit.split(",");
         const result =

@@ -145,7 +145,7 @@ const QueryPasswordPopup = ({
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{le("password")}</div>
+                                <div>{le("password")}</div>
                             </td>
                             <td>
                                 <div>
@@ -164,7 +164,7 @@ const QueryPasswordPopup = ({
                         {verifyMode && (
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{lc("retypePassword")}</div>
+                                    <div>{lc("retypePassword")}</div>
                                 </td>
                                 <td>
                                     <div>

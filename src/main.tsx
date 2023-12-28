@@ -25,6 +25,7 @@ SOFTWARE.
 import * as React from "react";
 import ReactDOM from "react-dom/client";
 import { StyleSheetManager } from "styled-components";
+import { ConfigProvider, theme } from "antd";
 import { StyledApp } from "./App";
 
 const shouldForwardProp = () => true;
@@ -35,7 +36,13 @@ ReactDOM.createRoot(document.querySelector("#root") as HTMLElement).render(
             enableVendorPrefixes
             shouldForwardProp={shouldForwardProp}
         >
-            <StyledApp />
+            <ConfigProvider
+                theme={{
+                    algorithm: theme.defaultAlgorithm,
+                }}
+            >
+                <StyledApp />
+            </ConfigProvider>
         </StyleSheetManager>
     </React.StrictMode>
 );

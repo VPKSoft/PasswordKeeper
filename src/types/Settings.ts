@@ -23,7 +23,6 @@ SOFTWARE.
 */
 
 import { invoke } from "@tauri-apps/api/tauri";
-import { DxThemeNames } from "../utilities/ThemeUtils";
 import { Locales } from "../i18n";
 
 /**
@@ -31,7 +30,7 @@ import { Locales } from "../i18n";
  */
 export type Settings = {
     /** The current theme used by the application. */
-    theme: DxThemeNames;
+    theme: string;
     /** The window position. NOTE:NOT CURRENTLY IN USE - AN EXAMPLE */
     window_pos: Array<number>;
     /** The current application locale used by the i18next library. */
