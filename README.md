@@ -97,6 +97,9 @@ Well, that was background noise - the reasons:
 
 * *UX Powered by* **[Ant Design](https://ant.design)**
 
+  ![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/7f9c19fe-4b38-499a-9cfe-f3cba79347b8)
+
+
 * Localization powered by [Crowdin](https://crowdin.com) (for Open-source project)
 
   <img src="https://github.com/VPKSoft/PasswordKeeper/assets/40712699/0dc92fca-9763-4376-bd05-70c1c5c92780" width="200px" />
