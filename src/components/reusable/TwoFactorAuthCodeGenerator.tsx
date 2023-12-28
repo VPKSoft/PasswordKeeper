@@ -27,7 +27,9 @@ import { styled } from "styled-components";
 import classNames from "classnames";
 import { ColorHex, CountdownCircleTimer, TimeProps } from "react-countdown-circle-timer";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Button } from "devextreme-react";
+import { Button, Tooltip } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { Auth2Fa, CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { cssRgbToHex } from "../../utilities/ColorConversion";
@@ -153,12 +155,13 @@ const TwoFactorAuthCodeGenerator = ({
                     {twoFactorResult?.key?.slice(f, f + 1)}
                 </div>
             ))}
-            <Button //
-                icon="copy"
-                className="CopyButton"
-                onClick={copyToClipboard}
-                hint={lu("copyClipboard")}
-            />
+            <Tooltip title={lu("copyClipboard")}>
+                <Button //
+                    icon={<FontAwesomeIcon icon={faCopy} />}
+                    className="CopyButton"
+                    onClick={copyToClipboard}
+                />
+            </Tooltip>
         </div>
     );
 };

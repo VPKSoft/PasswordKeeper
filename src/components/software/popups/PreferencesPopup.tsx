@@ -71,7 +71,7 @@ const PreferencesPopup = ({
     const ls = useLocalize("settings");
     const lc = useLocalize("common");
 
-    // Memoize the DevExtreme themes as a data source used by a theme Lookup.
+    // Memoize the themes as a data source used by a theme Lookup.
     const dataSource = React.useMemo(() => {
         const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replaceAll(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
         return result;
@@ -84,7 +84,7 @@ const PreferencesPopup = ({
     const onThemeValueChanged = React.useCallback(
         (value: { key: string; name: string }) => {
             const valueNew = value.key as DxThemeNames;
-            setSettingsInternal({ ...(settingsInternal ?? settings), dx_theme: valueNew });
+            setSettingsInternal({ ...(settingsInternal ?? settings), theme: valueNew });
         },
         [settings, settingsInternal]
     );
@@ -157,7 +157,7 @@ const PreferencesPopup = ({
                                     className="Select-width"
                                     options={dataSource}
                                     fieldNames={{ label: "name", value: "key" }}
-                                    value={dataSource.find(f => f.key === settingsInternal?.dx_theme)}
+                                    value={dataSource.find(f => f.key === settingsInternal?.theme)}
                                     onChange={onThemeValueChanged}
                                 />
                             </td>

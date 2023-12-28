@@ -186,7 +186,7 @@ const App = ({ className }: AppProps) => {
     const applySettings = React.useCallback(
         (value: Settings) => {
             settingsRef.current = value;
-            void setTheme(value.dx_theme).then(() => {
+            void setTheme(value.theme).then(() => {
                 setLocale((value.locale ?? "en") as Locales);
                 setTimeoutEnabled(value.lock_timeout > 0);
                 setTimeOut(value.lock_timeout);
@@ -817,6 +817,7 @@ const StyledApp = styled(App)`
     }
     .App-itemsView-list {
         width: 40%;
+        overflow: auto;
     }    
 `;
 

@@ -25,9 +25,8 @@ SOFTWARE.
 import * as React from "react";
 import classNames from "classnames";
 import { styled } from "styled-components";
-import { ItemClickEvent } from "devextreme/ui/menu";
 import { AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
-import { AppMenuProps, MenuData, StyledAppMenu } from "./AppMenu";
+import { ActionNames, AppMenuProps, StyledAppMenu } from "./AppMenu";
 
 /**
  * The props for the {@link AppMenuToolbar} component.
@@ -78,10 +77,8 @@ const AppMenuToolbar = ({
     testClick,
 }: AppMenuToolbarProps) => {
     const onItemClick = React.useCallback(
-        (e: ItemClickEvent) => {
-            const clickedItem: MenuData = e.itemData as MenuData;
-
-            switch (clickedItem.actionName) {
+        (action: ActionNames) => {
+            switch (action) {
                 case "open": {
                     loadFileClick();
                     break;
