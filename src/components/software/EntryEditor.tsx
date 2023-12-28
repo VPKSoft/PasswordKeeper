@@ -310,7 +310,7 @@ const EntryEditor = ({
                         <tbody>
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{le("name")}</div>
+                                    <div>{le("name")}</div>
                                 </td>
                                 <td>
                                     <Input //
@@ -323,7 +323,7 @@ const EntryEditor = ({
                             </tr>
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{le("domain")}</div>
+                                    <div>{le("domain")}</div>
                                 </td>
                                 <td>
                                     <Input //
@@ -335,7 +335,7 @@ const EntryEditor = ({
                             </tr>
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{le("userName")}</div>
+                                    <div>{le("userName")}</div>
                                 </td>
                                 <td>
                                     <Input //
@@ -347,7 +347,7 @@ const EntryEditor = ({
                             </tr>
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{le("password")}</div>
+                                    <div>{le("password")}</div>
                                 </td>
                                 <td>
                                     <div>
@@ -364,7 +364,7 @@ const EntryEditor = ({
                             </tr>
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{le("tags")}</div>
+                                    <div>{le("tags")}</div>
                                 </td>
                                 <td>
                                     <TagBox //
@@ -378,7 +378,7 @@ const EntryEditor = ({
                             </tr>
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{le("otpAuthUrl")}</div>
+                                    <div>{le("otpAuthUrl")}</div>
                                 </td>
                                 <td>
                                     <div className="OTPAuth">
@@ -410,7 +410,7 @@ const EntryEditor = ({
                             {entry?.otpAuthKey && (
                                 <tr>
                                     <td>
-                                        <div className="dx-field-item-label-text">{le("otpAuthKey")}</div>
+                                        <div>{le("otpAuthKey")}</div>
                                     </td>
                                     <td>
                                         <TwoFactorAuthCodeGeneratorStyled //
@@ -423,7 +423,7 @@ const EntryEditor = ({
                         </tbody>
                     </table>
                     <div className="Notes-labelArea">
-                        <div className={classNames("dx-field-item-label-text", "Label-center")}>{le("notes")}</div>
+                        <div className={classNames("Label-center")}>{le("notes")}</div>
                         {!readOnly && (
                             <Checkbox //
                                 onChange={onUseMarkdownChanged}

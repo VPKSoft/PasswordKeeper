@@ -134,7 +134,7 @@ const PreferencesPopup = ({
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{lc("language")}</div>
+                                <div>{lc("language")}</div>
                             </td>
                             <td>
                                 <Select //
@@ -148,7 +148,7 @@ const PreferencesPopup = ({
                         </tr>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("lockTimeoutMinutes")}</div>
+                                <div>{ls("lockTimeoutMinutes")}</div>
                             </td>
                             <td>
                                 <InputNumber //
@@ -161,7 +161,7 @@ const PreferencesPopup = ({
                         </tr>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("failedUnlockExitCount")}</div>
+                                <div>{ls("failedUnlockExitCount")}</div>
                             </td>
                             <td>
                                 <InputNumber //
@@ -175,7 +175,7 @@ const PreferencesPopup = ({
 
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("saveWindowPosition")}</div>
+                                <div>{ls("saveWindowPosition")}</div>
                             </td>
                             <td>
                                 <Checkbox //

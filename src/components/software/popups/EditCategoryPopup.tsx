@@ -128,7 +128,7 @@ const EditCategoryPopup = ({
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{le("name")}</div>
+                                <div>{le("name")}</div>
                             </td>
                             <td>
                                 <Input //

@@ -100,7 +100,7 @@ const FilePreferencesPopup = ({
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("defaultUseMonoSpacedFontOnNotes")}</div>
+                                <div>{ls("defaultUseMonoSpacedFontOnNotes")}</div>
                             </td>
                             <td>
                                 <Checkbox //
@@ -113,7 +113,7 @@ const FilePreferencesPopup = ({
 
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("defaultUseMarkdownOnNotes")}</div>
+                                <div>{ls("defaultUseMarkdownOnNotes")}</div>
                             </td>
                             <td>
                                 <Checkbox //
@@ -127,7 +127,7 @@ const FilePreferencesPopup = ({
                         {/* This might come back when a decision is made of a HTML text editor, perhaps: verbun, https://github.com/ozanyurtsever/verbum
                             <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("useHtmlIOnNotes")}</div>
+                                <div>{ls("useHtmlIOnNotes")}</div>
                             </td>
                             <td>
                                 <Checkbox //
