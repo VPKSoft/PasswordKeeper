@@ -71,7 +71,7 @@ const PreferencesPopup = ({
     const ls = useLocalize("settings");
     const lc = useLocalize("common");
 
-    // Memoize the DevExtreme themes as a data source used by a theme Lookup.
+    // Memoize the themes as a data source used by a theme Lookup.
     const dataSource = React.useMemo(() => {
         const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replaceAll(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
         return result;

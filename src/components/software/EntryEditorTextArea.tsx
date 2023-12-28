@@ -51,15 +51,8 @@ const EntryEditorTextArea = ({
     className, //
     readOnly,
     value,
-    monospacedFont,
     onValueChanged,
 }: EntryEditorTextAreaProps) => {
-    // For unresolved reason the prop does not affect if used directly with styled components.
-    // This is possibly a DevExtreme bug with the TextArea component.
-    const style = React.useMemo(() => {
-        return { fontFamily: monospacedFont === true ? "monospace" : "system-ui" };
-    }, [monospacedFont]);
-
     const onChange = React.useCallback(
         (e: React.ChangeEvent<HTMLTextAreaElement>) => {
             onValueChanged?.(e.target.value);
@@ -69,7 +62,6 @@ const EntryEditorTextArea = ({
 
     return (
         <Input.TextArea //
-            style={style}
             readOnly={readOnly}
             value={value}
             className={classNames(EntryEditorTextArea.name, className)}
@@ -79,7 +71,10 @@ const EntryEditorTextArea = ({
 };
 
 const EntryEditorTextAreaStyled = styled(EntryEditorTextArea)`
-    // Add style(s) here
+    // Use the &&-block to not to allow the style being overridden by specifying the className prop.
+    && {
+        font-family: ${props => (props.monospacedFont === true ? "monospace" : "system-ui")};
+    }
 `;
 
 export { EntryEditorTextAreaStyled };

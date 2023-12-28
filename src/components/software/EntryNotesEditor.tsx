@@ -1,7 +1,6 @@
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { ScrollView } from "devextreme-react";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
@@ -57,14 +56,11 @@ const EntryNotesEditor = ({
     const content = React.useMemo(() => {
         if ((entry?.useMarkdown ?? defaultUseMarkdown) === true) {
             return readOnly ? (
-                <ScrollView //
+                <MarkDownViewStyled //
                     className="EntryNotesEditor-TextArea"
-                >
-                    <MarkDownViewStyled //
-                        markDown={entry?.notes}
-                        monospacedFont={monoSpacedFont}
-                    />
-                </ScrollView>
+                    markDown={entry?.notes}
+                    monospacedFont={monoSpacedFont}
+                />
             ) : (
                 <MarkdownTextEditorStyled //
                     markDown={entry?.notes}
@@ -109,6 +105,7 @@ const EntryNotesEditorStyled = styled(EntryNotesEditor)`
         height: 100%;
         min-height: ${props => props.height ?? "240px"};
         resize: none;
+        overflow: auto;
     }
 `;
 
