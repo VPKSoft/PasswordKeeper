@@ -817,6 +817,7 @@ const StyledApp = styled(App)`
     }
     .App-itemsView-list {
         width: 40%;
+        overflow: auto;
     }    
 `;
 
