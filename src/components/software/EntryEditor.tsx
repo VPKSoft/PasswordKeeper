@@ -35,7 +35,6 @@ import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
-import { useCssStyle } from "../../hooks/UseCssStyle";
 import { TagBox } from "../reusable/inputs/TagBox";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryNotesEditorStyled } from "./EntryNotesEditor";
