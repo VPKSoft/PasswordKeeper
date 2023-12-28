@@ -36,6 +36,8 @@ pub struct Auth2FAResult {
     key: String,
     /// A value indicating whether the key was successfully generated.
     success: bool,
+    /// An error message if an error occurred in key generation.
+    error_message: String,
 }
 
 // The default value for the Auth2FAResult struct.
@@ -53,20 +55,25 @@ impl ::std::default::Default for Auth2FAResult {
             issuer: "".to_string(),
             key: "".to_string(),
             success: true,
+            error_message: "".to_string(),
         }
     }
 }
 
 ///  Returns a default error value for the `Auth2FAResult` `struct`.
 ///
+/// # Arguments
+/// * `error_message` - Error message for the error which occurred during the TOTP generation.
+///
 /// # Returns
 /// a default error value for the `Auth2FAResult` `struct`.
-fn aut_error() -> Auth2FAResult {
+fn aut_error(error_message: String) -> Auth2FAResult {
     let result = Auth2FAResult {
         name: "".to_string(),
         issuer: "".to_string(),
         key: "".to_string(),
         success: false,
+        error_message: error_message,
     };
 
     result
@@ -105,18 +112,19 @@ pub fn gen_secret_otpauth(otpauth: String) -> Auth2FAResult {
                         },
                         key: totp_value,
                         success: true,
+                        error_message: "".to_string(),
                     };
 
                     auth_result
                 }
                 // The key generation failed.
-                Err(_) => aut_error(),
+                Err(e) => aut_error(e.to_string()),
             };
 
             auth_result
         }
         // The TOTP creation failed.
-        Err(_) => aut_error(),
+        Err(e) => aut_error(e.to_string()),
     };
 
     result

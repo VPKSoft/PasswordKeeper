@@ -382,10 +382,10 @@ const EntryEditor = ({
                                 <td>
                                     <div className="OTPAuth">
                                         <Input //
-                                            readOnly={true}
                                             value={entry?.otpAuthKey}
                                             onChange={onOTPAuthChanged}
                                             className="OTPAuth-textBox"
+                                            readOnly={readOnly}
                                         />
                                         {showQrViewButton && (
                                             <Tooltip title={lu("displayQrCodeTitle")}>
