@@ -26,10 +26,8 @@ import * as React from "react";
 import "./App.css";
 import classNames from "classnames";
 import { appWindow } from "@tauri-apps/api/window";
-import notify from "devextreme/ui/notify";
 import { exit } from "@tauri-apps/api/process";
 import { ask } from "@tauri-apps/api/dialog";
-import dxTreeList, { Node } from "devextreme/ui/tree_list";
 import { styled } from "styled-components";
 import { open } from "@tauri-apps/api/shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
@@ -38,7 +36,6 @@ import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
-import { setTheme } from "./utilities/ThemeUtils";
 import { useSecureStorage } from "./hooks/UseSecureStorage";
 import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
@@ -58,8 +55,8 @@ import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
 import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
-import { useCssStyle } from "./hooks/UseCssStyle";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
+import { useNotify } from "./components/reusable/Notify";
 
 /**
  * The props for the {@link App} component.
@@ -76,6 +73,8 @@ const App = ({ className }: AppProps) => {
     const la = useLocalize("app");
     const lm = useLocalize("messages");
     const ls = useLocalize("settings");
+
+    const [contextHolder, notification] = useNotify();
 
     const [entry, setEntry] = React.useState<DataEntry | null>(null);
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
@@ -104,11 +103,14 @@ const App = ({ className }: AppProps) => {
     const [isNewFile, setIsNewFile] = React.useState(true);
     const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
+    const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
 
-    const treeListRef = React.useRef<dxTreeList>();
     const settingsRef = React.useRef<Settings>();
-    const textColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
-    const backColor = useCssStyle("color", "#5bbec3", null, "dx-theme-border-color-as-text-color");
+    const expandedKeysRef = React.useRef<Array<string>>([]);
+    const selectedItemRef = React.useRef<DataEntry | null>(null);
+
+    const textColor = "white";
+    const backColor = "#f05b41";
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -151,8 +153,10 @@ const App = ({ className }: AppProps) => {
         setPreferencesVisible(false);
 
         // Collapse the tree. The categories are allowed to show.
-        collapseTree(treeListRef?.current);
-    }, []);
+        expandedKeysRef.current = expandedKeys;
+        selectedItemRef.current = entry;
+        setExpandedKeys([]);
+    }, [entry, expandedKeys]);
 
     // A callback to lock the view after a time interval has elapsed.
     const onViewLockTimeout = React.useCallback(() => {
@@ -180,12 +184,10 @@ const App = ({ className }: AppProps) => {
     const applySettings = React.useCallback(
         (value: Settings) => {
             settingsRef.current = value;
-            void setTheme(value.dx_theme).then(() => {
-                setLocale((value.locale ?? "en") as Locales);
-                setTimeoutEnabled(value.lock_timeout > 0);
-                setTimeOut(value.lock_timeout);
-                setSettingsLoaded(true);
-            });
+            setLocale((value.locale ?? "en") as Locales);
+            setTimeoutEnabled(value.lock_timeout > 0);
+            setTimeOut(value.lock_timeout);
+            setSettingsLoaded(true);
         },
         [setTimeoutEnabled]
     );
@@ -240,12 +242,12 @@ const App = ({ className }: AppProps) => {
                         }
                     } else {
                         // Something went wrong with the file save. Display the error message.
-                        notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                        notification("error", lm("fileSaveFail", undefined, f.errorMessage), 5);
                     }
                 });
             }
         }
-    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, saveFileAsCallback]);
+    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, notification, saveFileAsCallback]);
 
     // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
@@ -363,12 +365,12 @@ const App = ({ className }: AppProps) => {
         const lockAfter = (settingsRef.current?.failed_unlock_attempts ?? 0) - failed;
         if (lockAfter > 0) {
             // Notify about the erroneous password.
-            notify(lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), "warning", 5_000);
+            notification("warning", lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), 5);
         } else {
             // The count exceeded, exit the software.
             void exit(0);
         }
-    }, [lm, passwordFailedCount]);
+    }, [lm, notification, passwordFailedCount]);
 
     // The file popup was closed. If the user accepted the popup.
     // Depending on the popup mode and user input either open an existing file or save new file.
@@ -388,9 +390,12 @@ const App = ({ className }: AppProps) => {
                             setPasswordFailedCount(0);
                             setDataTags(f.tags);
                             setFileOptions(f.dataOptions);
+                            expandedKeysRef.current = [];
+                            selectedItemRef.current = null;
+                            setExpandedKeys([]);
                         } else {
                             // The file load failed with most probable reason being an invalid password.
-                            notify(lm("fileOpenFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            notification("error", lm("fileOpenFail", undefined, { msg: f.errorMessage }), 5);
                             // Increase the failed password count, whatever the failure reason is.
                             increaseFileLockFail();
                         }
@@ -416,14 +421,14 @@ const App = ({ className }: AppProps) => {
                             }
                         } else {
                             // Some error occurred saving the file, report the save failure.
-                            notify(lm("fileSaveFail", undefined, { msg: f.errorMessage }), "error", 5_000);
+                            notification("error", lm("fileSaveFail", undefined, { msg: f.errorMessage }), 5);
                         }
                     });
                 }
             }
             setFileSaveOpenQueryOpen(false);
         },
-        [dataSource, dataTags, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, setFilePassword]
+        [dataSource, dataTags, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, notification, setFilePassword]
     );
 
     // The exit application menu was chosen.
@@ -524,22 +529,22 @@ const App = ({ className }: AppProps) => {
                         if (fileChanged) {
                             // If the file is changed, notify the user that the theme change
                             // failed as it requires the window to be refreshed.
-                            notify({ message: ls("themeChangeFailFileUnsaved"), width: 300, shading: true, displayTime: 5_000, type: "warning" }, { position: "bottom center", direction: "up-push" });
-                            notify({ message: ls("saveSuccess"), width: 300, shading: true, displayTime: 5_000, type: "success" }, { position: "bottom center", direction: "up-push" });
+                            notification("warning", ls("themeChangeFailFileUnsaved"), 5);
+                            notification("success", ls("saveSuccess"), 5);
                         } else {
                             // The theme change requires a window reload.
                             window.location.reload();
-                            notify(ls("saveSuccess"), "success", 5_000);
+                            notification("success", ls("saveSuccess"), 5);
                         }
                     } else {
                         // Notify of an error while trying to save the changes.
-                        notify(ls("saveFailed"), "error", 5_000);
+                        notification("error", ls("saveFailed"), 5);
                     }
                 });
             }
             setPreferencesVisible(false);
         },
-        [applySettings, fileChanged, ls]
+        [applySettings, fileChanged, ls, notification]
     );
 
     // Display the about popup.
@@ -553,22 +558,10 @@ const App = ({ className }: AppProps) => {
     }, []);
 
     // Expands the tree list selection and restores the selected state upon unlocking the view.
-    const expandTreeListSelection = React.useCallback(async () => {
-        const key = treeListRef.current?.getSelectedRowKeys()[0] as number | undefined;
-        if (key) {
-            const item = dataSource.find(f => f.id === key);
-
-            if (item) {
-                if (item.parentId !== -1) {
-                    await treeListRef.current?.expandRow(item.parentId);
-                }
-                await treeListRef.current?.expandRow(key);
-                await treeListRef.current?.navigateToRow(key);
-
-                setEntry(item);
-            }
-        }
-    }, [dataSource]);
+    const expandTreeListSelection = React.useCallback(() => {
+        setExpandedKeys(expandedKeysRef.current);
+        setEntry(selectedItemRef.current);
+    }, []);
 
     // A callback to unlock the view locked with an overlay.
     // If an existing file is opened a password dialog is displayed instead to unlock the view.
@@ -651,12 +644,6 @@ const App = ({ className }: AppProps) => {
         setFilePreferencesVisible(false);
     }, []);
 
-    // Set the file as updated if the data source is updated via entry list. E.g. ordering might have changed.
-    const onEntryListChanged = React.useCallback((dataSource: DataEntry[]) => {
-        setDataSource(dataSource);
-        setFileChanged(true);
-    }, []);
-
     // The file preferences was requested to be modified.
     const filePreferencesClick = React.useCallback(() => {
         setFilePreferencesVisible(true);
@@ -670,6 +657,7 @@ const App = ({ className }: AppProps) => {
     // Render the main view.
     return (
         <>
+            {contextHolder}
             <StyledTitle //
                 title={title}
                 onClose={fileSaveQueryAbortCloseCallback}
@@ -710,11 +698,11 @@ const App = ({ className }: AppProps) => {
                 <div id="mainView" className="App-itemsView">
                     <StyledPasswordList //
                         searchValue={searchTextBoxValue}
-                        treeListRef={treeListRef}
                         dataSource={dataSource}
-                        setDataSource={onEntryListChanged}
                         className="App-itemsView-list"
                         setEntry={setEntry}
+                        expandedKeys={expandedKeys}
+                        setExpandedKeys={setExpandedKeys}
                     />
                     <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
@@ -727,7 +715,6 @@ const App = ({ className }: AppProps) => {
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
-                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                     />
                 </div>
                 {editEntry !== null && (
@@ -740,7 +727,6 @@ const App = ({ className }: AppProps) => {
                         notesFont={fileOptions?.notesFont}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
-                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                     />
                 )}
                 {editEntry !== null && (
@@ -808,21 +794,6 @@ const App = ({ className }: AppProps) => {
     );
 };
 
-/**
- * Collapses a {@link dxTreeList} using array of {@link DataEntry} items as a data source.
- * @param tree The tree list to collapse.
- */
-const collapseTree = (tree: dxTreeList | undefined) => {
-    if (tree) {
-        tree.forEachNode((f: Node<DataEntry>) => {
-            // Only collapse the parent nodes.
-            if (f.data?.parentId === -1) {
-                void tree.collapseRow(f.key);
-            }
-        });
-    }
-};
-
 const searchBoxValueEmpty: SearchTextBoxValue = { value: "", searchMode: SearchMode.Or };
 
 const StyledApp = styled(App)`
@@ -842,6 +813,7 @@ const StyledApp = styled(App)`
     }
     .App-itemsView-list {
         width: 40%;
+        overflow: auto;
     }    
 `;
 

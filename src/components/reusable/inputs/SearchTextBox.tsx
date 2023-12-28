@@ -23,11 +23,11 @@ SOFTWARE.
 */
 
 import classNames from "classnames";
-import Button from "devextreme-react/button";
-import TextBox from "devextreme-react/text-box";
-import dxTextBox, { InitializedEvent, KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
 import * as React from "react";
 import { styled } from "styled-components";
+import { Button, Input, Tooltip } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 
@@ -50,9 +50,7 @@ type SearchTextBoxProps = {
     /** Occurs when the {@link TextBox} value has been changed. */
     onValueChanged?: (value: SearchTextBoxValue) => void;
     /** Occurs when a key was pressed on the {@link TextBox}. */
-    onKeyDown?: (e: KeyDownEvent) => void;
-    /** Occurs when the {@link TextBox} was initialized. */
-    onInitialized?: (e: InitializedEvent) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 } & CommonProps;
 
 /**
@@ -63,22 +61,10 @@ type SearchTextBoxProps = {
 const SearchTextBox = ({
     className, //
     value,
-    onInitialized: onInitializedCallback,
     onValueChanged,
     onKeyDown,
 }: SearchTextBoxProps) => {
-    const textBoxRef = React.useRef<dxTextBox>();
-
     const lu = useLocalize("ui");
-
-    // Save the TextBox ref and delegate a new callback with the same parameters.
-    const onInitialized = React.useCallback(
-        (e: InitializedEvent) => {
-            onInitializedCallback?.(e);
-            textBoxRef.current = e.component;
-        },
-        [onInitializedCallback]
-    );
 
     // Memoize the tooltip for the password visibility toggle
     // button based on the value whether to display the password.
@@ -95,8 +81,8 @@ const SearchTextBox = ({
     }, [onValueChanged, value.searchMode]);
 
     const textBoxValueChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
-            onValueChanged?.({ value: e.value as string, searchMode: value.searchMode });
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            onValueChanged?.({ value: e.target.value, searchMode: value.searchMode });
         },
         [onValueChanged, value.searchMode]
     );
@@ -104,27 +90,26 @@ const SearchTextBox = ({
     return (
         <div className={classNames(SearchTextBox.name, className)}>
             <div className="SearchTextBox-label">{lu("searchLabel")}</div>
-            <TextBox //
-                onInitialized={onInitialized}
+            <Input //
                 className="SearchTextBox-textBox"
                 value={value.value}
-                onValueChanged={textBoxValueChanged}
+                onChange={textBoxValueChanged}
                 onKeyDown={onKeyDown}
-                valueChangeEvent="keyup blur change input focusout keydown"
             />
-            <Button //
-                text={`${value.searchMode === SearchMode.Or ? "/" : "&"}`}
-                className="SearchTextBox-buttonAndOr"
-                onClick={toggleMode}
-                hint={modeToggleHint}
-            />
-            <Button //
-                icon="clear"
-                className="SearchTextBox-button"
-                onClick={clearClick}
-                hint={lu("clearSearch")}
-                disabled={value.value === ""}
-            />
+            <Tooltip title={modeToggleHint}>
+                <Button //
+                    className="SearchTextBox-buttonAndOr"
+                    onClick={toggleMode}
+                >{`${value.searchMode === SearchMode.Or ? "/" : "&"}`}</Button>
+            </Tooltip>
+            <Tooltip title={lu("clearSearch")}>
+                <Button //
+                    icon={<FontAwesomeIcon icon={faCircleXmark} />}
+                    className="SearchTextBox-button"
+                    onClick={clearClick}
+                    disabled={value.value === ""}
+                />
+            </Tooltip>
         </div>
     );
 };
@@ -138,6 +123,7 @@ const StyledSearchTextBox = styled(SearchTextBox)`
     .SearchTextBox-button {
         margin-left: 6px;
         font-weight: bolder;
+        width: 100px;
     }
     .SearchTextBox-buttonAndOr {
         margin-left: 6px;

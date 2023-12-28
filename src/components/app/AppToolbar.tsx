@@ -23,10 +23,12 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Toolbar } from "devextreme-react";
-import { Item as ToolbarItem } from "devextreme-react/toolbar";
 import { styled } from "styled-components";
 import classNames from "classnames";
+import { Button, Tooltip } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFloppyDisk, faFolderOpen, faFolderPlus, faHammer, faLock, faPen, faSliders, faSquarePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
@@ -87,93 +89,102 @@ const AppToolbar = ({
 }: AppToolbarProps) => {
     const lm = useLocalize("menu");
     const ls = useLocalize("settings");
+
+    // Clear the search box when the Escape key is pressed.
+    const onSearchKeyDown = React.useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.code === "Escape") {
+                searchValueChanged?.({ ...searchValue, value: "" });
+                e.preventDefault();
+            }
+        },
+        [searchValue, searchValueChanged]
+    );
+
     return (
-        <Toolbar className={classNames(AppToolbar.name, className)}>
-            <ToolbarItem location="before">
+        <div className={classNames(AppToolbar.name, className)}>
+            <Tooltip title={lm("itemAdd")}>
                 <Button //
-                    icon="add"
+                    icon={<FontAwesomeIcon icon={faSquarePlus} />}
                     onClick={addClick}
                     disabled={entry === undefined}
-                    hint={lm("itemAdd")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("itemAddCategory")}>
                 <Button //
-                    icon="newfolder"
+                    icon={<FontAwesomeIcon icon={faFolderPlus} />}
                     onClick={addCategoryClick}
-                    hint={lm("itemAddCategory")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("itemEdit")}>
                 <Button //
-                    icon="edit"
+                    icon={<FontAwesomeIcon icon={faPen} />}
                     onClick={editClick}
                     disabled={entry === undefined}
-                    hint={lm("itemEdit")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("itemDelete")}>
                 <Button //
-                    icon="trash"
+                    icon={<FontAwesomeIcon icon={faTrashCan} />}
                     onClick={deleteClick}
                     disabled={entry === undefined}
-                    hint={lm("itemDelete")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("fileSave")}>
                 <Button //
-                    icon="save"
+                    icon={<FontAwesomeIcon icon={faFloppyDiskSave} />}
                     onClick={saveFileClick}
-                    hint={lm("fileSave")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("fileSaveAs")}>
                 <Button //
-                    icon="fas fa-floppy-disk"
+                    icon={<FontAwesomeIcon icon={faFloppyDisk} />}
                     onClick={saveFileAsClick}
-                    hint={lm("fileSaveAs")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("fileOpen")}>
                 <Button //
-                    icon="folder"
+                    icon={<FontAwesomeIcon icon={faFolderOpen} />}
                     onClick={loadFileClick}
-                    hint={lm("fileOpen")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={lm("lockView")}>
                 <Button //
-                    icon="lock"
+                    icon={<FontAwesomeIcon icon={faLock} />}
                     onClick={lockViewClick}
-                    hint={lm("lockView")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="before">
+            </Tooltip>
+            <Tooltip title={ls("filePreferences")}>
                 <Button //
-                    icon="fas fa-sliders"
+                    icon={<FontAwesomeIcon icon={faSliders} />}
                     onClick={filePreferencesClick}
-                    hint={ls("filePreferences")}
                 />
-            </ToolbarItem>
-            <ToolbarItem location="after">
-                <StyledSearchTextBox value={searchValue} onValueChanged={searchValueChanged} className="AppToolbar-searchBox" />
-            </ToolbarItem>
+            </Tooltip>
+            <StyledSearchTextBox //
+                value={searchValue}
+                onValueChanged={searchValueChanged}
+                className="AppToolbar-searchBox"
+                onKeyDown={onSearchKeyDown}
+            />
             {testClick && (
-                <ToolbarItem location="before">
+                <Tooltip title="Test stuff">
                     <Button //
-                        icon="help"
+                        icon={<FontAwesomeIcon icon={faHammer} />}
                         onClick={testClick}
-                        hint="Test stuff"
                     />
-                </ToolbarItem>
+                </Tooltip>
             )}
-        </Toolbar>
+        </div>
     );
 };
 
 const StyledAppToolbar = styled(AppToolbar)`
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
     .AppToolbar-searchBox {
-        width: 450px;
+        width: 480px;
+        margin-left: auto;
     }
 `;
 

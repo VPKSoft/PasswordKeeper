@@ -23,9 +23,9 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup } from "devextreme-react";
 import classNames from "classnames";
 import { styled } from "styled-components";
+import { Button, Modal } from "antd";
 import { DialogButtons, DialogResult, PopupType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
@@ -87,17 +87,6 @@ const ConfirmPopup = ({
         }
     }, [lc, mode, overrideTitle]);
 
-    // This is called when the popup is closed.
-    const onHiding = React.useCallback(() => {
-        if (visible && !hideViaButton.current) {
-            // Only call the onClose callback to indicate cancel if the ref
-            // is not indicating that the dialog was not hidden via a button click.
-            // E.g. the X on the upper right was clicked.
-            onClose(DialogResult.Cancel);
-        }
-        hideViaButton.current = false;
-    }, [onClose, visible]);
-
     // Close the dialog with the specified result.
     const onCloseCallback = React.useCallback(
         (result: DialogResult) => {
@@ -128,41 +117,41 @@ const ConfirmPopup = ({
     }, [onCloseCallback]);
 
     return (
-        <Popup //
+        <Modal //
             title={title}
-            showCloseButton={true}
-            visible={visible}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={250}
+            open={visible}
             width={400}
-            showTitle={true}
-            onHiding={onHiding}
+            footer={null}
+            onCancel={onCancelClick}
+            centered
         >
             <div className={classNames(ConfirmPopup.name, className)}>
                 <div className="Popup-messageText">{message}</div>
                 <div className="Popup-ButtonRow">
                     {(buttons & DialogButtons.Yes) === DialogButtons.Yes && (
                         <Button //
-                            text={lc("yes")}
                             onClick={onYesClick}
-                        />
+                        >
+                            {lc("yes")}
+                        </Button>
                     )}
                     {(buttons & DialogButtons.No) === DialogButtons.No && (
                         <Button //
-                            text={lc("no")}
                             onClick={onNoClick}
-                        />
+                        >
+                            {lc("no")}
+                        </Button>
                     )}
                     {(buttons & DialogButtons.Cancel) === DialogButtons.Cancel && (
                         <Button //
-                            text={lc("cancel")}
                             onClick={onCancelClick}
-                        />
+                        >
+                            {lc("cancel")}
+                        </Button>
                     )}
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 

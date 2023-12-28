@@ -23,9 +23,9 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup } from "devextreme-react";
 import classNames from "classnames";
 import { styled } from "styled-components";
+import { Button, Modal } from "antd";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { DataEntry } from "../../../types/PasswordEntry";
@@ -44,8 +44,6 @@ type EntryNotesEditorPopupProps = {
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
     /** A value indicating whether to use HTML on entry editing and rendering. */
-    useHtmlOnNotes?: boolean;
-    /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
     imagePasteEnabled: boolean;
     /**
      * A callback which occurs when the popup is closed.
@@ -62,7 +60,6 @@ const EntryNotesEditorPopup = ({
     entry,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
-    useHtmlOnNotes,
     imagePasteEnabled,
     onClose,
 }: EntryNotesEditorPopupProps) => {
@@ -70,6 +67,11 @@ const EntryNotesEditorPopup = ({
 
     const lu = useLocalize("ui");
     const le = useLocalize("entries");
+
+    // Update the state when the entry changes.
+    React.useEffect(() => {
+        setNotes(entry?.notes);
+    }, [entry?.notes]);
 
     // Raise the onClose if the popup is closed via the "X" button or is canceled.
     const onHiding = React.useCallback(() => {
@@ -86,16 +88,13 @@ const EntryNotesEditorPopup = ({
     }, [notes, onClose, visible]);
 
     return (
-        <Popup //
+        <Modal //
             title={le("editNotes")}
-            showCloseButton={true}
-            visible={visible}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={700}
+            open={visible}
             width={700}
-            showTitle={true}
-            onHiding={onHiding}
+            footer={null}
+            centered
+            onCancel={onHiding}
         >
             <div className={classNames(EntryNotesEditorPopup.name, className)}>
                 <EntryNotesEditorStyled //
@@ -103,22 +102,24 @@ const EntryNotesEditorPopup = ({
                     entry={entry}
                     defaultUseMarkdown={defaultUseMarkdown}
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
-                    useHtmlOnNotes={useHtmlOnNotes}
                     imagePasteEnabled={imagePasteEnabled}
                     onNotesChanged={setNotes}
+                    height="550px"
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onHiding}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
@@ -126,6 +127,7 @@ const StyledAEntryNotesEditorPopup = styled(EntryNotesEditorPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    min-height: 600px;
     .Popup-ButtonRow {
         display: flex;
         width: 100%;

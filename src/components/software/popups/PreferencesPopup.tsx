@@ -23,13 +23,12 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, CheckBox, Lookup, NumberBox, Popup } from "devextreme-react";
 import classNames from "classnames";
-import { ValueChangedEvent } from "devextreme/ui/lookup";
 import { styled } from "styled-components";
+import { Button, Checkbox, InputNumber, Modal, Select } from "antd";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Locales, currentLocales, useLocalize } from "../../../i18n";
 import { Settings } from "../../../types/Settings";
-import { DxThemeNames, dxThemes } from "../../../utilities/ThemeUtils";
 import { CommonProps } from "../../Types";
 
 /**
@@ -60,7 +59,6 @@ const PreferencesPopup = ({
     settings,
     onClose,
 }: PreferencesPopupProps) => {
-    const [userAccepted, setUserAccepted] = React.useState(false);
     const [settingsInternal, setSettingsInternal] = React.useState<Settings>();
 
     // Store the settings passed via the prop to the internal state of the component.
@@ -72,166 +70,117 @@ const PreferencesPopup = ({
     const ls = useLocalize("settings");
     const lc = useLocalize("common");
 
-    // Memoize the DevExtreme themes as a data source used by a theme Lookup.
-    const dataSource = React.useMemo(() => {
-        const result = dxThemes.map(f => ({ key: f, name: f.replaceAll(".", " ").replaceAll(/(^\w|\s\w)/g, m => m.toUpperCase()) }));
-        return result;
-    }, []);
-
     // Memoize the popup title.
     const title = React.useMemo(() => ls("settings"), [ls]);
 
-    // Handle the onVisibleChange callback of the Popup component.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose(userAccepted);
-            }
-            setUserAccepted(false);
-        },
-        [onClose, userAccepted]
-    );
-
-    // Handle the onHiding callback of the Popup component.
-    const onHiding = React.useCallback(() => {
-        onClose(userAccepted);
-        setUserAccepted(false);
-    }, [onClose, userAccepted]);
-
-    // Save the changed theme Lookup value into the internal state.
-    const onThemeValueChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
-            const value = e.value as DxThemeNames;
-            setSettingsInternal({ ...(settingsInternal ?? settings), dx_theme: value });
-        },
-        [settings, settingsInternal]
-    );
-
     // Save the locale Lookup value into the internal state.
     const onLocaleValueChanged = React.useCallback(
-        (e: ValueChangedEvent) => {
-            const value = e.value as Locales;
-            setSettingsInternal({ ...(settingsInternal ?? settings), locale: value });
+        (value: string) => {
+            const valueNew = value as Locales;
+            setSettingsInternal({ ...(settingsInternal ?? settings), locale: valueNew });
         },
         [settings, settingsInternal]
     );
 
     // Save the changed lock timeout NumberBox value into the internal state.
     const setLockTimeout = React.useCallback(
-        (value: number) => {
-            setSettingsInternal({ ...(settingsInternal ?? settings), lock_timeout: value });
+        (value: number | null) => {
+            if (value) {
+                setSettingsInternal({ ...(settingsInternal ?? settings), lock_timeout: value });
+            }
         },
         [settings, settingsInternal]
     );
 
     // Save the password retry count NumberBox value into the internal state.
     const setFailedUnlockCount = React.useCallback(
-        (value: number) => {
-            setSettingsInternal({ ...(settingsInternal ?? settings), failed_unlock_attempts: value });
+        (value: number | null) => {
+            if (value) {
+                setSettingsInternal({ ...(settingsInternal ?? settings), failed_unlock_attempts: value });
+            }
         },
         [settings, settingsInternal]
     );
 
     const setSaveWindowState = React.useCallback(
-        (value: boolean | null) => {
-            setSettingsInternal({ ...(settingsInternal ?? settings), save_window_state: value === true });
+        (e: CheckboxChangeEvent) => {
+            setSettingsInternal({ ...(settingsInternal ?? settings), save_window_state: e.target.checked === true });
         },
         [settings, settingsInternal]
     );
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        setUserAccepted(true);
         onClose(true, settingsInternal);
     }, [onClose, settingsInternal]);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
-        setUserAccepted(false);
         onClose(false);
     }, [onClose]);
 
     return (
-        <Popup //
+        <Modal //
             title={title}
-            showCloseButton={true}
-            visible={visible}
-            onHiding={onHiding}
-            onVisibleChange={onVisibleChange}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={360}
+            open={visible}
             width={600}
-            showTitle={true}
+            centered
+            onCancel={onCancelClick}
+            keyboard
+            footer={null}
         >
             <div className={classNames(PreferencesPopup.name, className)}>
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("theme")}</div>
+                                <div>{lc("language")}</div>
                             </td>
                             <td>
-                                <Lookup //
-                                    dataSource={dataSource}
-                                    displayExpr="name"
-                                    valueExpr="key"
-                                    value={settingsInternal?.dx_theme}
-                                    onValueChanged={onThemeValueChanged}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div className="dx-field-item-label-text">{lc("language")}</div>
-                            </td>
-                            <td>
-                                <Lookup //
-                                    dataSource={currentLocales}
-                                    displayExpr="name"
-                                    valueExpr="code"
+                                <Select //
+                                    className="Select-width"
+                                    options={currentLocales}
+                                    fieldNames={{ label: "name", value: "code" }}
+                                    onChange={onLocaleValueChanged}
                                     value={settingsInternal?.locale}
-                                    onValueChanged={onLocaleValueChanged}
                                 />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("lockTimeoutMinutes")}</div>
+                                <div>{ls("lockTimeoutMinutes")}</div>
                             </td>
                             <td>
-                                <NumberBox //
+                                <InputNumber //
                                     value={settingsInternal?.lock_timeout}
                                     min={0}
                                     max={120}
-                                    onValueChange={setLockTimeout}
-                                    showSpinButtons={true}
+                                    onChange={setLockTimeout}
                                 />
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("failedUnlockExitCount")}</div>
+                                <div>{ls("failedUnlockExitCount")}</div>
                             </td>
                             <td>
-                                <NumberBox //
+                                <InputNumber //
                                     value={settingsInternal?.failed_unlock_attempts}
                                     min={0}
                                     max={20}
-                                    onValueChange={setFailedUnlockCount}
-                                    showSpinButtons={true}
+                                    onChange={setFailedUnlockCount}
                                 />
                             </td>
                         </tr>
 
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{ls("saveWindowPosition")}</div>
+                                <div>{ls("saveWindowPosition")}</div>
                             </td>
                             <td>
-                                <CheckBox //
-                                    value={settingsInternal?.save_window_state}
-                                    onValueChange={setSaveWindowState}
+                                <Checkbox //
+                                    checked={settingsInternal?.save_window_state}
+                                    onChange={setSaveWindowState}
                                 />
                             </td>
                         </tr>
@@ -239,16 +188,18 @@ const PreferencesPopup = ({
                 </table>
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onCancelClick}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
@@ -264,6 +215,9 @@ const StyledPreferencesPopup = styled(PreferencesPopup)`
         width: 100%;
         flex-direction: row;
         justify-content: flex-end;
+    }
+    .Select-width {
+        width: 300px;
     }
 `;
 

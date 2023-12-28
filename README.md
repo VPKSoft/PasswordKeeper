@@ -2,8 +2,9 @@
 A software to store login information into an encrypted file. 
 
 [![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml) [![Crowdin](https://badges.crowdin.net/passwordkeeper/localized.svg)](https://crowdin.com/project/passwordkeeper)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper?ref=badge_shield)
 
-![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/c4e0893b-32b0-4d27-9051-55e31a2dc271)
+![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/d9f97198-c4fd-44f1-a1d6-cdb2735f748e)
 
 For instructions, see: [Help](https://vpksoft.github.io/PasswordKeeper/).
 
@@ -94,8 +95,15 @@ Well, that was background noise - the reasons:
 # Thanks to
 [Tauri](https://tauri.app), [Node.js](https://nodejs.org), [React](https://react.dev), [Font Awesome *Free*](https://fontawesome.com/search?o=r&m=free), [Weblate](https://weblate.org), [i18next](https://www.i18next.com), [React Countdown Circle Timer](https://www.npmjs.com/package/react-countdown-circle-timer), [Html5-QRCode](https://www.npmjs.com/package/html5-qrcode), [totp-rs](https://crates.io/crates/totp-rs), [qrcode](https://www.npmjs.com/package/qrcode), [google-authenticator-exporter](https://github.com/krissrex/google-authenticator-exporter), [protobufjs](https://www.npmjs.com/package/protobufjs), [html-react-parser](https://www.npmjs.com/package/html-react-parser), [DOMPurify](https://www.npmjs.com/package/dompurify), [Marked](https://www.npmjs.com/package/marked)
 
-* *UX Powered by* **[DevExtreme](https://js.devexpress.com/NonCommercial/)** *[Non-Commercial license](https://js.devexpress.com/Licensing/#NonCommercial)*, See: [DevExtreme Non-Commercial, Non-Competitive End User License Agreement](https://js.devexpress.com/EULAs/DevExtremeNonCommercial/)
+* *UX Powered by* **[Ant Design](https://ant.design)**
+
+  ![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/7f9c19fe-4b38-499a-9cfe-f3cba79347b8)
+
 
 * Localization powered by [Crowdin](https://crowdin.com) (for Open-source project)
 
   <img src="https://github.com/VPKSoft/PasswordKeeper/assets/40712699/0dc92fca-9763-4376-bd05-70c1c5c92780" width="200px" />
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper?ref=badge_large)

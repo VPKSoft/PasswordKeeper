@@ -9,6 +9,7 @@
         "rust"
     ],
     "cSpell.words": [
+        "antd",
         "devextreme",
         "dompurify",
         "Kautonen",
@@ -16,6 +17,7 @@
         "Petteri",
         "Tahoma",
         "tauri",
+        "TOTP",
         "unlisten",
         "Verdana"
     ],

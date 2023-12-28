@@ -23,13 +23,10 @@ SOFTWARE.
 */
 
 import * as React from "react";
-import { Button, Popup } from "devextreme-react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { KeyDownEvent, ValueChangedEvent } from "devextreme/ui/text_box";
-import { InitializedEvent } from "devextreme/ui/popup";
+import { Button, InputRef, Modal } from "antd";
 import { useLocalize } from "../../../i18n";
-import { useFocus } from "../../../hooks/UseFocus";
 import { CommonProps } from "../../Types";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
 
@@ -70,43 +67,26 @@ const QueryPasswordPopup = ({
     disableCloseViaKeyboard = false,
     onClose,
 }: QueryPasswordPopupProps) => {
-    const [userAccepted, setUserAccepted] = React.useState(false);
     const [password1, setPassword1] = React.useState("");
     const [password2, setPassword2] = React.useState("");
-    const [setFocus, textBoxInitialized] = useFocus();
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
     const lc = useLocalize("common");
 
+    const inputRef = React.useRef<InputRef>(null);
+
     // Memoize the localized title.
     const title = React.useMemo(() => lc("givePassword"), [lc]);
 
-    // Handle the onVisibleChange callback of the Popup component.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose(userAccepted, userAccepted ? password1 : undefined);
-            }
-            setUserAccepted(false);
-        },
-        [onClose, password1, userAccepted]
-    );
-
-    // Handle the onHiding callback of the Popup component.
-    const onHiding = React.useCallback(() => {
-        onClose(userAccepted, userAccepted ? password1 : undefined);
-        setUserAccepted(false);
-    }, [onClose, password1, userAccepted]);
-
     // Save the first password input value to the state when it is changed.
-    const onPassword1Changed = React.useCallback((e: ValueChangedEvent) => {
-        setPassword1(e.value);
+    const onPassword1Changed = React.useCallback((e: string) => {
+        setPassword1(e);
     }, []);
 
     // Save the second password input value to the state when it is changed.
-    const onPassword2Changed = React.useCallback((e: ValueChangedEvent) => {
-        setPassword2(e.value);
+    const onPassword2Changed = React.useCallback((e: string) => {
+        setPassword2(e);
     }, []);
 
     // Memoize the value whether the popup can be accepted. E.g. the password(s) are set.
@@ -120,63 +100,52 @@ const QueryPasswordPopup = ({
 
     // Listen to the text box key event to react to Escape and Return keys.
     const onKeyDown = React.useCallback(
-        (e: KeyDownEvent) => {
-            if (e.event?.key === "Escape") {
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Escape") {
                 if (!disableCloseViaKeyboard) {
-                    setUserAccepted(false);
                     onClose(false);
                 }
-            } else if (e.event?.key === "Enter" && allowAccept) {
-                setUserAccepted(true);
+            } else if (e.key === "Enter" && allowAccept) {
                 onClose(true, password1);
             }
         },
         [allowAccept, disableCloseViaKeyboard, onClose, password1]
     );
 
-    // Catch the escape key press of the popup if the disableCloseViaKeyboard is set.
-    const onInitialized = React.useCallback(
-        (e: InitializedEvent) => {
-            if (disableCloseViaKeyboard) {
-                e.component?.registerKeyHandler("escape", () => void 0);
-            }
-        },
-        [disableCloseViaKeyboard]
-    );
-
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        setUserAccepted(true);
         onClose(true, password1);
     }, [onClose, password1]);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
-        setUserAccepted(false);
         onClose(false);
     }, [onClose]);
 
+    // Set the focus to the text box.
+    const afterOpenChange = React.useCallback((open: boolean) => {
+        if (open) {
+            inputRef.current?.focus();
+        }
+    }, []);
+
     return (
-        <Popup //
+        <Modal //
             title={title}
-            showCloseButton={showCloseButton ?? true}
-            visible={visible}
-            onHiding={onHiding}
-            onVisibleChange={onVisibleChange}
-            onInitialized={onInitialized}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={verifyMode ? 240 : 200}
+            closeIcon={showCloseButton ?? true}
+            open={visible}
+            keyboard // Escape close
             width={600}
-            showTitle={true}
-            onShown={setFocus}
+            centered
+            footer={null}
+            afterOpenChange={afterOpenChange}
         >
             <div className={classNames(QueryPasswordPopup.name, className)}>
                 <table>
                     <tbody>
                         <tr>
                             <td>
-                                <div className="dx-field-item-label-text">{le("password")}</div>
+                                <div>{le("password")}</div>
                             </td>
                             <td>
                                 <div>
@@ -187,7 +156,7 @@ const QueryPasswordPopup = ({
                                         showCopyButton={true}
                                         initialShowPassword={initialShowPassword}
                                         onKeyDown={onKeyDown}
-                                        onInitialized={textBoxInitialized}
+                                        inputRef={inputRef}
                                     />
                                 </div>
                             </td>
@@ -195,7 +164,7 @@ const QueryPasswordPopup = ({
                         {verifyMode && (
                             <tr>
                                 <td>
-                                    <div className="dx-field-item-label-text">{lc("retypePassword")}</div>
+                                    <div>{lc("retypePassword")}</div>
                                 </td>
                                 <td>
                                     <div>
@@ -215,17 +184,19 @@ const QueryPasswordPopup = ({
                 </table>
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
                         disabled={!allowAccept}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onCancelClick}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 

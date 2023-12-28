@@ -27,13 +27,15 @@ import { styled } from "styled-components";
 import classNames from "classnames";
 import { ColorHex, CountdownCircleTimer, TimeProps } from "react-countdown-circle-timer";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Button } from "devextreme-react";
-import notify from "devextreme/ui/notify";
+import { Button, Tooltip } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { Auth2Fa, CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { cssRgbToHex } from "../../utilities/ColorConversion";
 import { useTimeSecond } from "../../hooks/UseTimeSecond";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
+import { useNotify } from "./Notify";
 
 /**
  * The props for the {@link TwoFactorAuthCodeGenerator} component.
@@ -56,6 +58,7 @@ const TwoFactorAuthCodeGenerator = ({
     otpAuthUrl,
 }: TwoFactorAuthCodeGeneratorProps) => {
     const lu = useLocalize("ui");
+    const [contextHolder, notification] = useNotify();
 
     const [durationStart, setDurationStart] = React.useState(0);
     const [reset, setReset] = React.useState(false);
@@ -105,14 +108,14 @@ const TwoFactorAuthCodeGenerator = ({
             navigator.clipboard
                 .writeText(twoFactorResult.key)
                 .then(() => {
-                    notify(lu("clipboardCopySuccess"), "success", 5_000);
+                    notification("success", lu("clipboardCopySuccess"), 5);
                     clipboardNotifyOther();
                 })
                 .catch(() => {
-                    notify(lu("clipboardCopyFailed"), "error", 5_000);
+                    notification("error", lu("clipboardCopyFailed"), 5);
                 });
         }
-    }, [lu, twoFactorResult]);
+    }, [lu, notification, twoFactorResult]);
 
     // A callback when the CountdownCircleTimer completes.
     const onComplete = React.useCallback(() => ({ shouldRepeat: true, delay: 1 }), []);
@@ -134,6 +137,7 @@ const TwoFactorAuthCodeGenerator = ({
         <div //
             className={classNames(TwoFactorAuthCodeGeneratorStyled.name, className)}
         >
+            {contextHolder}
             <CountdownCircleTimer //
                 isPlaying={true}
                 duration={durationStart}
@@ -151,12 +155,13 @@ const TwoFactorAuthCodeGenerator = ({
                     {twoFactorResult?.key?.slice(f, f + 1)}
                 </div>
             ))}
-            <Button //
-                icon="copy"
-                className="CopyButton"
-                onClick={copyToClipboard}
-                hint={lu("copyClipboard")}
-            />
+            <Tooltip title={lu("copyClipboard")}>
+                <Button //
+                    icon={<FontAwesomeIcon icon={faCopy} />}
+                    className="CopyButton"
+                    onClick={copyToClipboard}
+                />
+            </Tooltip>
         </div>
     );
 };

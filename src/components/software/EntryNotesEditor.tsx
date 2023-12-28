@@ -1,14 +1,11 @@
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { ScrollView } from "devextreme-react";
-import { ValueChangedEvent as TextBoxValueChangedEvent } from "devextreme/ui/text_box";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
 import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
-import { EntryEditorHtmlAreaStyled } from "./EntryEditorHtmlArea";
 
 /**
  * The props for the {@link EntryNotesEditor} component.
@@ -22,12 +19,12 @@ type EntryNotesEditorProps = {
     defaultUseMarkdown?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
-    /** A value indicating whether to use HTML on entry editing and rendering. */
-    useHtmlOnNotes?: boolean;
     /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
     imagePasteEnabled: boolean;
     /** Occurs when the notes value has been changed. */
     onNotesChanged: (value: string | undefined) => void;
+    /** Height for the control via style. */
+    height?: string | undefined | null;
 } & CommonProps;
 
 /**
@@ -41,7 +38,6 @@ const EntryNotesEditor = ({
     readOnly = true,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
-    useHtmlOnNotes,
     imagePasteEnabled,
     onNotesChanged,
 }: EntryNotesEditorProps) => {
@@ -51,35 +47,20 @@ const EntryNotesEditor = ({
 
     // The item notes was changed.
     const onNotesChangedCallback = React.useCallback(
-        (e: TextBoxValueChangedEvent) => {
-            onNotesChanged(e.value);
+        (value: string | undefined) => {
+            onNotesChanged(value);
         },
         [onNotesChanged]
     );
 
     const content = React.useMemo(() => {
-        if (useHtmlOnNotes) {
-            return (
-                <EntryEditorHtmlAreaStyled //
-                    readOnly={readOnly}
-                    value={entry?.notes}
-                    className={classNames("EntryNotesEditor-TextArea")}
-                    onValueChanged={onNotesChanged}
-                    monospacedFont={monoSpacedFont}
-                />
-            );
-        }
-
         if ((entry?.useMarkdown ?? defaultUseMarkdown) === true) {
             return readOnly ? (
-                <ScrollView //
+                <MarkDownViewStyled //
                     className="EntryNotesEditor-TextArea"
-                >
-                    <MarkDownViewStyled //
-                        markDown={entry?.notes}
-                        monospacedFont={monoSpacedFont}
-                    />
-                </ScrollView>
+                    markDown={entry?.notes}
+                    monospacedFont={monoSpacedFont}
+                />
             ) : (
                 <MarkdownTextEditorStyled //
                     markDown={entry?.notes}
@@ -100,7 +81,7 @@ const EntryNotesEditor = ({
                 monospacedFont={monoSpacedFont}
             />
         );
-    }, [defaultUseMarkdown, entry?.notes, entry?.useMarkdown, imagePasteEnabled, monoSpacedFont, onNotesChanged, onNotesChangedCallback, readOnly, useHtmlOnNotes]);
+    }, [defaultUseMarkdown, entry?.notes, entry?.useMarkdown, imagePasteEnabled, monoSpacedFont, onNotesChanged, onNotesChangedCallback, readOnly]);
 
     return (
         <div //
@@ -122,7 +103,9 @@ const EntryNotesEditorStyled = styled(EntryNotesEditor)`
         margin-bottom: 10px;
         width: 100%;
         height: 100%;
-        min-height: 0px;
+        min-height: ${props => props.height ?? "240px"};
+        resize: none;
+        overflow: auto;
     }
 `;
 

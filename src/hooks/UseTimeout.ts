@@ -85,6 +85,7 @@ const useTimeout = (
     }, [interval, intervalType]);
 
     const reset = React.useCallback(() => {
+        setEnabled(true);
         resetState.current = true;
     }, []);
 

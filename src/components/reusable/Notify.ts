@@ -23,42 +23,31 @@ SOFTWARE.
 */
 
 import * as React from "react";
+import { notification } from "antd";
 
 /**
- * A type for something that has a focus function as a member.
+ * Notification types for the {@link useNotify} hook.
  */
-type Focusable = {
-    /** Focuses the compoentn. */
-    focus: () => void;
-};
+export type NotificationType = "success" | "info" | "warning" | "error";
 
 /**
- * A type for DevExtreme component {@link onInitialized} event.
+ * A custom hook for antd notifications.
+ * @returns A context holder for the notifications to be embedded into the JSX and a callback to display notifications.
  */
-type DxInitializedEvent = {
-    /** The component which can be focused. */
-    component: Focusable;
-};
+const useNotify = (): [React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>>, (type: NotificationType, title: string | null | undefined | Error, duration?: number) => void] => {
+    const [api, contextHolder] = notification.useNotification();
 
-/**
- * A custom hook to help focus a specific DevExtreme component.
- * @param dxInitialized An optional callback for the {@link dxComponent.onInitialized} event.
- * @returns A function to focus the component, the onInitialized event for the component to focus and a ref for the component.
- */
-export const useFocus = (dxInitialized?: (e: never) => void): [() => void, (e: unknown) => void, React.MutableRefObject<Focusable | undefined>] => {
-    const focusRef = React.useRef<Focusable>();
-
-    const setFocus = React.useCallback(() => {
-        focusRef.current?.focus();
-    }, []);
-
-    const onInitialized = React.useCallback(
-        (e: unknown) => {
-            focusRef.current = (e as DxInitializedEvent).component;
-            dxInitialized?.(e as never);
+    const openNotificationWithIcon = React.useCallback(
+        (type: NotificationType, title: string | null | undefined | Error, duration?: number) => {
+            api[type]({
+                message: title instanceof Error ? title?.toString() : title,
+                duration: duration ?? 5,
+            });
         },
-        [dxInitialized]
+        [api]
     );
 
-    return [setFocus, onInitialized, focusRef];
+    return [contextHolder, openNotificationWithIcon];
 };
+
+export { useNotify };

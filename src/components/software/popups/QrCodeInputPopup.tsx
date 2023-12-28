@@ -25,14 +25,14 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { Button, Popup } from "devextreme-react";
 import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import { invoke } from "@tauri-apps/api/tauri";
-import notify from "devextreme/ui/notify";
 import { decodeMigrationUriData, makeOtpAuthKey } from "gauth-decode";
+import { Button, Modal } from "antd";
 import { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
 import { useLocalize } from "../../../i18n";
+import { useNotify } from "../../reusable/Notify";
 
 /**
  * The props for the {@link QrCodeInputPopup} component.
@@ -53,30 +53,11 @@ const QrCodeInputPopup = ({
     visible,
     onClose,
 }: QrCodeInputPopupProps) => {
-    const [userAccepted, setUserAccepted] = React.useState(false);
     const [otpAuthPath, setOtpAuthPath] = React.useState("");
+    const [contextHolder, notification] = useNotify();
 
     const lm = useLocalize("messages");
     const lu = useLocalize("ui");
-
-    // Handle the onVisibleChange callback of the Popup component.
-    const onVisibleChange = React.useCallback(
-        (visible: boolean) => {
-            if (!visible) {
-                onClose(userAccepted, userAccepted ? otpAuthPath : undefined);
-            }
-            setUserAccepted(false);
-            setOtpAuthPath("");
-        },
-        [onClose, otpAuthPath, userAccepted]
-    );
-
-    // Handle the onHiding callback of the Popup component.
-    const onHiding = React.useCallback(() => {
-        onClose(userAccepted, userAccepted ? otpAuthPath : undefined);
-        setOtpAuthPath("");
-        setUserAccepted(false);
-    }, [onClose, otpAuthPath, userAccepted]);
 
     const onFilesUpdated = React.useCallback(
         (e: File | File[]) => {
@@ -95,65 +76,60 @@ const QrCodeInputPopup = ({
                                     if (otpData.length > 0) {
                                         setOtpAuthPath(makeOtpAuthKey(otpData[0]));
                                         if (otpData.length !== 1) {
-                                            notify(lm("qrMoreThan1"), "warning", 5_000);
+                                            notification("warning", lm("qrMoreThan1"), 5);
                                         }
-                                        notify(lm("qrSuccess"), "success", 5_000);
+                                        notification("success", lm("qrSuccess"), 5);
                                     } else {
-                                        notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                        notification("error", lm("otpAuthKeyGenFailed"), 5);
                                     }
                                 });
                             } else {
-                                notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                notification("error", lm("otpAuthKeyGenFailed"), 5);
                             }
                         } catch {
-                            notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                            notification("error", lm("otpAuthKeyGenFailed"), 5);
                         }
                     } else {
                         void invoke<Auth2Fa>("gen_otpauth", { otpauth: decodedText }).then((f: Auth2Fa) => {
                             if (f.success) {
-                                notify(lm("qrSuccess"), "success", 5_000);
+                                notification("success", lm("qrSuccess"), 5);
                                 setOtpAuthPath(decodedText);
                             } else {
-                                notify(lm("otpAuthKeyGenFailed"), "error", 5_000);
+                                notification("error", lm("otpAuthKeyGenFailed"), 5);
                             }
                         });
                     }
                 })
                 .catch(error => {
-                    notify(lm("qrCodeImageReadFailed", undefined, { message: error }));
+                    notification("error", lm("qrCodeImageReadFailed", undefined, { message: error }), 5);
                 });
         },
-        [lm]
+        [lm, notification]
     );
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        setUserAccepted(true);
         onClose(true, otpAuthPath);
         setOtpAuthPath("");
     }, [onClose, otpAuthPath]);
 
     const onCancelClick = React.useCallback(() => {
-        setUserAccepted(false);
         onClose(false);
         setOtpAuthPath("");
     }, [onClose]);
 
     return (
-        <Popup //
-            visible={visible}
-            showCloseButton={true}
-            dragEnabled={true}
-            resizeEnabled={true}
-            height={320}
+        <Modal //
+            open={visible}
             width={600}
-            showTitle={true}
             title={lu("readQrCodeTitle")}
-            onVisibleChange={onVisibleChange}
-            onHiding={onHiding}
+            centered
+            onCancel={onCancelClick}
+            footer={null}
         >
             <div className={classNames(QrCodeInputPopupStyled.name, className)}>
                 <div id="reader" />
+                {contextHolder}
                 {visible && (
                     <DragDropFileStyled //
                         onFileChange={onFilesUpdated}
@@ -165,17 +141,19 @@ const QrCodeInputPopup = ({
                 )}
                 <div className="Popup-ButtonRow">
                     <Button //
-                        text={lu("ok")}
                         onClick={onOkClick}
                         disabled={otpAuthPath === ""}
-                    />
+                    >
+                        {lu("ok")}
+                    </Button>
                     <Button //
-                        text={lu("cancel")}
                         onClick={onCancelClick}
-                    />
+                    >
+                        {lu("cancel")}
+                    </Button>
                 </div>
             </div>
-        </Popup>
+        </Modal>
     );
 };
 
