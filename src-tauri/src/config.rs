@@ -5,8 +5,8 @@ use serde_derive::{Deserialize, Serialize};
 pub struct AppConfig {
     /// The window position. NOTE:NOT CURRENTLY IN USE - AN EXAMPLE
     window_pos: (u32, u32),
-    /// The current devextreme theme used by the application.
-    dx_theme: String,
+    /// The current theme used by the application.
+    theme: String,
     /// The current application locale used by the i18next library
     locale: String,
     /// The lock view timeout in minutes for the application. 0 means disabled.
@@ -22,7 +22,7 @@ impl ::std::default::Default for AppConfig {
     fn default() -> Self {
         Self {
             window_pos: (320, 280),
-            dx_theme: "generic.carmine".to_string(),
+            theme: "generic.carmine".to_string(),
             locale: "en".to_string(),
             lock_timeout: 10,
             failed_unlock_attempts: 10,
