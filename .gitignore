@@ -26,8 +26,6 @@ dist-ssr
 *.db-wal
 *.db-shm
 
-# The software's secure file extension (PasswordKeeper Data File)
-*.pkd
 /src/assets/css/devextreme
 /src/assets/css/fontawesome-free-6.4.0-web
 /.vs/PasswordKeeper/FileContentIndex
