@@ -95,10 +95,14 @@ const WindowTitle = ({
 
 const StyledTitle = styled(WindowTitle)`
     height: 32px;
-    background: ${p => p.textColor};
+    background: ${p => p.backColor};
+    color: ${p => p.textColor};
     user-select: none;
     display: flex;
     flex-direction: row;
+    margin-left: 1px;
+    margin-top: 1px;
+    margin-right: 1px;
     top: 0;
     left: 0;
     right: 0;
@@ -120,7 +124,7 @@ const StyledTitle = styled(WindowTitle)`
         align-items: center;
         width: 32px;
         height: 32px;
-        background: ${p => p.backColor};
+        background: ${p => p.textColor};
     }
     .titlebar-button {
         display: inline-flex;
@@ -130,7 +134,7 @@ const StyledTitle = styled(WindowTitle)`
         height: 32px;
     }
     .titlebar-button:hover {
-        background: ${p => p.backColor};
+        background: ${p => p.textColor};
     }
 `;
 

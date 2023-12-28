@@ -106,7 +106,7 @@ const EntryEditor = ({
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
     const [noteEditorOpen, setNoteEditorOpen] = React.useState(false);
 
-    const countDownColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
+    const countDownColor = "#f05b41";
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");

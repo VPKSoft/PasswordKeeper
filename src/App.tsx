@@ -36,7 +36,6 @@ import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
-import { setTheme } from "./utilities/ThemeUtils";
 import { useSecureStorage } from "./hooks/UseSecureStorage";
 import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
@@ -56,7 +55,6 @@ import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
 import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
-import { useCssStyle } from "./hooks/UseCssStyle";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 import { useNotify } from "./components/reusable/Notify";
 
@@ -111,8 +109,8 @@ const App = ({ className }: AppProps) => {
     const expandedKeysRef = React.useRef<Array<string>>([]);
     const selectedItemRef = React.useRef<DataEntry | null>(null);
 
-    const textColor = useCssStyle("color", "#329ea3", null, "dx-theme-accent-as-text-color");
-    const backColor = useCssStyle("color", "#5bbec3", null, "dx-theme-border-color-as-text-color");
+    const textColor = "white";
+    const backColor = "#f05b41";
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -186,12 +184,10 @@ const App = ({ className }: AppProps) => {
     const applySettings = React.useCallback(
         (value: Settings) => {
             settingsRef.current = value;
-            void setTheme(value.theme).then(() => {
-                setLocale((value.locale ?? "en") as Locales);
-                setTimeoutEnabled(value.lock_timeout > 0);
-                setTimeOut(value.lock_timeout);
-                setSettingsLoaded(true);
-            });
+            setLocale((value.locale ?? "en") as Locales);
+            setTimeoutEnabled(value.lock_timeout > 0);
+            setTimeOut(value.lock_timeout);
+            setSettingsLoaded(true);
         },
         [setTimeoutEnabled]
     );
