@@ -104,6 +104,7 @@ const App = ({ className }: AppProps) => {
     const [searchTextBoxValue, setSearchTextBoxValue] = React.useState<SearchTextBoxValue>(searchBoxValueEmpty);
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
     const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
+    const [lastAddedDeletedId, setLastAddedDeletedId] = React.useState(0);
 
     const settingsRef = React.useRef<Settings>();
     const expandedKeysRef = React.useRef<Array<string>>([]);
@@ -307,6 +308,7 @@ const App = ({ className }: AppProps) => {
                 const newTags = generateTags(newDataSource);
                 setDataTags(f => ({ ...f, values: newTags }));
                 setEntry(entry);
+                setLastAddedDeletedId(entry.id);
                 setEditEntry(null);
                 setFileChanged(true);
             }
@@ -323,6 +325,7 @@ const App = ({ className }: AppProps) => {
             if (userAccepted && entry !== undefined) {
                 // ...update the data source and re-set the state variables.
                 setDataSource(updateDataSource(dataSource, entry));
+                setLastAddedDeletedId(entry.id);
                 setFileChanged(true);
                 setEditEntry(null);
             }
@@ -703,6 +706,8 @@ const App = ({ className }: AppProps) => {
                         setEntry={setEntry}
                         expandedKeys={expandedKeys}
                         setExpandedKeys={setExpandedKeys}
+                        lastAddedDeletedId={lastAddedDeletedId}
+                        setLastAddedDeletedId={setLastAddedDeletedId}
                     />
                     <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
