@@ -18,6 +18,10 @@ type PasswordListProps = {
     searchValue: SearchTextBoxValue;
     /** The expanded node keys. */
     expandedKeys: Array<string>;
+    /** An identifier to added, updated or deleted data entry. */
+    lastAddedDeletedId: number;
+    /** Set the identifier to added, updated or deleted data entry. */
+    setLastAddedDeletedId: (value: number) => void;
     /** Set the expanded node keys. */
     setExpandedKeys: (value: Array<string>) => void;
     /** Occurs when the selected item has been changed. */
@@ -35,9 +39,13 @@ const PasswordList = ({
     dataSource,
     searchValue,
     expandedKeys,
+    lastAddedDeletedId,
+    setLastAddedDeletedId,
     setExpandedKeys,
     setEntry,
 }: PasswordListProps) => {
+    const [selectedKey, setSelectedKey] = React.useState<string>();
+
     // Memoize a suitable data source for the Tree.
     const treeData = React.useMemo(() => {
         let parents = dataSource.filter(f => f.parentId === -1);
@@ -79,6 +87,43 @@ const PasswordList = ({
         }
     }, [searchValue, setExpandedKeys, treeData]);
 
+    // Handle tree expand when items are added, update or deleted.
+    React.useEffect(() => {
+        if (lastAddedDeletedId > 0) {
+            const data = treeData.find(f => f.data.id === lastAddedDeletedId)?.data;
+
+            let childData: DataEntry | undefined;
+
+            for (const parents of treeData) {
+                childData = (parents.children as (DataNode & { data: DataEntry })[])?.find(f => f.data.id === lastAddedDeletedId)?.data;
+                if (childData) {
+                    break;
+                }
+            }
+
+            if (childData) {
+                setExpandedKeys([...new Set([...expandedKeys, childData.parentId.toString()])]);
+                setSelectedKey(childData.id.toString());
+            }
+
+            if (data) {
+                setExpandedKeys([...new Set([...expandedKeys, data.id.toString()])]);
+                setSelectedKey(data.id.toString());
+            }
+
+            if (!data && !childData) {
+                const newExpandedRowKeys = [...expandedKeys];
+                const removeIndex = newExpandedRowKeys.indexOf(lastAddedDeletedId.toString());
+                if (removeIndex !== -1) {
+                    newExpandedRowKeys.splice(removeIndex, 1);
+                    setExpandedKeys(newExpandedRowKeys);
+                }
+            }
+
+            setLastAddedDeletedId(0);
+        }
+    }, [expandedKeys, lastAddedDeletedId, setExpandedKeys, setLastAddedDeletedId, treeData]);
+
     // Raise the setEntry callback when the TreeList selection has been changed.
     const onSelectionChanged = React.useCallback(
         (
@@ -94,6 +139,7 @@ const PasswordList = ({
             const selected = info.selectedNodes.length > 0 ? (info.selectedNodes[0] as DataNode & { data: DataEntry }) : null;
             if (selected?.data) {
                 setEntry(selected?.data);
+                setSelectedKey(selected?.data.id.toString());
             }
         },
         [setEntry]
@@ -111,6 +157,7 @@ const PasswordList = ({
             className={classNames(PasswordList.name, className)}
             showIcon
             defaultExpandAll
+            selectedKeys={selectedKey ? [selectedKey] : undefined}
             onExpand={onExpand}
             treeData={treeData}
             onSelect={onSelectionChanged}
