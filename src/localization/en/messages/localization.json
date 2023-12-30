@@ -13,5 +13,7 @@
     "pasteFromClipboard": "Paste file data from clipboard or",
     "uploadFile": "Upload a file",
     "qrSuccess": "QR code read successfully.",
-    "filePreferences": "File preferences"
+    "filePreferences": "File preferences",
+    "updateCheckFailed": "Update check failed with error '{{error}}'.",
+    "updateCheckError": "Update check error"
 }
