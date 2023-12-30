@@ -58,7 +58,7 @@ const AboutPopup = ({
     const [appVersion, setAppVersion] = React.useState("");
     const [appName, setAppName] = React.useState("");
 
-    const [shouldUpdate, manifest, reCheck, update, error, errorMessage] = useTauriUpdater(false);
+    const [shouldUpdate, manifest, reCheck, update, error, errorMessage] = useTauriUpdater(!visible);
 
     // Get the application name and current version.
     React.useEffect(() => {
@@ -156,6 +156,7 @@ SOFTWARE."
                         </Button>
                     </div>
                 </div>
+                {error && <div className="VersionCheckError-text">{errorMessage}</div>}
                 <div className="Popup-ButtonRow">
                     <Button //
                         onClick={onClose}
@@ -199,6 +200,14 @@ const StyledAboutPopup = styled(AboutPopup)`
         display: flex;
         flex-wrap: wrap;
         margin-right: 10px;
+    }
+    .VersionCheckError-text {
+        align-content: center;
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 10px;
+        font-weight: bold;
+        color: red;
     }
     .Popup-UpdateNotify-button {
         margin-right: 4px;
