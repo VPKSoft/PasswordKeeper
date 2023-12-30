@@ -25,6 +25,7 @@ SOFTWARE.
 import { relaunch } from "@tauri-apps/api/process";
 import { UpdateManifest, UpdateResult, checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 import * as React from "react";
+import { useLocalize } from "../i18n";
 
 /** A value indicating whether the application should update it self. `null` value indicates an unresolved status, `undefined` indicates an error status. */
 type ShouldUpdate = boolean | null | undefined;
@@ -39,7 +40,7 @@ type Update = () => Promise<void>;
 /**
  * A result data for the {@link useTauriUpdater} hook.
  */
-type TauriUpdaterResult = [shouldUpdate: ShouldUpdate, manifest: Manifest, reCheck: ReCheck, update: Update, checkError: boolean];
+type TauriUpdaterResult = [shouldUpdate: ShouldUpdate, manifest: Manifest, reCheck: ReCheck, update: Update, checkError: boolean, errorMessage: string];
 
 /**
  * A custom hook for Tauri updater check. See: https://tauri.app/v1/api/js/updater.
@@ -50,9 +51,12 @@ const useTauriUpdater = (passive: boolean, retryCount: number = 5): TauriUpdater
     const [shouldUpdate, setShouldUpdate] = React.useState<boolean | null | undefined>(null);
     const [manifest, setManifest] = React.useState<UpdateManifest | undefined | null>(null);
     const [checkError, setCheckError] = React.useState(false);
-    const [retries, setRetries] = React.useState(0);
+    const [errorMessage, setErrorMessage] = React.useState("");
+
+    const lm = useLocalize("messages");
 
     const shouldRetry = React.useRef<boolean>(false);
+    const retries = React.useRef(0);
 
     // An internal call back to check for updates.
     const checkUpdateInternal = React.useCallback(() => {
@@ -61,49 +65,50 @@ const useTauriUpdater = (passive: boolean, retryCount: number = 5): TauriUpdater
                 setShouldUpdate(updateResult.shouldUpdate);
                 setManifest(updateResult.manifest ?? null);
                 setCheckError(false);
-                setRetries(0);
+                retries.current = 0;
+                setErrorMessage("");
                 shouldRetry.current = false;
             })
-            .catch(() => {
+            .catch(error => {
                 // eslint-disable-next-line unicorn/no-useless-undefined
                 setShouldUpdate(undefined);
                 // eslint-disable-next-line unicorn/no-useless-undefined
                 setManifest(undefined);
                 setCheckError(true);
-                const newRetries = retries + 1;
-                setRetries(newRetries);
-                shouldRetry.current = newRetries < retryCount;
+                retries.current++;
+                shouldRetry.current = retries.current < retryCount;
+                setErrorMessage(lm("updateCheckFailed", "File open failed with message '{{error}}'.", { error: error }));
             });
-    }, [retries, retryCount]);
+    }, [lm, retries, retryCount]);
 
     const checkUpdateExternal = React.useCallback(() => {
-        setRetries(0);
+        retries.current = 0;
         shouldRetry.current = true;
         checkUpdateInternal();
     }, [checkUpdateInternal]);
 
     // Check for updates.
     React.useEffect(() => {
-        if (!passive || (shouldRetry.current && retries < retryCount)) {
+        if (!passive || (shouldRetry.current && retries.current < retryCount)) {
             checkUpdateInternal();
         }
-    }, [checkUpdateInternal, passive, retries, retryCount]);
+    }, [checkUpdateInternal, passive, retryCount]);
 
     React.useEffect(() => {
-        const timeout = setTimeout(() => {
-            if (!passive || (shouldRetry.current && retries < retryCount)) {
+        const timeout = setInterval(() => {
+            if (!passive || (shouldRetry.current && retries.current < retryCount)) {
                 checkUpdateInternal();
             }
         }, 5_000);
 
-        return () => clearTimeout(timeout);
-    }, [checkUpdateInternal, passive, retries, retryCount]);
+        return () => clearInterval(timeout);
+    }, [checkUpdateInternal, passive, retryCount]);
 
     const updateCallback = React.useCallback(() => {
         return installUpdate().then(relaunch);
     }, []);
 
-    return [shouldUpdate, manifest, checkUpdateExternal, updateCallback, checkError];
+    return [shouldUpdate, manifest, checkUpdateExternal, updateCallback, checkError, errorMessage];
 };
 
 export { useTauriUpdater };

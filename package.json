@@ -9,6 +9,7 @@
         "preview": "vite preview",
         "tauri": "tauri",
         "test-release": "tauri build -b none",
+        "release": "tauri build",
         "lint": "eslint --max-warnings=0 --config ./.eslintrc.cjs --ext .tsx,.ts ./src/"
     },
     "dependencies": {
