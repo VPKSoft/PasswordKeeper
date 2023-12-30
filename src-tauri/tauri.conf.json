@@ -8,7 +8,7 @@
     },
     "package": {
         "productName": "PasswordKeeper",
-        "version": "0.4.0"
+        "version": "0.3.0"
     },
     "tauri": {
         "allowlist": {
@@ -65,7 +65,7 @@
             },
             "resources": [],
             "shortDescription": "",
-            "targets": "all",
+            "targets": ["app", "appimage", "nsis", "updater"],
             "windows": {
                 "certificateThumbprint": null,
                 "digestAlgorithm": "sha256",

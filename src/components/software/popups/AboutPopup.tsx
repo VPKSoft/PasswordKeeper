@@ -33,6 +33,7 @@ import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
 import { useTauriUpdater } from "../../../hooks/UseTauriUpdater";
+import { useNotify } from "../../reusable/Notify";
 /**
  * The props for the {@link AboutPopup} component.
  */
@@ -52,11 +53,12 @@ const AboutPopup = ({
 }: AboutPopupProps) => {
     const lc = useLocalize("common");
     const ud = useLocalize("updates");
+    const [contextHolder, notification] = useNotify();
 
     const [appVersion, setAppVersion] = React.useState("");
     const [appName, setAppName] = React.useState("");
 
-    const [shouldUpdate, manifest, reCheck, update] = useTauriUpdater(false);
+    const [shouldUpdate, manifest, reCheck, update, error, errorMessage] = useTauriUpdater(false);
 
     // Get the application name and current version.
     React.useEffect(() => {
@@ -83,6 +85,12 @@ const AboutPopup = ({
         void open("https://github.com/VPKSoft/PasswordKeeper/releases/latest");
     }, []);
 
+    React.useEffect(() => {
+        if (error) {
+            notification("error", errorMessage, 5);
+        }
+    }, [error, errorMessage, notification]);
+
     return (
         <Modal //
             title={lc("about")}
@@ -93,6 +101,7 @@ const AboutPopup = ({
             onCancel={onClose}
             centered
         >
+            {contextHolder}
             <div className={classNames(AboutPopup.name, className)}>
                 <div className="Popup-versionText">{`${appName}, ${lc("copyright")} © 2023 VPKSoft, v.${appVersion}`}</div>
                 <div className="Popup-licenseText">{lc("license")}</div>
