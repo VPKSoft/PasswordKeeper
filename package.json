@@ -21,7 +21,7 @@
         "@typescript-eslint/eslint-plugin": "^6.16.0",
         "@vitejs/plugin-react": "^4.2.1",
         "antd": "^5.12.6",
-        "classnames": "^2.5.0",
+        "classnames": "^2.5.1",
         "dompurify": "^3.0.6",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-jsdoc": "^47.0.1",
