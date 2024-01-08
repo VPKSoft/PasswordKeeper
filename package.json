@@ -22,7 +22,7 @@
         "@vitejs/plugin-react": "^4.2.1",
         "antd": "^5.12.8",
         "classnames": "^2.5.1",
-        "dompurify": "^3.0.6",
+        "dompurify": "^3.0.8",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-jsdoc": "^48.0.2",
         "eslint-plugin-prefer-arrow": "^1.2.3",
