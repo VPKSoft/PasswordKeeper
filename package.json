@@ -25,7 +25,7 @@
         "gauth-decode": "^0.1.1",
         "html-react-parser": "^5.1.1",
         "html5-qrcode": "^2.3.8",
-        "i18next": "^23.7.18",
+        "i18next": "^23.8.0",
         "marked": "^11.1.1",
         "qrcode": "^1.5.3",
         "react": "^18.2.0",
