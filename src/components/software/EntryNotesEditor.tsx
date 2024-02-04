@@ -17,6 +17,8 @@ type EntryNotesEditorProps = {
     readOnly?: boolean;
     /** A value indicating whether to use Markdown by default in the notes editor. */
     defaultUseMarkdown?: boolean;
+    /** A value indicating whether to use TichText(HTML) by default in the notes editor. */
+    defaultUseHtml?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
     /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
@@ -37,6 +39,7 @@ const EntryNotesEditor = ({
     entry,
     readOnly = true,
     defaultUseMarkdown,
+    defaultUseHtml,
     defaultUseMonospacedFont,
     imagePasteEnabled,
     onNotesChanged,
