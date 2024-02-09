@@ -25,9 +25,9 @@ SOFTWARE.
 import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
-import { CommonProps } from "../Types";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
+import { CommonProps } from "../Types";
 
 /**
  * The props for the {@link HtmlView} component.
@@ -35,7 +35,7 @@ import parse from "html-react-parser";
 type HtmlViewProps = {
     /** The current value of the HTML in the viewer. */
     html?: string;
-} & CommonProps
+} & CommonProps;
 
 /**
  * A component to view HTML securely by parsing sanitizing and parsing it to React first.
@@ -51,15 +51,16 @@ const HtmlView = ({
             const result = DOMPurify.sanitize(html);
             return parse(result);
         }
-    }, []);
+    }, [html]);
 
     return (
-        < div // 
-          className={classNames(HtmlView.name, className)}
+        <div //
+            className={classNames(HtmlView.name, className)}
         >
             {htmlReact}
-        </div>)
-}
+        </div>
+    );
+};
 
 const HtmlViewStyled = styled(HtmlView)`
     width: 100%;

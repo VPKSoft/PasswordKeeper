@@ -48,6 +48,8 @@ type EditEntryPopupProps = {
     defaultUseMarkdown?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
+    /** A value indicating whether to use HTML rich text on notes. */
+    useHtmlOnNotes: boolean | undefined;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /** Occurs when the popup has been closed. */
@@ -68,6 +70,7 @@ const EditEntryPopup = ({
     defaultUseMarkdown,
     defaultUseMonospacedFont,
     notesFont,
+    useHtmlOnNotes,
     onClose,
 }: EditEntryPopupProps) => {
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
@@ -133,6 +136,7 @@ const EditEntryPopup = ({
                     defaultUseMarkdown={defaultUseMarkdown}
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
                     notesFont={notesFont}
+                    useHtmlOnNotes={useHtmlOnNotes}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //

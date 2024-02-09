@@ -76,6 +76,10 @@ const FilePreferencesPopup = ({
         setFileOptionsInternal(f => ({ ...f, useMarkdownOnNotes: e.target.checked }));
     }, []);
 
+    const onUseHtmlChanged = React.useCallback((e: CheckboxChangeEvent) => {
+        setFileOptionsInternal(f => ({ ...f, useHtmlOnNotes: e.target.checked }));
+    }, []);
+
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
         onClose(true, fileOptionsInternal);
@@ -123,9 +127,7 @@ const FilePreferencesPopup = ({
                                 />
                             </td>
                         </tr>
-
-                        {/* This might come back when a decision is made of a HTML text editor, perhaps: verbun, https://github.com/ozanyurtsever/verbum
-                            <tr>
+                        <tr>
                             <td>
                                 <div>{ls("useHtmlIOnNotes")}</div>
                             </td>
@@ -135,7 +137,7 @@ const FilePreferencesPopup = ({
                                     onChange={onUseHtmlChanged}
                                 />
                             </td>
-                        </tr> */}
+                        </tr>
                     </tbody>
                 </table>
                 <div className="Popup-ButtonRow">

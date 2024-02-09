@@ -70,6 +70,8 @@ type EntryEditorProps = {
     defaultUseMonospacedFont?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
+    /** A value indicating whether to use HTML rich text on notes. */
+    useHtmlOnNotes: boolean | undefined;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -98,6 +100,7 @@ const EntryEditor = ({
     allTags,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
+    useHtmlOnNotes,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
@@ -450,6 +453,7 @@ const EntryEditor = ({
                         defaultUseMonospacedFont={monoSpacedFont}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
                         readOnly={readOnly}
+                        defaultUseHtml={useHtmlOnNotes}
                     />
                     <QrCodeInputPopupStyled //
                         visible={qrCodeVisible && !hideQrAuthPopup && visible}

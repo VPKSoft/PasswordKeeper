@@ -718,6 +718,7 @@ const App = ({ className }: AppProps) => {
                         showCopyButton={true}
                         hideQrAuthPopup={true}
                         notesFont={fileOptions?.notesFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
@@ -730,6 +731,7 @@ const App = ({ className }: AppProps) => {
                         onClose={onEditClose}
                         allTags={dataTags.values}
                         notesFont={fileOptions?.notesFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />

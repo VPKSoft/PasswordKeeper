@@ -9,6 +9,7 @@ module.exports = {
         "plugin:import/warnings",
     ],
     parser: "@typescript-eslint/parser",
+    ignorePatterns: [".eslintrc.cjs"],
     parserOptions: {
         sourceType: "module",
         ecmaVersion: 2_020,
