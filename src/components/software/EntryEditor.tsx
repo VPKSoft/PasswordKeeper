@@ -426,7 +426,7 @@ const EntryEditor = ({
                     </table>
                     <div className="Notes-labelArea">
                         <div className={classNames("Label-center")}>{le("notes")}</div>
-                        {!readOnly && (
+                        {!readOnly && (useHtmlOnNotes ?? false) === false && (
                             <Checkbox //
                                 onChange={onUseMarkdownChanged}
                                 checked={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
@@ -435,7 +435,7 @@ const EntryEditor = ({
                                 {le("useMarkdown")}
                             </Checkbox>
                         )}
-                        {!readOnly && (
+                        {!readOnly && (useHtmlOnNotes ?? false) === false && (
                             <Checkbox //
                                 onChange={onMonospacedFontChanged}
                                 checked={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
@@ -469,6 +469,7 @@ const EntryEditor = ({
                         entry={entry}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
+                        defaultUseHtml={useHtmlOnNotes}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
                         onClose={onNotesEditorClose}
                     />

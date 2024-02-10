@@ -45,6 +45,8 @@ type EntryNotesEditorPopupProps = {
     defaultUseMonospacedFont?: boolean;
     /** A value indicating whether to use HTML on entry editing and rendering. */
     imagePasteEnabled: boolean;
+    /** A value indicating whether to use RichText(HTML) by default in the notes editor. */
+    defaultUseHtml?: boolean;
     /**
      * A callback which occurs when the popup is closed.
      * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
@@ -61,6 +63,7 @@ const EntryNotesEditorPopup = ({
     defaultUseMarkdown,
     defaultUseMonospacedFont,
     imagePasteEnabled,
+    defaultUseHtml,
     onClose,
 }: EntryNotesEditorPopupProps) => {
     const [notes, setNotes] = React.useState<string>();
@@ -104,6 +107,7 @@ const EntryNotesEditorPopup = ({
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
                     imagePasteEnabled={imagePasteEnabled}
                     onNotesChanged={setNotes}
+                    defaultUseHtml={defaultUseHtml}
                     height="550px"
                 />
                 <div className="Popup-ButtonRow">
