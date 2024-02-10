@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2023 Petteri Kautonen
+Copyright (c) 2024 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,11 +31,17 @@ import { CommonProps } from "../../Types";
  * The props for the {@link TagBox} component.
  */
 type TagBoxProps = {
+    /** The data source for the component. */
     dataSource: string[] | undefined;
+    /** A value indicating whether the component is in read-only mode. E.g. display item mode. */
     readOnly: boolean | undefined;
+    /** The current value of the {@link TagBox} component. */
     value: string[] | undefined;
+    /** A text to display in the {@link TagBox} when nothing is selected. */
     placeHolder?: string | undefined;
+    /** Occurs when the {@link TagBox} value has been changed. */
     onChange: (values: string[]) => void;
+    /** Occurs when user created an item (tag) which doesn't already exist int the {@link dataSource}. */
     onCustomItemCreating: (value: string) => void;
 } & CommonProps;
 

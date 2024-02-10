@@ -19,7 +19,9 @@
         "tauri",
         "TOTP",
         "unlisten",
-        "Verdana"
+        "Verdana",
+        "vpksoft",
+        "jodit"
     ],
     "rust-analyzer.linkedProjects": [
         ".\\src-tauri\\Cargo.toml"

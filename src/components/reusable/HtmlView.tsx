@@ -22,35 +22,49 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { invoke } from "@tauri-apps/api/tauri";
 import * as React from "react";
+import { styled } from "styled-components";
+import classNames from "classnames";
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
+import { CommonProps } from "../Types";
 
 /**
- * A custom hook to enumerate font families on the system and use some defaults as fallback.
- * @returns An array of font families.
+ * The props for the {@link HtmlView} component.
  */
-const useFontFamily = (): [Array<string>] => {
-    const [fontFamilies, setFontFamilies] = React.useState<Array<string>>(fallbackFamilies);
+type HtmlViewProps = {
+    /** The current value of the HTML in the viewer. */
+    html?: string;
+} & CommonProps;
 
-    React.useEffect(() => {
-        void invoke("get_font_families_data").then(values => {
-            const valueResult = values as unknown as StringListResult;
-            if (valueResult.error) {
-                setFontFamilies(fallbackFamilies);
-            } else {
-                setFontFamilies(valueResult.value.length > 0 ? valueResult.value : fallbackFamilies);
-            }
-        });
-    }, []);
+/**
+ * A component to view HTML securely by parsing sanitizing and parsing it to React first.
+ * @param param0 The component props: {@link HtmlViewProps}.
+ * @returns A HTML view component.
+ */
+const HtmlView = ({
+    className, //
+    html,
+}: HtmlViewProps) => {
+    const htmlReact = React.useMemo(() => {
+        if (html) {
+            const result = DOMPurify.sanitize(html);
+            return parse(result);
+        }
+    }, [html]);
 
-    return [fontFamilies];
+    return (
+        <div //
+            className={classNames(HtmlView.name, className)}
+        >
+            {htmlReact}
+        </div>
+    );
 };
 
-const fallbackFamilies = ["Arial", "Courier New", "Georgia", "Impact", "Lucida Console", "Tahoma", "Times New Roman", "Verdana"];
+const HtmlViewStyled = styled(HtmlView)`
+    width: 100%;
+    height: 100%;
+`;
 
-type StringListResult = {
-    value: Array<string>;
-    error: boolean;
-};
-
-export { useFontFamily };
+export { HtmlViewStyled };

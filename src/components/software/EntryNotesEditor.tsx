@@ -5,6 +5,8 @@ import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
+import { HtmlViewStyled } from "../reusable/HtmlView";
+import { HtmlEditorStyled } from "../reusable/HtmlEditor";
 import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
 
 /**
@@ -17,14 +19,16 @@ type EntryNotesEditorProps = {
     readOnly?: boolean;
     /** A value indicating whether to use Markdown by default in the notes editor. */
     defaultUseMarkdown?: boolean;
+    /** A value indicating whether to use RichText(HTML) by default in the notes editor. */
+    defaultUseHtml?: boolean;
     /** A value indicating whether to use monospaced font by default in the notes editor. */
     defaultUseMonospacedFont?: boolean;
     /** A value indicating whether the Markdown image pasting is enabled. **Disable if clipboard is being listened elsewhere.** */
     imagePasteEnabled: boolean;
-    /** Occurs when the notes value has been changed. */
-    onNotesChanged: (value: string | undefined) => void;
     /** Height for the control via style. */
     height?: string | undefined | null;
+    /** Occurs when the notes value has been changed. */
+    onNotesChanged: (value: string | undefined) => void;
 } & CommonProps;
 
 /**
@@ -37,8 +41,10 @@ const EntryNotesEditor = ({
     entry,
     readOnly = true,
     defaultUseMarkdown,
+    defaultUseHtml,
     defaultUseMonospacedFont,
     imagePasteEnabled,
+    height,
     onNotesChanged,
 }: EntryNotesEditorProps) => {
     const monoSpacedFont = React.useMemo(() => {
@@ -54,6 +60,22 @@ const EntryNotesEditor = ({
     );
 
     const content = React.useMemo(() => {
+        if (defaultUseHtml === true) {
+            return readOnly ? (
+                <HtmlViewStyled //
+                    html={entry?.notes}
+                    className="EntryNotesEditor-TextArea"
+                />
+            ) : (
+                <HtmlEditorStyled //
+                    value={entry?.notes}
+                    onChange={onNotesChanged}
+                    className="EntryNotesEditor-TextArea"
+                    height={height ?? "240px"}
+                />
+            );
+        }
+
         if ((entry?.useMarkdown ?? defaultUseMarkdown) === true) {
             return readOnly ? (
                 <MarkDownViewStyled //
@@ -81,7 +103,7 @@ const EntryNotesEditor = ({
                 monospacedFont={monoSpacedFont}
             />
         );
-    }, [defaultUseMarkdown, entry?.notes, entry?.useMarkdown, imagePasteEnabled, monoSpacedFont, onNotesChanged, onNotesChangedCallback, readOnly]);
+    }, [defaultUseHtml, entry?.useMarkdown, entry?.notes, defaultUseMarkdown, readOnly, onNotesChangedCallback, monoSpacedFont, onNotesChanged, height, imagePasteEnabled]);
 
     return (
         <div //
@@ -102,7 +124,7 @@ const EntryNotesEditorStyled = styled(EntryNotesEditor)`
         margin-top: 10px;
         margin-bottom: 10px;
         width: 100%;
-        height: 100%;
+        height: ${props => (props.defaultUseHtml === true ? "240px" : "100%")};
         min-height: ${props => props.height ?? "240px"};
         resize: none;
         overflow: auto;

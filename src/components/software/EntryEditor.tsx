@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2023 Petteri Kautonen
+Copyright (c) 2024 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -70,6 +70,8 @@ type EntryEditorProps = {
     defaultUseMonospacedFont?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
+    /** A value indicating whether to use HTML rich text on notes. */
+    useHtmlOnNotes: boolean | undefined;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -98,6 +100,7 @@ const EntryEditor = ({
     allTags,
     defaultUseMarkdown,
     defaultUseMonospacedFont,
+    useHtmlOnNotes,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
@@ -423,7 +426,7 @@ const EntryEditor = ({
                     </table>
                     <div className="Notes-labelArea">
                         <div className={classNames("Label-center")}>{le("notes")}</div>
-                        {!readOnly && (
+                        {!readOnly && (useHtmlOnNotes ?? false) === false && (
                             <Checkbox //
                                 onChange={onUseMarkdownChanged}
                                 checked={entry?.useMarkdown ?? defaultUseMarkdown ?? false}
@@ -432,7 +435,7 @@ const EntryEditor = ({
                                 {le("useMarkdown")}
                             </Checkbox>
                         )}
-                        {!readOnly && (
+                        {!readOnly && (useHtmlOnNotes ?? false) === false && (
                             <Checkbox //
                                 onChange={onMonospacedFontChanged}
                                 checked={entry?.useMonospacedFont ?? defaultUseMonospacedFont ?? false}
@@ -450,6 +453,7 @@ const EntryEditor = ({
                         defaultUseMonospacedFont={monoSpacedFont}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
                         readOnly={readOnly}
+                        defaultUseHtml={useHtmlOnNotes}
                     />
                     <QrCodeInputPopupStyled //
                         visible={qrCodeVisible && !hideQrAuthPopup && visible}
@@ -465,6 +469,7 @@ const EntryEditor = ({
                         entry={entry}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
+                        defaultUseHtml={useHtmlOnNotes}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
                         onClose={onNotesEditorClose}
                     />

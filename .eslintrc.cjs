@@ -9,6 +9,7 @@ module.exports = {
         "plugin:import/warnings",
     ],
     parser: "@typescript-eslint/parser",
+    ignorePatterns: [".eslintrc.cjs"],
     parserOptions: {
         sourceType: "module",
         ecmaVersion: 2_020,
@@ -31,6 +32,7 @@ module.exports = {
         "no-undef": "off",
         "no-unused-vars": "off",
         "prettier/prettier": "warn",
+        "curly": 2,
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-floating-promises": "warn",

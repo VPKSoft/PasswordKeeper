@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2023 Petteri Kautonen
+Copyright (c) 2024 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -718,6 +718,7 @@ const App = ({ className }: AppProps) => {
                         showCopyButton={true}
                         hideQrAuthPopup={true}
                         notesFont={fileOptions?.notesFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
@@ -730,6 +731,7 @@ const App = ({ className }: AppProps) => {
                         onClose={onEditClose}
                         allTags={dataTags.values}
                         notesFont={fileOptions?.notesFont}
+                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     />
