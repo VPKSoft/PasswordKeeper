@@ -34,13 +34,16 @@ import { useFontFamily } from "../../hooks/UseFontFamily";
  * The props for the {@link HtmlEditor} component.
  */
 type HtmlEditorProps = {
-    onChange: (value: string) => void;
+    /** The current value of the {@link HtmlEditor} editor. */
     value: string | undefined;
+    /** Height for the {@link HtmlEditor}. */
     height?: string | number;
+    /** Occurs when the {@link HtmlEditor} value has been changed. */
+    onChange: (value: string) => void;
 } & CommonProps;
 
 /**
- * A component for editing HTML rich text using [Jodit](https://github.com/xdan/jodit) as the editor component.
+ * A component for editing HTML rich text using [Jodit](https://github.com/xdan/jodit) and [React Jodit WYSIWYG Editor](https://github.com/jodit/jodit-react) as the editor component.
  * @param param0 The component props: {@link HtmlEditorProps}.
  * @returns A HTML editor component.
  */
@@ -77,13 +80,19 @@ const HtmlEditor = ({
             uploader: {
                 insertImageAsBase64URI: true,
             },
+            // Disable the floating toolbar for selection.
             toolbarInlineForSelection: false,
             showPlaceholder: false,
             toolbarAdaptive: false,
             buttons: joditButtons,
+            // Disable the floating toolbar.
             toolbarInline: false,
         };
     }, [fontsObject, height]);
+
+    const onChangeCallback = (value: string) => {
+        onChange(value);
+    };
 
     return (
         <div className={classNames(HtmlEditor.name, className)}>
@@ -91,7 +100,9 @@ const HtmlEditor = ({
                 ref={editor}
                 value={value ?? ""}
                 config={joditConfig}
-                onBlur={onChange} // preferred to use only this option to update the content for performance reasons
+                // For some reason the useCallBack function doesn't work in this case, need to use function that is regenerated on each render.
+                // eslint-disable-next-line react/jsx-no-bind
+                onBlur={onChangeCallback} // preferred to use only this option to update the content for performance reasons
                 onChange={emptyFunc}
             />
         </div>
