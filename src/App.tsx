@@ -721,6 +721,7 @@ const App = ({ className }: AppProps) => {
                         useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        locale={settingsRef.current?.locale ?? "en"}
                     />
                 </div>
                 {editEntry !== null && (
@@ -734,6 +735,7 @@ const App = ({ className }: AppProps) => {
                         useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        locale={settingsRef.current?.locale ?? "en"}
                     />
                 )}
                 {editEntry !== null && (

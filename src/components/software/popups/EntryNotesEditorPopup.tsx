@@ -26,7 +26,7 @@ import * as React from "react";
 import classNames from "classnames";
 import { styled } from "styled-components";
 import { Button, Modal } from "antd";
-import { useLocalize } from "../../../i18n";
+import { Locales, useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { DataEntry } from "../../../types/PasswordEntry";
 import { EntryNotesEditorStyled } from "../EntryNotesEditor";
@@ -47,6 +47,8 @@ type EntryNotesEditorPopupProps = {
     imagePasteEnabled: boolean;
     /** A value indicating whether to use RichText(HTML) by default in the notes editor. */
     defaultUseHtml?: boolean;
+    /** The current application locale used by the i18next library. */
+    locale: Locales;
     /**
      * A callback which occurs when the popup is closed.
      * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
@@ -64,6 +66,7 @@ const EntryNotesEditorPopup = ({
     defaultUseMonospacedFont,
     imagePasteEnabled,
     defaultUseHtml,
+    locale,
     onClose,
 }: EntryNotesEditorPopupProps) => {
     const [notes, setNotes] = React.useState<string>();
@@ -109,6 +112,7 @@ const EntryNotesEditorPopup = ({
                     onNotesChanged={setNotes}
                     defaultUseHtml={defaultUseHtml}
                     height="550px"
+                    locale={locale}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //

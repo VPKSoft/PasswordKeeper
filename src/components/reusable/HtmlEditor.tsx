@@ -29,6 +29,8 @@ import JoditEditor from "jodit-react";
 import { Jodit } from "jodit/esm/jodit";
 import { CommonProps } from "../Types";
 import { useFontFamily } from "../../hooks/UseFontFamily";
+import { Locales } from "../../i18n";
+import { jodit_fi } from "./jodit_fi/fi";
 
 /**
  * The props for the {@link HtmlEditor} component.
@@ -38,6 +40,8 @@ type HtmlEditorProps = {
     value: string | undefined;
     /** Height for the {@link HtmlEditor}. */
     height?: string | number;
+    /** The current application locale used by the i18next library. */
+    locale: Locales;
     /** Occurs when the {@link HtmlEditor} value has been changed. */
     onChange: (value: string) => void;
 } & CommonProps;
@@ -51,6 +55,7 @@ const HtmlEditor = ({
     className, //
     value,
     height,
+    locale,
     onChange,
 }: HtmlEditorProps) => {
     const editor = React.useRef<Jodit>(null);
@@ -66,7 +71,7 @@ const HtmlEditor = ({
     }, [fontFamilies]);
 
     const joditConfig = React.useMemo(() => {
-        return {
+        const result = {
             readonly: false, // all options from https://xdsoft.net/jodit/docs/,
             placeholder: "",
             controls: {
@@ -88,7 +93,18 @@ const HtmlEditor = ({
             // Disable the floating toolbar.
             toolbarInline: false,
         };
-    }, [fontsObject, height]);
+
+        if (locale === "fi") {
+            Object.assign(result, {
+                i18n: {
+                    fi: jodit_fi,
+                },
+                language: "fi",
+            });
+        }
+
+        return result;
+    }, [fontsObject, height, locale]);
 
     const onChangeCallback = (value: string) => {
         onChange(value);

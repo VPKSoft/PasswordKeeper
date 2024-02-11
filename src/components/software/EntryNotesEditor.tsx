@@ -7,6 +7,7 @@ import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
 import { HtmlViewStyled } from "../reusable/HtmlView";
 import { HtmlEditorStyled } from "../reusable/HtmlEditor";
+import { Locales } from "../../i18n";
 import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
 
 /**
@@ -27,6 +28,8 @@ type EntryNotesEditorProps = {
     imagePasteEnabled: boolean;
     /** Height for the control via style. */
     height?: string | undefined | null;
+    /** The current application locale used by the i18next library. */
+    locale: Locales;
     /** Occurs when the notes value has been changed. */
     onNotesChanged: (value: string | undefined) => void;
 } & CommonProps;
@@ -45,6 +48,7 @@ const EntryNotesEditor = ({
     defaultUseMonospacedFont,
     imagePasteEnabled,
     height,
+    locale,
     onNotesChanged,
 }: EntryNotesEditorProps) => {
     const monoSpacedFont = React.useMemo(() => {
@@ -72,6 +76,7 @@ const EntryNotesEditor = ({
                     onChange={onNotesChanged}
                     className="EntryNotesEditor-TextArea"
                     height={height ?? "240px"}
+                    locale={locale}
                 />
             );
         }
