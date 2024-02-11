@@ -27,7 +27,7 @@ import { styled } from "styled-components";
 import classNames from "classnames";
 import { Button, InputRef, Modal } from "antd";
 import { ModifyType } from "../../../types/Enums";
-import { useLocalize } from "../../../i18n";
+import { Locales, useLocalize } from "../../../i18n";
 import { CssFont, DataEntry } from "../../../types/PasswordEntry";
 import { CommonProps } from "../../Types";
 import { StyledEntryEditor } from "../EntryEditor";
@@ -50,6 +50,8 @@ type EditEntryPopupProps = {
     defaultUseMonospacedFont?: boolean;
     /** A value indicating whether to use HTML rich text on notes. */
     useHtmlOnNotes: boolean | undefined;
+    /** The current application locale used by the i18next library. */
+    locale: Locales;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
     /** Occurs when the popup has been closed. */
@@ -71,6 +73,7 @@ const EditEntryPopup = ({
     defaultUseMonospacedFont,
     notesFont,
     useHtmlOnNotes,
+    locale,
     onClose,
 }: EditEntryPopupProps) => {
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
@@ -137,6 +140,7 @@ const EditEntryPopup = ({
                     defaultUseMonospacedFont={defaultUseMonospacedFont}
                     notesFont={notesFont}
                     useHtmlOnNotes={useHtmlOnNotes}
+                    locale={locale}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
