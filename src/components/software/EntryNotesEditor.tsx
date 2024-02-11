@@ -108,7 +108,7 @@ const EntryNotesEditor = ({
                 monospacedFont={monoSpacedFont}
             />
         );
-    }, [defaultUseHtml, entry?.useMarkdown, entry?.notes, defaultUseMarkdown, readOnly, onNotesChangedCallback, monoSpacedFont, onNotesChanged, height, imagePasteEnabled]);
+    }, [defaultUseHtml, entry?.useMarkdown, entry?.notes, defaultUseMarkdown, readOnly, onNotesChangedCallback, monoSpacedFont, onNotesChanged, height, locale, imagePasteEnabled]);
 
     return (
         <div //
