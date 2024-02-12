@@ -30,7 +30,7 @@ import { faMagnifyingGlass, faPen, faQrcode } from "@fortawesome/free-solid-svg-
 import { Button, Checkbox, Input, InputRef, Tooltip } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CssFont, DataEntry } from "../../types/PasswordEntry";
-import { useLocalize } from "../../i18n";
+import { Locales, useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
@@ -70,6 +70,8 @@ type EntryEditorProps = {
     defaultUseMonospacedFont?: boolean;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
+    /** The current application locale used by the i18next library. */
+    locale: Locales;
     /** A value indicating whether to use HTML rich text on notes. */
     useHtmlOnNotes: boolean | undefined;
     /**
@@ -101,6 +103,7 @@ const EntryEditor = ({
     defaultUseMarkdown,
     defaultUseMonospacedFont,
     useHtmlOnNotes,
+    locale,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
@@ -454,6 +457,7 @@ const EntryEditor = ({
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
                         readOnly={readOnly}
                         defaultUseHtml={useHtmlOnNotes}
+                        locale={locale}
                     />
                     <QrCodeInputPopupStyled //
                         visible={qrCodeVisible && !hideQrAuthPopup && visible}
@@ -472,6 +476,7 @@ const EntryEditor = ({
                         defaultUseHtml={useHtmlOnNotes}
                         imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
                         onClose={onNotesEditorClose}
+                        locale={locale}
                     />
                 </div>
             )}

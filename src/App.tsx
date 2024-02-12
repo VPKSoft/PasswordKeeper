@@ -327,6 +327,7 @@ const App = ({ className }: AppProps) => {
                 setDataSource(updateDataSource(dataSource, entry));
                 setLastAddedDeletedId(entry.id);
                 setFileChanged(true);
+                setEntry(entry);
                 setEditEntry(null);
             }
             // Hide the popup.
@@ -721,6 +722,7 @@ const App = ({ className }: AppProps) => {
                         useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        locale={settingsRef.current?.locale ?? "en"}
                     />
                 </div>
                 {editEntry !== null && (
@@ -734,6 +736,7 @@ const App = ({ className }: AppProps) => {
                         useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                        locale={settingsRef.current?.locale ?? "en"}
                     />
                 )}
                 {editEntry !== null && (
