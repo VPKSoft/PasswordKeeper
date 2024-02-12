@@ -327,6 +327,7 @@ const App = ({ className }: AppProps) => {
                 setDataSource(updateDataSource(dataSource, entry));
                 setLastAddedDeletedId(entry.id);
                 setFileChanged(true);
+                setEntry(entry);
                 setEditEntry(null);
             }
             // Hide the popup.
