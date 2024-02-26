@@ -12,7 +12,7 @@
     "devDependencies": {
         "@wdio/local-runner": "^8.32.3",
         "@wdio/mocha-framework": "^8.32.3",
-        "@wdio/spec-reporter": "^8.31.1",
+        "@wdio/spec-reporter": "^8.32.2",
         "typescript": "^5.3.3"
     }
 }
