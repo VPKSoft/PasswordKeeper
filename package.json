@@ -23,7 +23,7 @@
         "classnames": "^2.5.1",
         "dompurify": "^3.0.9",
         "gauth-decode": "^0.1.1",
-        "html-react-parser": "^5.1.7",
+        "html-react-parser": "^5.1.8",
         "html5-qrcode": "^2.3.8",
         "i18next": "^23.10.0",
         "jodit-react": "^4.0.9",
