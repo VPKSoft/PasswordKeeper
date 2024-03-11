@@ -38,7 +38,7 @@
         "tauri-plugin-window-state-api": "github:tauri-apps/tauri-plugin-window-state#v1"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^1.5.10",
+        "@tauri-apps/cli": "^1.5.11",
         "@types/dompurify": "^3.0.5",
         "@types/node": "^20.11.24",
         "@types/qrcode": "^1.5.5",
