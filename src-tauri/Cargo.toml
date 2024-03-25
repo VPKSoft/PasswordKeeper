@@ -29,7 +29,7 @@ confy = "0.6.1"
 serde_derive = "1.0.162"
 totp-rs = { version = "5.5.1", features = ["otpauth"] }
 tauri-plugin-window-state = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-font-kit = "0.12.0"
+font-kit = "0.13.0"
 arboard = "3.3.2"
 
 [features]
