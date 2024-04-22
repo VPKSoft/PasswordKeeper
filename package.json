@@ -19,7 +19,7 @@
         "@fortawesome/react-fontawesome": "^0.2.0",
         "@tauri-apps/api": "^1.5.3",
         "@vitejs/plugin-react": "^4.2.1",
-        "antd": "^5.16.1",
+        "antd": "^5.16.2",
         "classnames": "^2.5.1",
         "dompurify": "^3.1.0",
         "gauth-decode": "^0.1.1",
