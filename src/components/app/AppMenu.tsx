@@ -51,26 +51,6 @@ import { useLocalize } from "../../i18n";
 const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close", "help", "file_preferences"] as const;
 type ActionNames = (typeof ActionValues)[number];
 
-/**
- * A type for menu items used by the {@link AppMenu} component.
- */
-type MenuData = {
-    /** A pseudo-identifier for the menu item. */
-    id: string;
-    /** A display name for the menu item. */
-    name: string;
-    /** An action name the menu item is going to be performing upon click. */
-    actionName?: ActionNames;
-    /** Optional submenu items for the current item. */
-    items?: MenuData[];
-    /** Optional icon for the menu item. */
-    icon?: string;
-    /** A value indicating whether a menu group separator should be placed before this menu item. */
-    beginGroup?: boolean;
-    /** A value indicating if the menu item is disabled. */
-    disabled?: boolean;
-};
-
 const makeKey = (action: ActionNames) => {
     return `"menu":${action}`;
 };
@@ -240,4 +220,4 @@ const StyledAppMenu = styled(AppMenu)`
 
 export { StyledAppMenu };
 
-export type { MenuData, ActionNames };
+export type { ActionNames };
