@@ -26,6 +26,9 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { Button, InputRef, Modal } from "antd";
+import { exit } from "@tauri-apps/api/process";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
@@ -117,6 +120,10 @@ const QueryPasswordPopup = ({
         onClose(true, password1);
     }, [onClose, password1]);
 
+    const forceCloseClick = React.useCallback(() => {
+        void exit(0);
+    }, [onClose]);
+
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
         onClose(false);
@@ -193,6 +200,12 @@ const QueryPasswordPopup = ({
                         onClick={onCancelClick}
                     >
                         {lu("cancel")}
+                    </Button>
+                    <Button //
+                        onClick={forceCloseClick}
+                        icon={<FontAwesomeIcon icon={faTriangleExclamation} />}
+                    >
+                        {lu("close", "Close")}
                     </Button>
                 </div>
             </div>
