@@ -122,7 +122,7 @@ const QueryPasswordPopup = ({
 
     const forceCloseClick = React.useCallback(() => {
         void exit(0);
-    }, [onClose]);
+    }, []);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
