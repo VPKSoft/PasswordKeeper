@@ -3158,9 +3158,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.117"
+version = "1.0.119"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "455182ea6142b14f93f4bc5320a2b31c1f266b66a4a5c858b013302a5d8cbfc3"
+checksum = "e8eddb61f0697cc3989c5d64b452f5488e2b8a60fd7d5076a3045076ffef8cb0"
 dependencies = [
  "indexmap 2.2.3",
  "itoa 1.0.9",
@@ -3692,7 +3692,7 @@ dependencies = [
 [[package]]
 name = "tauri-plugin-window-state"
 version = "0.1.1"
-source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#6d8188ebfa096fce9fea714b7dad948a98b2c36c"
+source = "git+https://github.com/tauri-apps/plugins-workspace?branch=v1#81676da7ab0155c630dc56cd704cfa985867ab51"
 dependencies = [
  "bincode",
  "bitflags 2.4.1",
