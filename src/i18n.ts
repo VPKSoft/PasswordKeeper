@@ -75,8 +75,7 @@ const resources = {
 };
 
 // Create a type of the supported locales.
-const LocaleValues = ["fi", "en"] as const;
-export type Locales = (typeof LocaleValues)[number];
+export type Locales = "fi" | "en";
 
 // A type for a single locale with an English name.
 export type LocaleCodeName = {
@@ -107,8 +106,7 @@ const setLocale = (locale: Locales) => {
 setLocale("en");
 
 // Create a type of the supported locale categories.
-const ComponentValues = ["ui", "entries", "app", "common", "messages", "menu", "settings", "updates"] as const;
-type TranslationComponents = (typeof ComponentValues)[number];
+type TranslationComponents = "settings" | "menu" | "messages" | "ui" | "entries" | "app" | "common" | "updates";
 
 /**
  * Custom hook for the i18next {@link useTranslation} hook.
