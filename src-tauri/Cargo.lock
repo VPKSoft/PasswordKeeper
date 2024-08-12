@@ -2441,6 +2441,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-window-state",
+ "time",
  "tokio",
  "totp-rs",
  "zeroize",
