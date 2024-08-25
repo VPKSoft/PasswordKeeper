@@ -26,7 +26,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { Button, InputRef, Modal } from "antd";
-import { exit } from "@tauri-apps/api/process";
+import { exit } from "@tauri-apps/plugin-process";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocalize } from "../../../i18n";

@@ -1,4 +1,3 @@
-// eslint-disable-next-line unicorn/filename-case
 module.exports = {
     extends: [
         "eslint:recommended",
@@ -9,7 +8,7 @@ module.exports = {
         "plugin:import/warnings",
     ],
     parser: "@typescript-eslint/parser",
-    ignorePatterns: [".eslintrc.cjs"],
+    ignorePatterns: [".eslintrc.cjs", "src/localization/rust_i18n_transform", "vite.config.ts"],
     parserOptions: {
         sourceType: "module",
         ecmaVersion: 2_020,
@@ -36,6 +35,7 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-floating-promises": "warn",
+        "react/forbid-component-props": ["error", { forbid: [{ "propName": "style", message: "Use className to define the component style"}] }],
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unused-vars": "warn",
         "unicorn/prevent-abbreviations": "off",
@@ -44,6 +44,7 @@ module.exports = {
         "react/jsx-no-bind": "error",
         "unicorn/no-null": "off",
         "import/order": "warn",
+        "react/jsx-curly-brace-presence": ["warn", { "props": "never", "children": "never" }],
         "unicorn/numeric-separators-style": ["error", { number: { minimumDigits: 0, groupLength: 3 } }],
         "unicorn/filename-case": [
             "error",

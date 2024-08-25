@@ -28,7 +28,7 @@ import classNames from "classnames";
 import { marked } from "marked";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import { CommonProps } from "../Types";
 
 /**

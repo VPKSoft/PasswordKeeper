@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { save, open } from "@tauri-apps/api/dialog";
-import { invoke } from "@tauri-apps/api/tauri";
+import { save, open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
 import { DataEntry, FileData, FileOptions, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
 
 /**
@@ -77,7 +77,7 @@ const selectFileToOpen = async (extensionName: string, extension = "pkd") => {
         ],
     });
 
-    return filePath as string | null;
+    return filePath?.path ?? null;
 };
 
 /**
