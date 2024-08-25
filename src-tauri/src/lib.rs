@@ -33,6 +33,7 @@ use config::{get_app_config, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
 use fonts::get_font_families;
 use serde::{Deserialize, Serialize};
+use tokio::{fs::File, io::AsyncReadExt};
 
 mod auth2fa;
 mod config;
@@ -57,6 +58,7 @@ pub async fn run() {
             save_settings,
             gen_otpauth,
             clear_clipboard,
+            load_image_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -198,4 +200,30 @@ async fn load_file(file_name: String, password: String) -> StringResult {
         },
     };
     result
+}
+
+/// Loads an image file requested by the frontend.
+/// # Arguments
+///
+/// * `file_name` - the file to load.
+///
+/// # Returns
+/// A `Result<Vec<u8>, String>` indicating success or failure with the file contents.
+#[tauri::command(async)]
+async fn load_image_file(file_name: String) -> Result<Vec<u8>, String> {
+    let mut file = match File::open(file_name).await {
+        Ok(v) => v,
+        Err(e) => {
+            return Err(e.to_string());
+        }
+    };
+
+    let mut buffer = Vec::new();
+
+    match file.read_to_end(&mut buffer).await {
+        Ok(_) => Ok(buffer),
+        Err(e) => {
+            return Err(e.to_string());
+        }
+    }
 }
