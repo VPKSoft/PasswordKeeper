@@ -23,34 +23,15 @@ SOFTWARE.
 */
 
 import { invoke } from "@tauri-apps/api/core";
-import * as React from "react";
 
 /**
- * A custom hook to enumerate font families on the system and use some defaults as fallback.
- * @returns An array of font families.
- */
-const useFontFamily = (): [Array<string>] => {
-    const [fontFamilies, setFontFamilies] = React.useState<Array<string>>(fallbackFamilies);
-
-    React.useEffect(() => {
-        void invoke("get_font_families_data").then(values => {
-            const valueResult = values as unknown as StringListResult;
-            if (valueResult.error) {
-                setFontFamilies(fallbackFamilies);
-            } else {
-                setFontFamilies(valueResult.value.length > 0 ? valueResult.value : fallbackFamilies);
-            }
-        });
-    }, []);
-
-    return [fontFamilies];
+ * Loads the image file contents from the file system into a number array.
+ * @param fileName The name of the file to load.
+ * @returns The image file contents as a number array.
+ **/
+const loadImageFile = async (fileName: string) => {
+    const result: number[] = await invoke("load_image_file", { fileName: fileName });
+    return result;
 };
 
-const fallbackFamilies = ["Arial", "Courier New", "Georgia", "Impact", "Lucida Console", "Tahoma", "Times New Roman", "Verdana"];
-
-type StringListResult = {
-    value: Array<string>;
-    error: boolean;
-};
-
-export { useFontFamily };
+export { loadImageFile };

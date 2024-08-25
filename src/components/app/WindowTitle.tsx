@@ -1,10 +1,11 @@
 import * as React from "react";
 import { styled } from "styled-components";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import classNames from "classnames";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { AppIcon, MdiClose, MdiWindowMaximize, MdiWindowMinimize } from "../../utilities/app/Images";
+const appWindow = getCurrentWebviewWindow();
 
 /**
  * The props for the {@link WindowTitle} component.
