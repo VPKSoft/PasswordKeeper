@@ -45,11 +45,11 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: ${{ github.workspace }}\init.ps1
       - name: init install folder (Linux & Mac)
-        if: matrix.platform == 'ubuntu-20.04' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-24.04' || matrix.platform == 'macos-latest'
         run: ${{ github.workspace }}/init.sh                
                 
       - name: E2E Linux
-        if: matrix.platform == 'ubuntu-20.04'
+        if: matrix.platform == 'ubuntu-24.04'
         run: |
           cd webdriver/webdriverio
           npm i

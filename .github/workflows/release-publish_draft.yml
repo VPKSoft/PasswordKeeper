@@ -31,7 +31,7 @@ jobs:
         run: ${{ github.workspace }}\init.ps1
       - name: init install folder (Linux & Mac)
 #        run: npm install # change this to npm or pnpm depending on which one you use
-        if: matrix.platform == 'ubuntu-20.04' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-24.04' || matrix.platform == 'macos-latest'
         run: ${{ github.workspace }}/init.sh          
       - uses: tauri-apps/tauri-action@v0
         env:
