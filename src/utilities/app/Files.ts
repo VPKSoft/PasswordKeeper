@@ -61,10 +61,6 @@ const EmptyGeneralEntryString: GeneralEntry<string> = { type: "tags", values: []
  */
 const failed: FileResult = { ok: false, fileData: [], fileName: "", tags: EmptyGeneralEntryString };
 
-type OpenDialogReturn = {
-    path?: string;
-};
-
 /**
  * Displays an open file dialog and returns the user selected file.
  * @param extensionName The name of the file extension to display to the user via the open file dialog.
@@ -80,13 +76,7 @@ const selectFileToOpen = async (extensionName: string, extension = "pkd") => {
             },
         ],
     });
-
-    // Compatibility fix for frontend dependencies vs. backend dependencies for Tauri breaking change. TODO::Remove when fully merged.
-    if (filePath === null) {
-        return "";
-    }
-
-    return typeof filePath === "string" ? filePath : ((filePath as OpenDialogReturn)?.path ?? null);
+    return filePath;
 };
 
 /**
@@ -111,7 +101,7 @@ const selectFileToSave = async (extensionName: string, extension = "pkd") => {
         filePath = filePath + `.${extension}`;
     }
 
-    return filePath as string | null;
+    return filePath;
 };
 
 /**
