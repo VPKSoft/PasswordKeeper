@@ -101,7 +101,7 @@ const selectFileToSave = async (extensionName: string, extension = "pkd") => {
         filePath = filePath + `.${extension}`;
     }
 
-    return filePath as string | null;
+    return filePath;
 };
 
 /**
