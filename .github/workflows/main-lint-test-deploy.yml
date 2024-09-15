@@ -11,6 +11,7 @@ jobs:
     env: 
       TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
       TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}  
+      WINDOWS_CERT_THUMBPRINT: ${{ secrets.WINDOWS_CERT_THUMBPRINT }}
     permissions:
       contents: write
     strategy:
@@ -18,11 +19,21 @@ jobs:
       matrix:
         platform: [macos-latest, ubuntu-24.04, windows-latest]
     runs-on: ${{ matrix.platform }}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+      - name: Install Windows certificates
+        if: matrix.platform == 'windows-latest'
+        run: |
+          MkDir C:\signing
+          Invoke-WebRequest https://github.com/VPKSoftOrg/FileToVariables/releases/latest/download/FileToVariables-x86_64-pc-windows-gnu.zip -OutFile C:\signing\win_exe.zip
+          Expand-Archive C:\signing\win_exe.zip C:\signing
+          C:\signing\FileToVariables.exe --file C:\signing\windows.cer --var-format "WIN_CERT{i}" read
+          $params = @{
+            CertFilePath = 'C:\signing\windows.cer'
+            CertStoreLocation = 'Cert:\CurrentUser\My'
+          }
+          Import-Certificate @params        
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
         # You can remove libayatana-appindicator3-dev if you don't use the system tray feature.
