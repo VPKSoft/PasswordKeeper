@@ -11,7 +11,9 @@ jobs:
     env: 
       TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
       TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}  
-      WINDOWS_CERT_THUMBPRINT: ${{ secrets.WINDOWS_CERT_THUMBPRINT }}
+      WIN_CERT01: ${{ secrets.WIN_CERT01 }}
+      WIN_CERT02: ${{ secrets.WIN_CERT02 }}
+      WIN_CERT03: ${{ secrets.WIN_CERT03 }}
     permissions:
       contents: write
     strategy:
