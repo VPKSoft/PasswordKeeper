@@ -31,6 +31,9 @@ jobs:
           node-version: 20
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
+      - name: Install Windows SDK
+        if: matrix.platform == 'windows-latest'
+        uses: GuillaumeFalourd/setup-windows10-sdk-action@v2           
       - name: Install Windows certificates
         if: matrix.platform == 'windows-latest'
         run: |
