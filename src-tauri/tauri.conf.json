@@ -23,9 +23,9 @@
       "icons/icon.ico"
     ],
     "windows": {
-      "certificateThumbprint": null,
+      "certificateThumbprint": "d951f983867e89da1eb8e71eadbea771a4be82d1",
       "digestAlgorithm": "sha256",
-      "timestampUrl": ""
+      "timestampUrl": "http://time.certum.pl"
     },
     "longDescription": "",
     "macOS": {

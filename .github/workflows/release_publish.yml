@@ -11,7 +11,8 @@ jobs:
     environment: Release
     env: 
       TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-      TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}  
+      TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+      WINDOWS_CERT_THUMBPRINT: ${{ secrets.WINDOWS_CERT_THUMBPRINT }}
     permissions:
       contents: write
     strategy:
@@ -28,6 +29,18 @@ jobs:
           node-version: 20
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
+      - name: Install Windows certificates
+        if: matrix.platform == 'windows-latest'
+        run: |
+          MkDir C:\signing
+          Invoke-WebRequest https://github.com/VPKSoftOrg/FileToVariables/releases/latest/download/FileToVariables-x86_64-pc-windows-gnu.zip -OutFile C:\signing\win_exe.zip
+          Expand-Archive C:\signing\win_exe.zip C:\signing
+          C:\signing\FileToVariables.exe --file C:\signing\windows.cer --var-format "WIN_CERT{i}" read
+          $params = @{
+            CertFilePath = 'C:\signing\windows.cer'
+            CertStoreLocation = 'Cert:\CurrentUser\My'
+          }
+          Import-Certificate @params
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
         run: |
