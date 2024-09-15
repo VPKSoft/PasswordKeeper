@@ -33,7 +33,7 @@ jobs:
             CertFilePath = 'C:\signing\windows.cer'
             CertStoreLocation = 'Cert:\CurrentUser\My'
           }
-          Import-Certificate @params        
+          Import-Certificate $params        
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
         # You can remove libayatana-appindicator3-dev if you don't use the system tray feature.
