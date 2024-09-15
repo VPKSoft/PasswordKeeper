@@ -38,11 +38,8 @@ jobs:
           Invoke-WebRequest https://github.com/VPKSoftOrg/FileToVariables/releases/latest/download/FileToVariables-x86_64-pc-windows-gnu.zip -OutFile C:\signing\win_exe.zip
           Expand-Archive C:\signing\win_exe.zip C:\signing
           C:\signing\FileToVariables.exe --file C:\signing\windows.cer --var-format "WIN_CERT{i}" read
-          $params = @{
-            CertFilePath = 'C:\signing\windows.cer'
-            CertStoreLocation = 'Cert:\CurrentUser\My'
-          }
-          Import-Certificate @params
+          Set-Location -Path Cert:\CurrentUser\My
+          Import-Certificate -Filepath "C:\signing\windows.cer"
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-24.04'
         run: |
