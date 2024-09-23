@@ -4160,9 +4160,9 @@ checksum = "14c39fd04924ca3a864207c66fc2cd7d22d7c016007f9ce846cbb9326331930a"
 
 [[package]]
 name = "tauri"
-version = "2.0.0-rc.13"
+version = "2.0.0-rc.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a283cb3d25e46e2f5d99f0068928dadaca4a19558c555f91a5064e3299c691d"
+checksum = "2fa32e2741bda64c1da02d93252a466893180052fc6de61c8803b0356504b70d"
 dependencies = [
  "anyhow",
  "bytes",
@@ -4211,9 +4211,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-build"
-version = "2.0.0-rc.11"
+version = "2.0.0-rc.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "148441d64674b2885c1ba5baf3ae61662bb8753859ffcfb541962cbc6b847f39"
+checksum = "6ff5713e81e02e0b99f5219b275abbd7d2c0cc0f30180e25b1b650e08feeac63"
 dependencies = [
  "anyhow",
  "cargo_toml",
@@ -4406,9 +4406,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-window-state"
-version = "2.0.0-rc.4"
+version = "2.0.0-rc.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67c9b841c8164b949eac9e4fe8d56a23ed5e8ef0ac1c52e26a500709f7a50e50"
+checksum = "2221224863eced96d800407f7ed8b8e6bd8f329e834b7b975bb553123fb79af0"
 dependencies = [
  "bitflags 2.6.0",
  "log",
@@ -4466,9 +4466,9 @@ dependencies = [
 
 [[package]]
 name = "tauri-utils"
-version = "2.0.0-rc.11"
+version = "2.0.0-rc.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3019641087c9039b57ebfca95fa42a93c07056845b7d8d57c8966061bcee83b4"
+checksum = "31fe4c9148e1b35225e1c00753f24b517ce00041d02eb4b4d6fd10613a47736c"
 dependencies = [
  "brotli",
  "cargo_metadata",
