@@ -15,5 +15,6 @@
     "qrSuccess": "QR code read successfully.",
     "filePreferences": "File preferences",
     "updateCheckFailed": "Update check failed with error '{{error}}'.",
-    "updateCheckError": "Update check error"
+    "updateCheckError": "Update check error",
+    "categoryGeneral": "General"
 }
