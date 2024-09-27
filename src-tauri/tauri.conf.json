@@ -45,7 +45,7 @@
     "createUpdaterArtifacts": true
   },
   "productName": "PasswordKeeper",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "identifier": "PasswordKeeper",
   "plugins": {
     "updater": {
