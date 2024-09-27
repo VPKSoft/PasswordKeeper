@@ -177,7 +177,7 @@ const PasswordList = ({
  */
 const createNode = (value: DataEntry, values: DataEntry[], generalName: string) => {
     const result: DataNode & { data: DataEntry } = {
-        title: value.id === -1 ? generalName : value.name,
+        title: value.id === -1_000 ? generalName : value.name,
         key: value.id.toString(),
         icon: isGroup(value) ? <FolderOpenOutlined /> : <TagsOutlined />,
         children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values, generalName)) : undefined,
