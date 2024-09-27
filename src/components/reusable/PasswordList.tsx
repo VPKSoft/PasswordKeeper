@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { styled } from "styled-components";
 import type { DataNode, EventDataNode } from "antd/es/tree";
 import Tree from "antd/es/tree/Tree";
-import { FolderOpenOutlined, TagsOutlined } from "@ant-design/icons";
+import { FolderOpenOutlined, TagsOutlined, FolderOpenFilled } from "@ant-design/icons";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
@@ -52,7 +52,11 @@ const PasswordList = ({
     // Memoize a suitable data source for the Tree.
     const treeData = React.useMemo(() => {
         const generalName = lm("categoryGeneral");
-        const generalNode = dataSource.find(f => f.id === generalId) as DataEntry;
+        const generalNode = dataSource.find(f => f.id === generalId) ?? {
+            name: "#NO_CATEGORY#",
+            id: generalId,
+            parentId: -1,
+        };
         let parents = dataSource.filter(f => f.parentId === -1 && f.id !== generalId);
         let children = dataSource.filter(f => f.parentId !== -1);
         parents = parents.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
@@ -178,10 +182,14 @@ const PasswordList = ({
  * @returns A {@link TreeNode} created from the specified {@link DataEntry}.
  */
 const createNode = (value: DataEntry, values: DataEntry[], generalName: string) => {
+    let icon = <TagsOutlined />;
+    if (isGroup(value)) {
+        icon = value.id === generalId ? <FolderOpenFilled /> : <FolderOpenOutlined />;
+    }
     const result: DataNode & { data: DataEntry } = {
         title: value.id === generalId ? generalName : value.name,
         key: value.id.toString(),
-        icon: isGroup(value) ? <FolderOpenOutlined /> : <TagsOutlined />,
+        icon: icon,
         children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values, generalName)) : undefined,
         selectable: true,
         data: value,
