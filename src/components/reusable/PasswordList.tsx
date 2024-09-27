@@ -3,9 +3,11 @@ import classNames from "classnames";
 import { styled } from "styled-components";
 import type { DataNode, EventDataNode } from "antd/es/tree";
 import Tree from "antd/es/tree/Tree";
-import { FolderOpenOutlined, TagsOutlined } from "@ant-design/icons";
+import { FolderOpenOutlined, TagsOutlined, FolderOpenFilled } from "@ant-design/icons";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
+import { useLocalize } from "../../i18n";
+import { generalId } from "../../misc/DataUtils";
 import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
@@ -45,10 +47,17 @@ const PasswordList = ({
     setEntry,
 }: PasswordListProps) => {
     const [selectedKey, setSelectedKey] = React.useState<string>();
+    const lm = useLocalize("messages");
 
     // Memoize a suitable data source for the Tree.
     const treeData = React.useMemo(() => {
-        let parents = dataSource.filter(f => f.parentId === -1);
+        const generalName = lm("categoryGeneral");
+        const generalNode = dataSource.find(f => f.id === generalId) ?? {
+            name: "#NO_CATEGORY#",
+            id: generalId,
+            parentId: -1,
+        };
+        let parents = dataSource.filter(f => f.parentId === -1 && f.id !== generalId);
         let children = dataSource.filter(f => f.parentId !== -1);
         parents = parents.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
         children = children.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
@@ -72,13 +81,13 @@ const PasswordList = ({
                 }
             }
         }
-        let result = parents.map(f => createNode(f, children));
+        let result = [generalNode, ...parents].map(f => createNode(f, children, generalName));
         if (searching) {
             result = result.filter(f => f.children && f.children.length > 0);
         }
 
         return result;
-    }, [dataSource, searchValue]);
+    }, [dataSource, lm, searchValue.searchMode, searchValue.value]);
 
     // Expand all search results if any results were found.
     React.useEffect(() => {
@@ -172,12 +181,16 @@ const PasswordList = ({
  * @param values The data source to use for possible node children.
  * @returns A {@link TreeNode} created from the specified {@link DataEntry}.
  */
-const createNode = (value: DataEntry, values: DataEntry[]) => {
+const createNode = (value: DataEntry, values: DataEntry[], generalName: string) => {
+    let icon = <TagsOutlined />;
+    if (isGroup(value)) {
+        icon = value.id === generalId ? <FolderOpenFilled /> : <FolderOpenOutlined />;
+    }
     const result: DataNode & { data: DataEntry } = {
-        title: value.name,
+        title: value.id === generalId ? generalName : value.name,
         key: value.id.toString(),
-        icon: isGroup(value) ? <FolderOpenOutlined /> : <TagsOutlined />,
-        children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values)) : undefined,
+        icon: icon,
+        children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values, generalName)) : undefined,
         selectable: true,
         data: value,
     };
