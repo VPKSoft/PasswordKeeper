@@ -24,12 +24,17 @@ SOFTWARE.
 
 import { DataEntry } from "../types/PasswordEntry";
 
-const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string) => {
+const getNewId = (dataSource: DataEntry[]) => {
     let id = Math.max(...dataSource.map(f => f.id));
     if (id === Number.NEGATIVE_INFINITY) {
         id = 0;
     }
     id++;
+    return id;
+};
+
+const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string) => {
+    const id = getNewId(dataSource);
 
     const result: DataEntry = {
         name: newDataName,
@@ -38,6 +43,7 @@ const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string
         notes: "",
         id: id,
         parentId: parentId,
+        tags: dataSource.find(f => f.id === parentId)?.name,
     };
 
     return result;
@@ -64,8 +70,31 @@ const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
     if (index === -1) {
         newDataSource.push(entry);
     } else {
+        const firstTag = entry.tags?.split("|")?.[0];
+        const parentByFirstTag = newDataSource.find(f => f.name === firstTag);
+
+        if (parentByFirstTag) {
+            entry.parentId = parentByFirstTag.id;
+        } else {
+            const parentId = getNewId(newDataSource);
+            if (firstTag && firstTag.length > 0) {
+                newDataSource.push({
+                    parentId: -1,
+                    name: firstTag,
+                    id: parentId,
+                });
+            }
+            entry.parentId = parentId;
+        }
+
         newDataSource[index] = entry;
     }
+
+    // Mark as un-categorized
+    if (entry.tags?.trim() === "") {
+        entry.parentId = -1_000;
+    }
+
     return newDataSource;
 };
 

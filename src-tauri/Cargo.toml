@@ -1,6 +1,6 @@
 [package]
 name = "password_keeper"
-version = "0.1.0"
+version = "0.1.1"
 description = "PasswordKeeper"
 authors = ["VPKSoft", "Petteri Kautonen"]
 license = "MIT"
@@ -20,7 +20,7 @@ tauri-build = { version = "2.0.0-rc.12", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-rc.14", features = [] }
+tauri = { version = "2.0.0-rc.15", features = [] }
 tokio = { version = "1.40.0", features = ["full"] }
 directories = "5.0.0"
 aes-gcm-siv = { version = "0.11.1" }

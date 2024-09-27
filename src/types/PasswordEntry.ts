@@ -32,6 +32,8 @@ type FileData = {
     metaData?: GeneralEntry<string>[];
     /** Global file options. */
     dataOptions?: FileOptions;
+    /** The version of the file. */
+    version: number;
 };
 
 /**

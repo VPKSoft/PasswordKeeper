@@ -231,6 +231,7 @@ const App = ({ className }: AppProps) => {
                     entries: dataSource,
                     metaData: [dataTags],
                     dataOptions: fileOptions,
+                    version: 1,
                 };
 
                 void saveFile(data, password, currentFile).then(f => {
@@ -410,6 +411,7 @@ const App = ({ className }: AppProps) => {
                     const data: FileData = {
                         entries: dataSource,
                         metaData: [dataTags],
+                        version: 1,
                     };
                     void saveFile(data, password, fileName).then(f => {
                         if (f.ok) {
