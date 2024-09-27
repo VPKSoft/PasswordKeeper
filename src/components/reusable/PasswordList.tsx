@@ -7,6 +7,7 @@ import { FolderOpenOutlined, TagsOutlined } from "@ant-design/icons";
 import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
+import { generalId } from "../../misc/DataUtils";
 import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
@@ -51,7 +52,8 @@ const PasswordList = ({
     // Memoize a suitable data source for the Tree.
     const treeData = React.useMemo(() => {
         const generalName = lm("categoryGeneral");
-        let parents = dataSource.filter(f => f.parentId === -1);
+        const generalNode = dataSource.find(f => f.id === generalId) as DataEntry;
+        let parents = dataSource.filter(f => f.parentId === -1 && f.id !== generalId);
         let children = dataSource.filter(f => f.parentId !== -1);
         parents = parents.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
         children = children.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
@@ -75,7 +77,7 @@ const PasswordList = ({
                 }
             }
         }
-        let result = parents.map(f => createNode(f, children, generalName));
+        let result = [generalNode, ...parents].map(f => createNode(f, children, generalName));
         if (searching) {
             result = result.filter(f => f.children && f.children.length > 0);
         }
@@ -177,7 +179,7 @@ const PasswordList = ({
  */
 const createNode = (value: DataEntry, values: DataEntry[], generalName: string) => {
     const result: DataNode & { data: DataEntry } = {
-        title: value.id === -1_000 ? generalName : value.name,
+        title: value.id === generalId ? generalName : value.name,
         key: value.id.toString(),
         icon: isGroup(value) ? <FolderOpenOutlined /> : <TagsOutlined />,
         children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values, generalName)) : undefined,

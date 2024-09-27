@@ -25,6 +25,7 @@ SOFTWARE.
 import { save, open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import { DataEntry, FileData, FileOptions, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
+import { generalId } from "../../misc/DataUtils";
 
 /**
  * A result type for the {@link loadFile} and {@link saveFile} functions.
@@ -159,7 +160,7 @@ const loadFile = async (password: string, fileName: string) => {
 
             data.entries.push({
                 parentId: -1,
-                id: -1_000,
+                id: generalId,
                 name: "#NO_CATEGORY#",
             });
 

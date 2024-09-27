@@ -92,7 +92,7 @@ const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
 
     // Mark as un-categorized
     if (entry.tags?.trim() === "") {
-        entry.parentId = -1_000;
+        entry.parentId = generalId;
     }
 
     return newDataSource;
@@ -135,4 +135,6 @@ const testData: DataEntry[] = [
     },
 ];
 
-export { newEntry, updateDataSource, deleteEntryOrCategory, testData };
+const generalId = -1_000;
+
+export { newEntry, updateDataSource, deleteEntryOrCategory, testData, generalId };
