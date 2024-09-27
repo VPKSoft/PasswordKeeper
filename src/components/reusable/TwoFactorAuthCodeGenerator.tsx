@@ -26,7 +26,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { ColorHex, CountdownCircleTimer, TimeProps } from "react-countdown-circle-timer";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 import { Button, Tooltip } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";

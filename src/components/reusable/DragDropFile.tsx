@@ -26,6 +26,8 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { CommonProps } from "../Types";
+import { DragDropEvent, DragDropState, useTauriDragAndDrop } from "../../hooks/useTauriDragAndDrop";
+import { loadImageFile } from "../../utilities/app/TauriBackend";
 
 /**
  * The props for the {@link DragDropFile} component.
@@ -60,35 +62,23 @@ const DragDropFile = ({
     pasteFileText = "Paste file data from clipboard or",
     uploadFileText = "Upload a file",
 }: DragDropFileProps) => {
-    const [dragActive, setDragActive] = React.useState(false);
     const inputRef = React.createRef<HTMLInputElement>();
 
-    // Handle drag events.
-    const handleDrag = React.useCallback((e: React.DragEvent<HTMLDivElement> | React.DragEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (e.type === "dragenter" || e.type === "dragover") {
-            setDragActive(true);
-        } else if (e.type === "dragleave") {
-            setDragActive(false);
-        }
-    }, []);
-
-    // Triggers when file is dropped.
-    const handleDrop = React.useCallback(
-        (e: React.DragEvent<HTMLDivElement>) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-                const uploadFiles = multiple ? createFileArray(e.dataTransfer.files) : e.dataTransfer.files[0];
-                onFileChange(uploadFiles);
+    const onDropFile = React.useCallback<DragDropEvent>(
+        (state: DragDropState, files?: string[] | undefined) => {
+            if (state === DragDropState.Drop && files && files[0]) {
+                const uploadFiles = multiple ? files : files[0];
+                if (typeof uploadFiles === "string") {
+                    void createFileFromName(uploadFiles).then(file => onFileChange(file));
+                } else if (Array.isArray(uploadFiles)) {
+                    void createFilesFromNames(uploadFiles).then(files => onFileChange(files));
+                }
             }
-            setDragActive(false);
         },
         [multiple, onFileChange]
     );
+
+    useTauriDragAndDrop(true, true, "form-file-upload", 5, onDropFile);
 
     // Triggers when file is selected with click.
     const handleChange = React.useCallback(
@@ -146,7 +136,6 @@ const DragDropFile = ({
     return (
         <form //
             id="form-file-upload"
-            onDragEnter={handleDrag}
             onSubmit={onSubmit}
             className={classNames(DragDropFileStyled.name, className)}
         >
@@ -161,7 +150,7 @@ const DragDropFile = ({
             <label //
                 id="label-file-upload"
                 htmlFor="input-file-upload"
-                className={dragActive ? "drag-active" : ""}
+                className="drag-active"
             >
                 <div>
                     <p>{dragDropFileHereText}</p>
@@ -171,15 +160,6 @@ const DragDropFile = ({
                     </button>
                 </div>
             </label>
-            {dragActive && (
-                <div //
-                    id="drag-file-element"
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
-                ></div>
-            )}
         </form>
     );
 };
@@ -191,6 +171,18 @@ const createFileArray = (files: FileList) => {
     }
 
     return result;
+};
+
+const createFileFromName = async (fileName: string) => {
+    const data = await loadImageFile(fileName);
+    return new File([new Uint8Array(data).buffer], fileName, {
+        type: "image/png",
+    });
+};
+
+const createFilesFromNames = async (fileNames: string[]) => {
+    const files = await Promise.all(fileNames.map(fileName => createFileFromName(fileName)));
+    return files;
 };
 
 const DragDropFileStyled = styled(DragDropFile)`

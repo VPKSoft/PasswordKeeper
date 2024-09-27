@@ -1,0 +1,7 @@
+{
+    "identifier": "dialog",
+    "description": "dialog plugin permissions",
+    "local": true,
+    "windows": ["main"],
+    "permissions": ["dialog:allow-open", "dialog:default"]
+}

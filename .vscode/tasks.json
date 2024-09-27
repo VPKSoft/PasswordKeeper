@@ -1,31 +1,39 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "ui:dev",
-        "type": "shell",
-        "isBackground": true,
-        "command": "npm run dev",
-        // "args": [
-        //   "run dev"
-        // ]
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ui:dev",
+      "type": "shell",
+      "isBackground": true,
+      "command": "npm run dev",
+      // "args": [
+      //   "run dev"
+      // ]
+      "problemMatcher": {
+        "base": "$tsc-watch",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE v",
+          "endsPattern": "http://localhost:1420/" // This must match the port in `vite.config.ts` and/or `src-tauri/tauri.conf.json` ?
+        }
       },
-      {
-        "label": "ui:build",
-        "type": "shell",
-        "command": "npm run build",
-        // "args": [
-        //   " run build"
-        // ]
-      },
-      {
-        "type": "npm",
-        "script": "build",
-        "group": "build",
-        "label": "npm: build",
-        "detail": "next build"
-      }
-    ]
-  }
+    },
+    {
+      "label": "ui:build",
+      "type": "shell",
+      "command": "npm run build",
+      // "args": [
+      //   " run build"
+      // ]
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "label": "npm: build",
+      "detail": "next build"
+    }
+  ]
+}

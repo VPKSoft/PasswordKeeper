@@ -25,21 +25,22 @@ SOFTWARE.
 import * as React from "react";
 import { Select, SelectProps, Space, Tag } from "antd";
 import classNames from "classnames";
+import { styled } from "styled-components";
 import { CommonProps } from "../../Types";
 
 /**
- * The props for the {@link TagBox} component.
+ * The props for the {@link TagBoxComponent} component.
  */
 type TagBoxProps = {
     /** The data source for the component. */
     dataSource: string[] | undefined;
     /** A value indicating whether the component is in read-only mode. E.g. display item mode. */
     readOnly: boolean | undefined;
-    /** The current value of the {@link TagBox} component. */
+    /** The current value of the {@link TagBoxComponent} component. */
     value: string[] | undefined;
-    /** A text to display in the {@link TagBox} when nothing is selected. */
+    /** A text to display in the {@link TagBoxComponent} when nothing is selected. */
     placeHolder?: string | undefined;
-    /** Occurs when the {@link TagBox} value has been changed. */
+    /** Occurs when the {@link TagBoxComponent} value has been changed. */
     onChange: (values: string[]) => void;
     /** Occurs when user created an item (tag) which doesn't already exist int the {@link dataSource}. */
     onCustomItemCreating: (value: string) => void;
@@ -50,7 +51,7 @@ type TagBoxProps = {
  * @param param0 The component props: {@link TagBoxProps}.
  * @returns A component.
  */
-const TagBox = ({
+const TagBoxComponent = ({
     className, //
     dataSource,
     readOnly,
@@ -91,15 +92,18 @@ const TagBox = ({
 
     return (
         <Select //
-            className={classNames(TagBox.name, className)}
+            className={classNames(TagBoxComponent.name, className)}
             mode="tags"
             value={value ?? []}
-            style={{ width: "100%" }}
             placeholder={placeHolder}
             onChange={handleChange}
             options={options}
         />
     );
 };
+
+const TagBox = styled(TagBoxComponent)`
+    width: 100%;
+`;
 
 export { TagBox };

@@ -48,8 +48,7 @@ import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 
-const ActionValues = ["new", "open", "save", "saveas", "exit", "additem", "addcategory", "edit", "delete", "settings", "about", "close", "help", "file_preferences"] as const;
-type ActionNames = (typeof ActionValues)[number];
+type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "addcategory" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
 
 const makeKey = (action: ActionNames) => {
     return `"menu":${action}`;

@@ -25,13 +25,13 @@ SOFTWARE.
 import * as React from "react";
 import "./App.css";
 import classNames from "classnames";
-import { appWindow } from "@tauri-apps/api/window";
-import { exit } from "@tauri-apps/api/process";
-import { ask } from "@tauri-apps/api/dialog";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { exit } from "@tauri-apps/plugin-process";
+import { ask } from "@tauri-apps/plugin-dialog";
 import { styled } from "styled-components";
-import { open } from "@tauri-apps/api/shell";
-import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state-api";
-import { invoke } from "@tauri-apps/api";
+import { open } from "@tauri-apps/plugin-shell";
+import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state";
+import { invoke } from "@tauri-apps/api/core";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
@@ -57,6 +57,7 @@ import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPass
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 import { useNotify } from "./components/reusable/Notify";
+const appWindow = getCurrentWebviewWindow();
 
 /**
  * The props for the {@link App} component.
@@ -230,6 +231,7 @@ const App = ({ className }: AppProps) => {
                     entries: dataSource,
                     metaData: [dataTags],
                     dataOptions: fileOptions,
+                    version: 1,
                 };
 
                 void saveFile(data, password, currentFile).then(f => {
@@ -409,6 +411,7 @@ const App = ({ className }: AppProps) => {
                     const data: FileData = {
                         entries: dataSource,
                         metaData: [dataTags],
+                        version: 1,
                     };
                     void saveFile(data, password, fileName).then(f => {
                         if (f.ok) {

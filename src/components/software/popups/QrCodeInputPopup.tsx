@@ -26,7 +26,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import classNames from "classnames";
 import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 import { decodeMigrationUriData, makeOtpAuthKey } from "gauth-decode";
 import { Button, Modal } from "antd";
 import { Auth2Fa, CommonProps } from "../../Types";

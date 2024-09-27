@@ -15,5 +15,6 @@
     "qrSuccess": "QR-koodi luettu onnistuneesti.",
     "filePreferences": "Tiedoston ominaisuudet",
     "updateCheckFailed": "Päivityksen tarkistus epäonnistui virheellä '{{error}}'.",
-    "updateCheckError": "Päivityksen tarkistusvirhe"
+    "updateCheckError": "Päivityksen tarkistusvirhe",
+    "categoryGeneral": "Yleiset"
 }

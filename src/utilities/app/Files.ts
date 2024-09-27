@@ -22,9 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { save, open } from "@tauri-apps/api/dialog";
-import { invoke } from "@tauri-apps/api/tauri";
+import { save, open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
 import { DataEntry, FileData, FileOptions, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
+import { generalId } from "../../misc/DataUtils";
 
 /**
  * A result type for the {@link loadFile} and {@link saveFile} functions.
@@ -76,8 +77,7 @@ const selectFileToOpen = async (extensionName: string, extension = "pkd") => {
             },
         ],
     });
-
-    return filePath as string | null;
+    return filePath;
 };
 
 /**
@@ -102,7 +102,7 @@ const selectFileToSave = async (extensionName: string, extension = "pkd") => {
         filePath = filePath + `.${extension}`;
     }
 
-    return filePath as string | null;
+    return filePath;
 };
 
 /**
@@ -140,12 +140,42 @@ const loadFile = async (password: string, fileName: string) => {
         const data = items as FileData;
 
         const itemTag = (data.metaData ?? []).filter(f => f.type === "tags");
+        const tags = itemTag.length > 0 ? itemTag[0] : EmptyGeneralEntryString;
+
+        // The latest format will have a version
+        if (!data.version) {
+            // Convert the data to add the parent items as tags also
+
+            for (const f of data.entries.filter(f => f.parentId === -1)) {
+                if (!tags.values.includes(f.name)) {
+                    tags.values.push(f.name);
+                }
+
+                for (const g of data.entries.filter(g => g.parentId === f.id)) {
+                    if (!g.tags?.split("|").includes(f.name)) {
+                        g.tags = g.tags ? `${f.name}|` + g.tags : f.name;
+                    }
+                }
+            }
+
+            data.entries.push({
+                parentId: -1,
+                id: generalId,
+                name: "#NO_CATEGORY#",
+            });
+
+            data.version = 1;
+        }
+
+        // The format with main tags.
+
         return {
             fileName: fileName,
             fileData: data.entries,
             tags: itemTag.length > 0 ? itemTag[0] : EmptyGeneralEntryString,
             ok: true,
             dataOptions: data.dataOptions,
+            version: data.version,
         } as FileResult;
     }
 };

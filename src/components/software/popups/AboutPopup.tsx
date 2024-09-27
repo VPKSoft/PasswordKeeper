@@ -26,7 +26,7 @@ import * as React from "react";
 import classNames from "classnames";
 import { getName, getVersion } from "@tauri-apps/api/app";
 import { styled } from "styled-components";
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 import { Button, Modal, Tooltip } from "antd";
 import { ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
 import { useLocalize } from "../../../i18n";
