@@ -161,7 +161,7 @@ const loadFile = async (password: string, fileName: string) => {
             data.entries.push({
                 parentId: -1,
                 id: generalId,
-                name: "#NO_CATEGORY#",
+                name: unCategorized,
             });
 
             data.version = 1;
@@ -234,4 +234,6 @@ const generateTags = <T>(fileData: (DataEntry | GeneralEntry<T>)[]) => {
     return [...resultSet];
 };
 
-export { loadFile, saveFile, selectFileToOpen, selectFileToSave, generateTags };
+const unCategorized = "#NO_CATEGORY#";
+
+export { loadFile, saveFile, selectFileToOpen, selectFileToSave, generateTags, unCategorized };

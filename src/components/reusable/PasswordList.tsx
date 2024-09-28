@@ -8,6 +8,7 @@ import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { generalId } from "../../misc/DataUtils";
+import { unCategorized } from "../../utilities/app/Files";
 import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
@@ -53,7 +54,7 @@ const PasswordList = ({
     const treeData = React.useMemo(() => {
         const generalName = lm("categoryGeneral");
         const generalNode = dataSource.find(f => f.id === generalId) ?? {
-            name: "#NO_CATEGORY#",
+            name: unCategorized,
             id: generalId,
             parentId: -1,
         };
