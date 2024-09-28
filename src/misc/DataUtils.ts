@@ -23,6 +23,7 @@ SOFTWARE.
 */
 
 import { DataEntry } from "../types/PasswordEntry";
+import { unCategorized } from "../utilities/app/Files";
 
 const getNewId = (dataSource: DataEntry[]) => {
     let id = Math.max(...dataSource.map(f => f.id));
@@ -36,6 +37,15 @@ const getNewId = (dataSource: DataEntry[]) => {
 const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string) => {
     const id = getNewId(dataSource);
 
+    let tags = dataSource.find(f => f.id === parentId)?.name;
+    if (!tags) {
+        tags = "";
+    }
+
+    if (tags === unCategorized) {
+        tags = "";
+    }
+
     const result: DataEntry = {
         name: newDataName,
         password: "",
@@ -43,7 +53,7 @@ const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string
         notes: "",
         id: id,
         parentId: parentId,
-        tags: dataSource.find(f => f.id === parentId)?.name,
+        tags: tags,
     };
 
     return result;
