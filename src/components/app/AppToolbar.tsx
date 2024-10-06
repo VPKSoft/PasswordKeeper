@@ -181,11 +181,12 @@ const AppToolbar = ({
 const StyledAppToolbar = styled(AppToolbar)`
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 4px;
     .AppToolbar-searchBox {
         width: 480px;
         margin-left: auto;
     }
+    padding-bottom: 4px;
 `;
 
 export { StyledAppToolbar };

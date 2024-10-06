@@ -43,7 +43,7 @@ import {
     faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
-import { MenuInfo } from "rc-menu/lib/interface";
+import { MenuInfo, MenuMode } from "rc-menu/lib/interface";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
@@ -172,6 +172,8 @@ export type AppMenuProps = {
     isNewFile: boolean;
     /** A value indicating whether the current file has been changed. */
     isfileChanged: boolean;
+    /** The mode of the application menu. */
+    mode?: MenuMode;
     /** Occurs when a menu item was clicked. */
     onItemClick: (action: ActionNames) => void;
 } & CommonProps;
@@ -184,9 +186,10 @@ export type AppMenuProps = {
 const AppMenu = ({
     className, //
     entry,
-    onItemClick,
     isNewFile,
     isfileChanged,
+    mode = "horizontal",
+    onItemClick,
 }: AppMenuProps) => {
     const lm = useLocalize("menu");
 
@@ -204,17 +207,21 @@ const AppMenu = ({
     );
 
     return (
-        <Menu //
-            className={classNames(AppMenu.name, className)}
-            mode="horizontal"
-            items={menuData}
-            onClick={onClick}
-        />
+        <div className={classNames(AppMenu.name, className)}>
+            <Menu //
+                mode={mode}
+                items={menuData}
+                onClick={onClick}
+            />
+        </div>
     );
 };
 
 const StyledAppMenu = styled(AppMenu)`
-    // Add style(s) here
+    display: flex;
+    flex-direction: column;
+    min-height: 0px;
+    padding-bottom: 10px;
 `;
 
 export { StyledAppMenu };
