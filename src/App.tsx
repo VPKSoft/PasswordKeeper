@@ -813,6 +813,9 @@ const StyledApp = styled(App)`
     height: 100%;
     width: 100%;
     display: contents;    
+        .AppMenu {
+        overflow: hidden;
+    }
     .App-itemsView {
         display: flex;
         height: 100%;

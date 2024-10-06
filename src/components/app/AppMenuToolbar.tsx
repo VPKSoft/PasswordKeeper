@@ -193,6 +193,7 @@ const StyledAppMenuToolbar = styled(AppMenuToolbar)`
     flex-direction: column;
     min-height: 0px;
     margin-bottom: 10px;
+    flex: none;
 `;
 
 export { StyledAppMenuToolbar };
