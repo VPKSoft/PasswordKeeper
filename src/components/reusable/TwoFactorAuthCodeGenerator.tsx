@@ -125,30 +125,32 @@ const TwoFactorAuthCodeGenerator = ({
         return cssRgbToHex(countdownTimerColor, "#004777") as ColorHex;
     }, [countdownTimerColor]);
 
-    // Unmount the CountdownCircleTimer component by returning null when the reset flag is raised.
-    if (reset) {
-        void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
-            setTwoFactorResult(f);
-        });
-        return null;
-    }
+    React.useEffect(() => {
+        if (reset) {
+            void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
+                setTwoFactorResult(f);
+            });
+        }
+    }, [otpAuthUrl, reset]);
 
     return (
         <div //
             className={classNames(TwoFactorAuthCodeGeneratorStyled.name, className)}
         >
             {contextHolder}
-            <CountdownCircleTimer //
-                isPlaying={true}
-                duration={durationStart}
-                colors={[circleTimerColor, circleTimerColor]}
-                colorsTime={[30, 0]}
-                onComplete={onComplete}
-                size={60}
-                strokeWidth={10}
-            >
-                {renderSeconds}
-            </CountdownCircleTimer>
+            {!reset && (
+                <CountdownCircleTimer //
+                    isPlaying={true}
+                    duration={durationStart}
+                    colors={[circleTimerColor, circleTimerColor]}
+                    colorsTime={[30, 0]}
+                    onComplete={onComplete}
+                    size={60}
+                    strokeWidth={10}
+                >
+                    {renderSeconds}
+                </CountdownCircleTimer>
+            )}
             <div className="SpaceBetween" />
             {[0, 1, 2, 3, 4, 5].map(f => (
                 <div className="NumberBoxBorder" key={f}>
