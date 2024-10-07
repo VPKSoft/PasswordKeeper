@@ -51,7 +51,7 @@ export type Settings = {
 const loadSettings = async () => {
     try {
         const settings = (await invoke("load_settings")) as Settings;
-        window.localStorage.setItem("settings", JSON.stringify(settings));
+        globalThis.localStorage.setItem("settings", JSON.stringify(settings));
         return settings;
     } catch {
         return null;
@@ -67,7 +67,7 @@ const loadSettings = async () => {
 const saveSettings = async (settings: Settings) => {
     try {
         await invoke("save_settings", { config: settings });
-        window.localStorage.setItem("settings", JSON.stringify(settings));
+        globalThis.localStorage.setItem("settings", JSON.stringify(settings));
         return true;
     } catch {
         return false;

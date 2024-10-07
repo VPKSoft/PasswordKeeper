@@ -41,7 +41,7 @@ const useGetCssStyle = <T = string>(styleProp: keyof CSSStyleDeclaration, fallba
         const div = document.createElement("div");
         div.className = classNames(args);
         document.head.append(div);
-        const resultValue = window.getComputedStyle(div)[styleProp]?.toString() ?? fallbackValue;
+        const resultValue = globalThis.getComputedStyle(div)[styleProp]?.toString() ?? fallbackValue;
         div.remove();
         if (typeof fallbackValue !== "string" && !processConvertFunc) {
             throw new Error("The processConvertFunc must be defined when the result type is other than string.");
