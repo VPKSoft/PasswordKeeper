@@ -178,7 +178,7 @@ const App = ({ className }: AppProps) => {
 
         clearFilePassword();
         // Reloading the window will do the same as re-setting multiple state variables.
-        window.location.reload();
+        globalThis.location.reload();
     }, [clearFilePassword, fileChanged]);
 
     // Applies the specified settings for the program to use. E.g. update required state variables.
@@ -241,7 +241,7 @@ const App = ({ className }: AppProps) => {
                         if (fileCloseRequested) {
                             // File was requested to be closed after saving,
                             // reloading the window will do the same as re-setting multiple state variables.
-                            window.location.reload();
+                            globalThis.location.reload();
                         }
                     } else {
                         // Something went wrong with the file save. Display the error message.
@@ -424,7 +424,7 @@ const App = ({ className }: AppProps) => {
                             if (fileCloseRequested) {
                                 // File was requested to be closed after saving,
                                 // reloading the window will do the same as re-setting multiple state variables.
-                                window.location.reload();
+                                globalThis.location.reload();
                             }
                         } else {
                             // Some error occurred saving the file, report the save failure.
@@ -518,7 +518,7 @@ const App = ({ className }: AppProps) => {
                 setFileCloseRequested(false);
             } else {
                 // Reloading the window will do the same as re-setting multiple state variables.
-                window.location.reload();
+                globalThis.location.reload();
             }
         },
         [saveFileCallback]
@@ -540,7 +540,7 @@ const App = ({ className }: AppProps) => {
                             notification("success", ls("saveSuccess"), 5);
                         } else {
                             // The theme change requires a window reload.
-                            window.location.reload();
+                            globalThis.location.reload();
                             notification("success", ls("saveSuccess"), 5);
                         }
                     } else {

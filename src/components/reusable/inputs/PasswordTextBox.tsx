@@ -81,11 +81,11 @@ const PasswordTextBox = ({
     // If the password hiding is enabled, hide the password after a specified interval.
     React.useEffect(() => {
         if (hidePasswordTimeout && hidePasswordTimeout > 0 && displayPassword && readonly) {
-            const timer = window.setInterval(() => {
+            const timer = globalThis.setInterval(() => {
                 setDisplayPassword(false);
             }, hidePasswordTimeout * 1_000);
 
-            return () => window.clearInterval(timer);
+            return () => globalThis.clearInterval(timer);
         }
     }, [displayPassword, hidePasswordTimeout, readonly]);
 
