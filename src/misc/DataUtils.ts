@@ -60,10 +60,18 @@ const newEntry = (parentId: number, dataSource: DataEntry[], newDataName: string
 };
 
 const deleteEntryOrCategory = (dataSource: DataEntry[], entry: DataEntry) => {
-    let newDataSource = [...dataSource];
-    // The item being deleted is a category.
+    const newDataSource = [...dataSource];
+    // The item being deleted is a tag.
     if (entry.parentId === -1) {
-        newDataSource = newDataSource.filter(f => f.parentId !== entry.id);
+        const newTagItems = newDataSource.filter(f => f.parentId === entry.id);
+        for (const f of newTagItems) {
+            f.tags = f.tags?.split("|").slice(1).join("|");
+            if ((f.tags?.trim() ?? "") === "") {
+                f.parentId = generalId;
+            }
+        }
+
+        // newDataSource = newDataSource.filter(f => f.parentId !== entry.id);
         const parentIndex = newDataSource.findIndex(f => f.id === entry.id);
         newDataSource.splice(parentIndex, 1);
     } else {
@@ -71,15 +79,57 @@ const deleteEntryOrCategory = (dataSource: DataEntry[], entry: DataEntry) => {
         newDataSource.splice(index, 1);
     }
 
+    return ensureFirstTags(newDataSource);
+};
+
+const ensureFirstTags = (dataSource: DataEntry[]) => {
+    let newDataSource = [...dataSource];
+
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const f of newDataSource) {
+            const result = ensureFirstTag(newDataSource, f);
+            if (result.changed) {
+                newDataSource = result.newDataSource;
+                changed = true;
+                break;
+            }
+        }
+    }
     return newDataSource;
+};
+
+const ensureFirstTag = (dataSource: DataEntry[], entry: DataEntry) => {
+    let changed = false;
+    const newDataSource = [...dataSource];
+    const firstTag = entry.tags?.split("|")?.[0] ?? "";
+    if (firstTag && firstTag.length > 0) {
+        const parentByFirstTag = newDataSource.find(f => f.name === firstTag && f.parentId === -1);
+        if (parentByFirstTag) {
+            changed = entry.parentId !== parentByFirstTag.id;
+            entry.parentId = parentByFirstTag.id;
+        } else {
+            const parentId = getNewId(newDataSource);
+            newDataSource.push({
+                parentId: -1,
+                name: firstTag,
+                id: parentId,
+            });
+            entry.parentId = parentId;
+            changed = true;
+        }
+    }
+
+    return { newDataSource, changed };
 };
 
 const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
     const newDataSource = [...dataSource];
     const index = newDataSource.findIndex(f => f.id === entry.id);
 
-    const firstTag = entry.tags?.split("|")?.[0];
-    const parentByFirstTag = newDataSource.find(f => f.name === firstTag);
+    const firstTag = entry.tags?.split("|")?.[0] ?? "";
+    const parentByFirstTag = newDataSource.find(f => f.name === firstTag && f.parentId === -1);
 
     if (parentByFirstTag) {
         entry.parentId = parentByFirstTag.id;
@@ -93,6 +143,10 @@ const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
             });
         }
         entry.parentId = parentId;
+
+        if (firstTag.trim() === "") {
+            entry.parentId = generalId;
+        }
     }
 
     if (index === -1) {
@@ -106,7 +160,7 @@ const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
         entry.parentId = generalId;
     }
 
-    return newDataSource;
+    return ensureFirstTags(newDataSource);
 };
 
 const generalId = -1_000;

@@ -64,7 +64,6 @@ const AppMenuToolbar = ({
     saveFileAsClick,
     editClick,
     addClick,
-    addCategoryClick,
     exitClick,
     deleteClick,
     newFileClick,
@@ -97,10 +96,6 @@ const AppMenuToolbar = ({
                 }
                 case "additem": {
                     addClick();
-                    break;
-                }
-                case "addcategory": {
-                    addCategoryClick();
                     break;
                 }
                 case "edit": {
@@ -143,22 +138,7 @@ const AppMenuToolbar = ({
                 }
             }
         },
-        [
-            aboutShowClick,
-            addCategoryClick,
-            addClick,
-            deleteClick,
-            editClick,
-            exitClick,
-            fileCloseClick,
-            filePreferencesClick,
-            loadFileClick,
-            newFileClick,
-            onHelpClick,
-            saveFileAsClick,
-            saveFileClick,
-            settingsClick,
-        ]
+        [aboutShowClick, addClick, deleteClick, editClick, exitClick, fileCloseClick, filePreferencesClick, loadFileClick, newFileClick, onHelpClick, saveFileAsClick, saveFileClick, settingsClick]
     );
 
     return (
@@ -176,7 +156,6 @@ const AppMenuToolbar = ({
                 loadFileClick={loadFileClick}
                 editClick={editClick}
                 addClick={addClick}
-                addCategoryClick={addCategoryClick}
                 deleteClick={deleteClick}
                 lockViewClick={lockViewClick}
                 searchValue={searchValue}
