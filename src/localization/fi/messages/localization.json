@@ -16,5 +16,6 @@
     "filePreferences": "Tiedoston ominaisuudet",
     "updateCheckFailed": "Päivityksen tarkistus epäonnistui virheellä '{{error}}'.",
     "updateCheckError": "Päivityksen tarkistusvirhe",
-    "categoryGeneral": "Yleiset"
+    "categoryGeneral": "Yleiset",
+    "queryDeleteTag": "Poistetaanko tunniste '{{tag}}'? Kaikki tunnisteeseen liitetyt merkinnät siirretään uusien tunnisteiden alle."
 }
