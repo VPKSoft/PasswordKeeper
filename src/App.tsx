@@ -464,8 +464,11 @@ const App = ({ className }: AppProps) => {
         (e: DialogResult) => {
             // If the popup was accepted, delete the selected category or entry.
             if (e === DialogResult.Yes && entry) {
-                setDataSource(deleteEntryOrCategory(dataSource, entry));
+                const newDataSource = deleteEntryOrCategory(dataSource, entry);
+                setDataSource(newDataSource);
                 setFileChanged(true);
+                const newTags = generateTags(newDataSource);
+                setDataTags(f => ({ ...f, values: newTags }));
             }
             // Hide the ConfirmPopup.
             setDialogVisible(false);
