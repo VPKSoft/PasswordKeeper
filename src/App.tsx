@@ -35,7 +35,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { Locales, setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
-import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
+import { deleteEntryOrCategory, generalId, newEntry, updateDataSource } from "./misc/DataUtils";
 import { useSecureStorage } from "./hooks/UseSecureStorage";
 import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
 import { Settings, loadSettings, saveSettings } from "./types/Settings";
@@ -48,7 +48,6 @@ import { StyledAppMenuToolbar } from "./components/app/AppMenuToolbar";
 import { StyledTitle } from "./components/app/WindowTitle";
 import { StyledPasswordList } from "./components/reusable/PasswordList";
 import { StyledEntryEditor } from "./components/software/EntryEditor";
-import { StyledEditCategoryPopup } from "./components/software/popups/EditCategoryPopup";
 import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
 import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
 import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
@@ -80,7 +79,6 @@ const App = ({ className }: AppProps) => {
     const [entry, setEntry] = React.useState<DataEntry | null>(null);
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
-    const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
     const [filePreferencesVisible, setFilePreferencesVisible] = React.useState(false);
 
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
@@ -88,7 +86,6 @@ const App = ({ className }: AppProps) => {
     const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
     const [fileChanged, setFileChanged] = React.useState(false);
     const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
-    const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
     const [entryEditMode, setEntryEditMode] = React.useState<ModifyType>(ModifyType.New);
     const [dialogVisible, setDialogVisible] = React.useState(false);
@@ -320,35 +317,12 @@ const App = ({ className }: AppProps) => {
         [dataSource]
     );
 
-    // The category editor popup was closed. Handle the possible changes.
-    const onCategoryEditClose = React.useCallback(
-        (userAccepted: boolean, entry?: DataEntry | undefined) => {
-            // If the popup was accepted and there is something set in the entry...
-            if (userAccepted && entry !== undefined) {
-                // ...update the data source and re-set the state variables.
-                setDataSource(updateDataSource(dataSource, entry));
-                setLastAddedDeletedId(entry.id);
-                setFileChanged(true);
-                setEntry(entry);
-                setEditEntry(null);
-            }
-            // Hide the popup.
-            setCategoryEditVisible(false);
-        },
-        [dataSource]
-    );
-
     // The user requested to edit a selected entry or category. Set the editor visible.
     const onEditClick = React.useCallback(() => {
         if (entry) {
             setEditEntry({ ...entry });
-            if (entry?.parentId === -1) {
-                setCategoryPopupMode(ModifyType.Edit);
-                setCategoryEditVisible(true);
-            } else if (entry) {
-                setEntryEditMode(ModifyType.Edit);
-                setEntryEditVisible(true);
-            }
+            setEntryEditMode(ModifyType.Edit);
+            setEntryEditVisible(true);
         }
     }, [entry]);
 
@@ -453,8 +427,10 @@ const App = ({ className }: AppProps) => {
     // The delete item was selected either for a category or an entry.
     const deleteClick = React.useCallback(() => {
         // Display the delete verification popup.
-        setDialogVisible(true);
-    }, []);
+        if (entry?.id !== generalId) {
+            setDialogVisible(true);
+        }
+    }, [entry?.id]);
 
     // The preferences was selected.
     const settingsClick = React.useCallback(() => {
@@ -467,41 +443,37 @@ const App = ({ className }: AppProps) => {
         closeFile();
     }, [closeFile]);
 
-    // A category was selected to be added. Set the editing type to new and
-    // set the edit category popup visible.
-    const addCategoryClick = React.useCallback(() => {
-        setCategoryPopupMode(ModifyType.New);
-        setEditEntry(newEntry(-1, dataSource, ""));
-        setCategoryEditVisible(true);
-    }, [dataSource]);
-
     // An entry was selected to be added. Set the editing type to new and
     // set the edit entry popup visible.
     const addItem = React.useCallback(() => {
-        if (entry) {
-            setEntryEditMode(ModifyType.New);
-            const parentId = entry.parentId === -1 ? entry.id : entry.parentId;
-            const editEntry = newEntry(parentId, dataSource, "");
-            setEditEntry(editEntry);
-            setEntryEditVisible(true);
-        }
+        setEntryEditMode(ModifyType.New);
+        const parentId = entry && entry.parentId === -1 ? entry.id : generalId;
+        const editEntry = newEntry(parentId, dataSource, "");
+        setEditEntry(editEntry);
+        setEntryEditVisible(true);
     }, [dataSource, entry]);
 
     // Memoize the delete query message based on the selected entry.
     const deleteQueryMessage = React.useMemo(() => {
-        const message = entry?.parentId === -1 ? lm("queryDeleteCategory", undefined, { category: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
+        const message = entry?.parentId === -1 ? lm("queryDeleteTag", undefined, { tag: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
         return message;
     }, [entry, lm]);
 
     // A callback for the ConfirmPopup after querying about deleting a selected category or entry.
-    const deleteCategoryOrEntry = React.useCallback(
+    const deleteEntry = React.useCallback(
         (e: DialogResult) => {
             // If the popup was accepted, delete the selected category or entry.
             if (e === DialogResult.Yes && entry) {
-                setDataSource(deleteEntryOrCategory(dataSource, entry));
+                const newDataSource = deleteEntryOrCategory(dataSource, entry);
+                setDataSource(newDataSource);
+                setFileChanged(true);
+                const newTags = generateTags(newDataSource);
+                setDataTags(f => ({ ...f, values: newTags }));
             }
             // Hide the ConfirmPopup.
             setDialogVisible(false);
+
+            setEntry(null);
         },
         [dataSource, entry]
     );
@@ -681,7 +653,6 @@ const App = ({ className }: AppProps) => {
                 loadFileClick={loadFileCallback}
                 editClick={onEditClick}
                 addClick={addItem}
-                addCategoryClick={addCategoryClick}
                 newFileClick={newClick}
                 settingsClick={settingsClick}
                 exitClick={exitClick}
@@ -728,28 +699,18 @@ const App = ({ className }: AppProps) => {
                         locale={settingsRef.current?.locale ?? "en"}
                     />
                 </div>
-                {editEntry !== null && (
-                    <StyledEditEntryPopup //
-                        entry={editEntry}
-                        mode={entryEditMode}
-                        visible={entryEditVisible}
-                        onClose={onEditClose}
-                        allTags={dataTags.values}
-                        notesFont={fileOptions?.notesFont}
-                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
-                        defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
-                        defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
-                        locale={settingsRef.current?.locale ?? "en"}
-                    />
-                )}
-                {editEntry !== null && (
-                    <StyledEditCategoryPopup //
-                        entry={editEntry}
-                        mode={categoryPopupMode}
-                        visible={categoryEditVisible}
-                        onClose={onCategoryEditClose}
-                    />
-                )}
+                <StyledEditEntryPopup //
+                    entry={editEntry ?? undefined}
+                    mode={entryEditMode}
+                    visible={entryEditVisible}
+                    onClose={onEditClose}
+                    allTags={dataTags.values}
+                    notesFont={fileOptions?.notesFont}
+                    useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
+                    defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
+                    defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                    locale={settingsRef.current?.locale ?? "en"}
+                />
                 <StyledOpenSaveFilePopup //
                     visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
@@ -761,7 +722,7 @@ const App = ({ className }: AppProps) => {
                     mode={PopupType.Confirm}
                     message={deleteQueryMessage}
                     buttons={DialogButtons.Yes | DialogButtons.No}
-                    onClose={deleteCategoryOrEntry}
+                    onClose={deleteEntry}
                 />
                 <StyledConfirmPopup //
                     visible={saveChangedFileQueryVisible}

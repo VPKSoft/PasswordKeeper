@@ -28,6 +28,7 @@ import { styled } from "styled-components";
 import { Menu, MenuProps } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    //
     faCircleInfo,
     faCircleQuestion,
     faCircleXmark,
@@ -35,7 +36,6 @@ import {
     faFile,
     faFloppyDisk,
     faFolderOpen,
-    faFolderPlus,
     faGear,
     faPen,
     faSliders,
@@ -48,7 +48,7 @@ import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 
-type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "addcategory" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
+type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
 
 const makeKey = (action: ActionNames) => {
     return `"menu":${action}`;
@@ -57,7 +57,7 @@ const makeKey = (action: ActionNames) => {
 /**
  * Creates the application menu structure with localization for the menu item names.
  * @param localize The localization function.
- * @param entry The currently selected category or item.
+ * @param entry The currently selected item.
  * @param isNewFile A value indicating whether the file is a new file.
  * @param isfileChanged A value indicating whether the file has been changed.
  * @returns A localized menu structure for the application.
@@ -115,12 +115,6 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     label: localize("itemAdd"),
                     key: makeKey("additem"),
                     icon: <FontAwesomeIcon icon={faSquarePlus} />,
-                    disabled: entry === undefined,
-                },
-                {
-                    label: localize("itemAddCategory"),
-                    key: makeKey("addcategory"),
-                    icon: <FontAwesomeIcon icon={faFolderPlus} />,
                 },
                 {
                     label: localize("itemEdit"),
