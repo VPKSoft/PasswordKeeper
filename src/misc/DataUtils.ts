@@ -77,26 +77,27 @@ const deleteEntryOrCategory = (dataSource: DataEntry[], entry: DataEntry) => {
 const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
     const newDataSource = [...dataSource];
     const index = newDataSource.findIndex(f => f.id === entry.id);
-    if (index === -1) {
-        newDataSource.push(entry);
+
+    const firstTag = entry.tags?.split("|")?.[0];
+    const parentByFirstTag = newDataSource.find(f => f.name === firstTag);
+
+    if (parentByFirstTag) {
+        entry.parentId = parentByFirstTag.id;
     } else {
-        const firstTag = entry.tags?.split("|")?.[0];
-        const parentByFirstTag = newDataSource.find(f => f.name === firstTag);
-
-        if (parentByFirstTag) {
-            entry.parentId = parentByFirstTag.id;
-        } else {
-            const parentId = getNewId(newDataSource);
-            if (firstTag && firstTag.length > 0) {
-                newDataSource.push({
-                    parentId: -1,
-                    name: firstTag,
-                    id: parentId,
-                });
-            }
-            entry.parentId = parentId;
+        const parentId = getNewId(newDataSource);
+        if (firstTag && firstTag.length > 0) {
+            newDataSource.push({
+                parentId: -1,
+                name: firstTag,
+                id: parentId,
+            });
         }
+        entry.parentId = parentId;
+    }
 
+    if (index === -1) {
+        newDataSource.push({ ...entry, id: getNewId(newDataSource) });
+    } else {
         newDataSource[index] = entry;
     }
 
@@ -108,43 +109,6 @@ const updateDataSource = (dataSource: DataEntry[], entry: DataEntry) => {
     return newDataSource;
 };
 
-const testData: DataEntry[] = [
-    {
-        name: "General",
-        id: 1,
-        parentId: -1,
-    },
-    {
-        name: "Sample 1",
-        password: "password123",
-        userName: "user1",
-        notes: "2F2 required.",
-        id: 2,
-        parentId: 1,
-    },
-    {
-        name: "Local Windows servers",
-        id: 3,
-        parentId: -1,
-    },
-    {
-        name: "Server 1",
-        userName: "admin",
-        password: "assword",
-        domain: "localhost",
-        id: 4,
-        parentId: 3,
-    },
-    {
-        name: "Server 2",
-        userName: "sysadmin",
-        password: "secure1",
-        domain: "localhost",
-        id: 5,
-        parentId: 3,
-    },
-];
-
 const generalId = -1_000;
 
-export { newEntry, updateDataSource, deleteEntryOrCategory, testData, generalId };
+export { newEntry, updateDataSource, deleteEntryOrCategory, generalId };
