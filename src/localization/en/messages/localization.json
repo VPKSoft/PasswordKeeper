@@ -16,5 +16,6 @@
     "filePreferences": "File preferences",
     "updateCheckFailed": "Update check failed with error '{{error}}'.",
     "updateCheckError": "Update check error",
-    "categoryGeneral": "General"
+    "categoryGeneral": "General",
+    "queryDeleteTag": "Delete the tag '{{tag}}'? All the entries will be assigned to a new tag."
 }
