@@ -455,7 +455,7 @@ const App = ({ className }: AppProps) => {
 
     // Memoize the delete query message based on the selected entry.
     const deleteQueryMessage = React.useMemo(() => {
-        const message = entry?.parentId === -1 ? lm("queryDeleteCategory", undefined, { category: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
+        const message = entry?.parentId === -1 ? lm("queryDeleteTag", undefined, { tag: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
         return message;
     }, [entry, lm]);
 

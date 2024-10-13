@@ -28,6 +28,7 @@ import { styled } from "styled-components";
 import { Menu, MenuProps } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    //
     faCircleInfo,
     faCircleQuestion,
     faCircleXmark,
@@ -35,7 +36,6 @@ import {
     faFile,
     faFloppyDisk,
     faFolderOpen,
-    faFolderPlus,
     faGear,
     faPen,
     faSliders,
