@@ -45,18 +45,18 @@
     "devDependencies": {
         "@tauri-apps/cli": "^2.0.3",
         "@types/dompurify": "^3.0.5",
-        "@types/node": "^22.7.5",
+        "@types/node": "^22.7.7",
         "@types/qrcode": "^1.5.5",
         "@types/react": "^18.3.11",
         "@types/react-dom": "^18.3.1",
         "@types/styled-components": "^5.1.34",
-        "@typescript-eslint/eslint-plugin": "^8.8.1",
-        "@typescript-eslint/parser": "^8.8.1",
+        "@typescript-eslint/eslint-plugin": "^8.10.0",
+        "@typescript-eslint/parser": "^8.10.0",
         "@vitejs/plugin-react-swc": "^3.7.1",
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-jsdoc": "^50.3.2",
+        "eslint-plugin-jsdoc": "^50.4.3",
         "eslint-plugin-prefer-arrow": "^1.2.3",
         "eslint-plugin-prettier": "^5.2.1",
         "eslint-plugin-react": "^7.37.1",
@@ -64,7 +64,7 @@
         "eslint-plugin-unicorn": "^56.0.0",
         "prettier": "^3.3.3",
         "typescript": "^5.6.3",
-        "vite": "^5.4.8",
+        "vite": "^5.4.9",
         "internal-ip": "^8.0.0"
     }
 }
