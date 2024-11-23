@@ -29,7 +29,7 @@ SOFTWARE.
 
 use arboard::Clipboard;
 use auth2fa::{gen_secret_otpauth, Auth2FAResult};
-use config::{get_app_config, set_app_config, AppConfig};
+use config::{get_app_config, get_config_path, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
 use fonts::get_font_families;
 use serde::{Deserialize, Serialize};
@@ -146,9 +146,10 @@ async fn get_font_families_data() -> StringListResult {
 ///
 /// # Returns
 /// Application settings.
-#[tauri::command]
-async fn load_settings() -> AppConfig {
-    get_app_config()
+#[tauri::command(async)]
+async fn load_settings(app_handle: tauri::AppHandle) -> AppConfig {
+    let cfg_path = get_config_path(&app_handle).await;
+    get_app_config(&cfg_path).await
 }
 
 /// Generates an OTPAuth key with the specified OTPAuth URL.
@@ -174,9 +175,10 @@ async fn gen_otpauth(otpauth: String) -> Auth2FAResult {
 ///
 /// # Returns
 /// `true` if the settings were saved successfully; `false` otherwise.
-#[tauri::command]
-async fn save_settings(config: AppConfig) -> bool {
-    set_app_config(config)
+#[tauri::command(async)]
+async fn save_settings(config: AppConfig, app_handle: tauri::AppHandle) -> bool {
+    let cfg_path = get_config_path(&app_handle).await;
+    set_app_config(&cfg_path, config).await
 }
 
 /// Loads a file requested by the frontend.

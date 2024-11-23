@@ -39,13 +39,12 @@ type PreferencesPopupProps = {
     visible: boolean;
     /** The current program settings. */
     settings: Settings;
-    /**
-     * A callback which occurs when the popup is closed.
-     * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
-     * @param {Settings} settings The updated settings settings in case the popup was accepted.
-     * @returns {void} void.
-     */
-    onClose: (userAccepted: boolean, settings?: Settings) => void;
+    /** A call back to toggle the dark mode. */
+    toggleDarkMode: (antdTheme: "light" | "dark") => void;
+    /** A call back to update the settings. */
+    updateSettings: (settings: Settings) => Promise<void>;
+    /** A call back to close the popup. */
+    onClose: () => void;
 } & CommonProps;
 
 /**
@@ -57,9 +56,11 @@ const PreferencesPopup = ({
     className, //
     visible,
     settings,
+    toggleDarkMode,
+    updateSettings,
     onClose,
 }: PreferencesPopupProps) => {
-    const [settingsInternal, setSettingsInternal] = React.useState<Settings>();
+    const [settingsInternal, setSettingsInternal] = React.useState<Settings>(settings);
 
     // Store the settings passed via the prop to the internal state of the component.
     React.useEffect(() => {
@@ -111,12 +112,14 @@ const PreferencesPopup = ({
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        onClose(true, settingsInternal);
-    }, [onClose, settingsInternal]);
+        void updateSettings(settingsInternal).then(() => {
+            onClose();
+        });
+    }, [onClose, settingsInternal, updateSettings]);
 
     // The Cancel button was clicked.
     const onCancelClick = React.useCallback(() => {
-        onClose(false);
+        onClose();
     }, [onClose]);
 
     return (

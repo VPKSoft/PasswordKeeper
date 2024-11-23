@@ -56,6 +56,8 @@ import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPass
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 import { useNotify } from "./components/reusable/Notify";
+import { useSettings } from "./utilities/app/Settings";
+import { useAntdTheme } from "./context/AntdThemeContext";
 const appWindow = getCurrentWebviewWindow();
 
 /**
@@ -91,7 +93,6 @@ const App = ({ className }: AppProps) => {
     const [dialogVisible, setDialogVisible] = React.useState(false);
     const [preferencesVisible, setPreferencesVisible] = React.useState(false);
     const [aboutVisible, setAboutVisible] = React.useState(false);
-    const [settingsLoaded, setSettingsLoaded] = React.useState(false);
     const [viewLocked, setViewLocked] = React.useState(false);
     const [lockPasswordQueryVisible, setLockPasswordQueryVisible] = React.useState(false);
     const [timeOut, setTimeOut] = React.useState(10);
@@ -103,6 +104,10 @@ const App = ({ className }: AppProps) => {
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
     const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
     const [lastAddedDeletedId, setLastAddedDeletedId] = React.useState(0);
+    const [previewDarkMode, setPreviewDarkMode] = React.useState<boolean | null>(null);
+
+    const { setTheme, updateBackround } = useAntdTheme();
+    const [settings, settingsLoaded, updateSettings, reloadSettings] = useSettings();
 
     const settingsRef = React.useRef<Settings>();
     const expandedKeysRef = React.useRef<Array<string>>([]);
@@ -178,35 +183,12 @@ const App = ({ className }: AppProps) => {
         globalThis.location.reload();
     }, [clearFilePassword, fileChanged]);
 
-    // Applies the specified settings for the program to use. E.g. update required state variables.
-    // NOTE::For a successful theme change the window needs to be reloaded.
-    const applySettings = React.useCallback(
-        (value: Settings) => {
-            settingsRef.current = value;
-            setLocale((value.locale ?? "en") as Locales);
-            setTimeoutEnabled(value.lock_timeout > 0);
-            setTimeOut(value.lock_timeout);
-            setSettingsLoaded(true);
-        },
-        [setTimeoutEnabled]
-    );
-
     // Enable the time out hook if the view was unlocked.
     React.useEffect(() => {
         if (settingsRef.current && !viewLocked) {
             setTimeoutEnabled(settingsRef.current.lock_timeout > 0);
         }
     }, [setTimeoutEnabled, viewLocked]);
-
-    // Load the settings from the setting file.
-    React.useEffect(() => {
-        void loadSettings().then(f => {
-            if (f) {
-                // Apply the loaded settings.
-                applySettings(f);
-            }
-        });
-    }, [applySettings]);
 
     // Save the file "as new".
     const saveFileAsCallback = React.useCallback(() => {
@@ -496,36 +478,6 @@ const App = ({ className }: AppProps) => {
         [saveFileCallback]
     );
 
-    // A callback for the preferences popup close whether to changes were accepted or rejected.
-    const preferencesClose = React.useCallback(
-        (userAccepted: boolean, settings?: Settings) => {
-            if (userAccepted && settings) {
-                // Save the settings as the changes were accepted.
-                void saveSettings(settings).then(f => {
-                    if (f) {
-                        // Apply the setting changes.
-                        applySettings(settings);
-                        if (fileChanged) {
-                            // If the file is changed, notify the user that the theme change
-                            // failed as it requires the window to be refreshed.
-                            notification("warning", ls("themeChangeFailFileUnsaved"), 5);
-                            notification("success", ls("saveSuccess"), 5);
-                        } else {
-                            // The theme change requires a window reload.
-                            globalThis.location.reload();
-                            notification("success", ls("saveSuccess"), 5);
-                        }
-                    } else {
-                        // Notify of an error while trying to save the changes.
-                        notification("error", ls("saveFailed"), 5);
-                    }
-                });
-            }
-            setPreferencesVisible(false);
-        },
-        [applySettings, fileChanged, ls, notification]
-    );
-
     // Display the about popup.
     const aboutShowClick = React.useCallback(() => {
         setAboutVisible(true);
@@ -627,6 +579,14 @@ const App = ({ className }: AppProps) => {
     const filePreferencesClick = React.useCallback(() => {
         setFilePreferencesVisible(true);
     }, []);
+
+    const onPreferencesClose = React.useCallback(() => {
+        setPreferencesVisible(false);
+        void reloadSettings().then(() => {
+            setPreviewDarkMode(null);
+            setTheme?.(settings?.dark_mode ? "dark" : "light");
+        });
+    }, [reloadSettings, setTheme, settings?.dark_mode]);
 
     // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded) {
