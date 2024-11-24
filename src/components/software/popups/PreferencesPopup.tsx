@@ -28,8 +28,8 @@ import { styled } from "styled-components";
 import { Button, Checkbox, InputNumber, Modal, Select } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Locales, currentLocales, useLocalize } from "../../../i18n";
-import { Settings } from "../../../types/Settings";
 import { CommonProps } from "../../Types";
+import { Settings } from "../../../utilities/app/Settings";
 
 /**
  * The props for the {@link PreferencesPopup} component.
@@ -73,6 +73,14 @@ const PreferencesPopup = ({
 
     // Memoize the popup title.
     const title = React.useMemo(() => ls("settings"), [ls]);
+
+    const setDarkMode = React.useCallback(
+        (e: CheckboxChangeEvent) => {
+            toggleDarkMode(e.target.checked === true ? "dark" : "light");
+            setSettingsInternal({ ...settingsInternal, dark_mode: e.target.checked === true });
+        },
+        [settingsInternal, toggleDarkMode]
+    );
 
     // Save the locale Lookup value into the internal state.
     const onLocaleValueChanged = React.useCallback(
@@ -184,6 +192,17 @@ const PreferencesPopup = ({
                                 <Checkbox //
                                     checked={settingsInternal?.save_window_state}
                                     onChange={setSaveWindowState}
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div>{ls("darkMode")}</div>
+                            </td>
+                            <td>
+                                <Checkbox //
+                                    checked={settingsInternal.dark_mode}
+                                    onChange={setDarkMode}
                                 />
                             </td>
                         </tr>

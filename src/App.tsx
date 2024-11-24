@@ -38,7 +38,6 @@ import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } fro
 import { deleteEntryOrCategory, generalId, newEntry, updateDataSource } from "./misc/DataUtils";
 import { useSecureStorage } from "./hooks/UseSecureStorage";
 import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
-import { Settings, loadSettings, saveSettings } from "./types/Settings";
 import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
 import { CommonProps } from "./components/Types";
 import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
@@ -56,8 +55,8 @@ import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPass
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 import { useNotify } from "./components/reusable/Notify";
-import { useSettings } from "./utilities/app/Settings";
-import { useAntdTheme } from "./context/AntdThemeContext";
+import { Settings, useSettings } from "./utilities/app/Settings";
+import { useAntdTheme, useAntdToken } from "./context/AntdThemeContext";
 const appWindow = getCurrentWebviewWindow();
 
 /**
@@ -75,6 +74,8 @@ const App = ({ className }: AppProps) => {
     const la = useLocalize("app");
     const lm = useLocalize("messages");
     const ls = useLocalize("settings");
+
+    const { token } = useAntdToken();
 
     const [contextHolder, notification] = useNotify();
 
@@ -112,9 +113,6 @@ const App = ({ className }: AppProps) => {
     const settingsRef = React.useRef<Settings>();
     const expandedKeysRef = React.useRef<Array<string>>([]);
     const selectedItemRef = React.useRef<DataEntry | null>(null);
-
-    const textColor = "white";
-    const backColor = "#f05b41";
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -580,6 +578,20 @@ const App = ({ className }: AppProps) => {
         setFilePreferencesVisible(true);
     }, []);
 
+    // This effect occurs when the theme token has been changed and updates the
+    // root and body element colors to match to the new theme.
+    React.useEffect(() => {
+        updateBackround?.(token);
+    }, [token, updateBackround]);
+
+    const toggleDarkMode = React.useCallback(
+        (antdTheme: "light" | "dark") => {
+            setTheme?.(antdTheme);
+            setPreviewDarkMode(antdTheme === "dark");
+        },
+        [setTheme]
+    );
+
     const onPreferencesClose = React.useCallback(() => {
         setPreferencesVisible(false);
         void reloadSettings().then(() => {
@@ -589,7 +601,7 @@ const App = ({ className }: AppProps) => {
     }, [reloadSettings, setTheme, settings?.dark_mode]);
 
     // Don't render the page if the settings have not been loaded yet.
-    if (!settingsLoaded) {
+    if (!settingsLoaded || settings === null) {
         return null;
     }
 
@@ -601,8 +613,7 @@ const App = ({ className }: AppProps) => {
                 title={title}
                 onClose={fileSaveQueryAbortCloseCallback}
                 onUserInteraction={resetTimeOut}
-                textColor={textColor}
-                backColor={backColor}
+                darkMode={previewDarkMode ?? settings.dark_mode ?? false}
             />
             <StyledAppMenuToolbar //
                 entry={entry ?? undefined}
@@ -624,6 +635,7 @@ const App = ({ className }: AppProps) => {
                 filePreferencesClick={filePreferencesClick}
                 isNewFile={isNewFile}
                 isfileChanged={fileChanged}
+                darkMode={previewDarkMode ?? settings.dark_mode ?? false}
             />
             <div //
                 className={classNames(App.name, className)}
@@ -643,6 +655,7 @@ const App = ({ className }: AppProps) => {
                         setExpandedKeys={setExpandedKeys}
                         lastAddedDeletedId={lastAddedDeletedId}
                         setLastAddedDeletedId={setLastAddedDeletedId}
+                        darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                     />
                     <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
@@ -657,6 +670,7 @@ const App = ({ className }: AppProps) => {
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                         locale={settingsRef.current?.locale ?? "en"}
+                        darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                     />
                 </div>
                 <StyledEditEntryPopup //
@@ -670,12 +684,14 @@ const App = ({ className }: AppProps) => {
                     defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                     defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                     locale={settingsRef.current?.locale ?? "en"}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledOpenSaveFilePopup //
                     visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
                     mode={filePopupMode}
                     currentFile={currentFile}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledConfirmPopup //
                     visible={dialogVisible}
@@ -683,6 +699,7 @@ const App = ({ className }: AppProps) => {
                     message={deleteQueryMessage}
                     buttons={DialogButtons.Yes | DialogButtons.No}
                     onClose={deleteEntry}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledConfirmPopup //
                     visible={saveChangedFileQueryVisible}
@@ -690,18 +707,22 @@ const App = ({ className }: AppProps) => {
                     message={lm("fileChangedSaveQuery", undefined, { file: currentFile })}
                     buttons={DialogButtons.Yes | DialogButtons.No | DialogButtons.Cancel}
                     onClose={queryFileChangesPopupClosed}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
-                {settingsRef.current && (
+                {settings && (
                     <StyledPreferencesPopup //
                         visible={preferencesVisible}
-                        settings={settingsRef.current}
-                        onClose={preferencesClose}
+                        settings={settings}
+                        onClose={onPreferencesClose}
+                        toggleDarkMode={toggleDarkMode}
+                        updateSettings={updateSettings}
                     />
                 )}
                 <StyledAboutPopup //
                     visible={aboutVisible}
                     onClose={aboutClose}
-                    textColor={textColor}
+                    textColor="white"
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledLockScreenOverlay //
                     lockText={lm("programLockedClickToUnlock")}
@@ -716,12 +737,14 @@ const App = ({ className }: AppProps) => {
                         onClose={queryUnlockPassword}
                         visible={lockPasswordQueryVisible}
                         disableCloseViaKeyboard={true}
+                        darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                     />
                 )}
                 <FilePreferencesPopupStyled //
                     visible={filePreferencesVisible}
                     fileOptions={fileOptions}
                     onClose={fileOptionsChanged}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
             </div>
         </>

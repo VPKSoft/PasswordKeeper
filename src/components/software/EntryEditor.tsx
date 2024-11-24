@@ -36,6 +36,7 @@ import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { TagBox } from "../reusable/inputs/TagBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryNotesEditorStyled } from "./EntryNotesEditor";
 import { StyledAEntryNotesEditorPopup } from "./popups/EntryNotesEditorPopup";
@@ -74,6 +75,8 @@ type EntryEditorProps = {
     locale: Locales;
     /** A value indicating whether to use HTML rich text on notes. */
     useHtmlOnNotes: boolean | undefined;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -488,6 +491,7 @@ const StyledEntryEditor = styled(EntryEditor)`
     display: flex;
     flex-direction: column;
     min-height: 0;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .EntryEditor-editRow {
         display: flex;
         flex-direction: row;

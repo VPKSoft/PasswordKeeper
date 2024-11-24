@@ -47,6 +47,7 @@ import { MenuInfo, MenuMode } from "rc-menu/lib/interface";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
 
 type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
 
@@ -168,6 +169,8 @@ export type AppMenuProps = {
     isfileChanged: boolean;
     /** The mode of the application menu. */
     mode?: MenuMode;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Occurs when a menu item was clicked. */
     onItemClick: (action: ActionNames) => void;
 } & CommonProps;
@@ -216,6 +219,7 @@ const StyledAppMenu = styled(AppMenu)`
     flex-direction: column;
     min-height: 0px;
     padding-bottom: 10px;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledAppMenu };

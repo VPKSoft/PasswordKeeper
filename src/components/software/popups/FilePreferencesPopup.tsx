@@ -30,6 +30,7 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CommonProps } from "../../Types";
 import { FileOptions } from "../../../types/PasswordEntry";
 import { useLocalize } from "../../../i18n";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link FilePreferencesPopup} component.
@@ -39,6 +40,8 @@ type FilePreferencesPopupProps = {
     visible: boolean;
     /** The file options to modify. */
     fileOptions: FileOptions | undefined;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /**
      * A callback which occurs when the popup is closed.
      * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
@@ -161,6 +164,7 @@ const FilePreferencesPopupStyled = styled(FilePreferencesPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .Popup-ButtonRow {
         display: flex;
         width: 100%;

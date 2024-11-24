@@ -7,6 +7,16 @@ import { CommonProps } from "../Types";
 import { AppIcon, MdiClose, MdiWindowMaximize, MdiWindowMinimize } from "../../utilities/app/Images";
 const appWindow = getCurrentWebviewWindow();
 
+type TitleColorConfig = {
+    titleBackground: string;
+    textColor: string;
+    closeButtonColor: string;
+    minimizeButtonColor: string;
+    maximizeButtonColor: string;
+    iconBackground: string;
+    buttonHoverBackground: string;
+};
+
 /**
  * The props for the {@link WindowTitle} component.
  */
@@ -20,10 +30,12 @@ type WindowTitleProps = {
      * This is for tracking the application idle status.
      */
     onUserInteraction?: () => void;
-    /** A  text color for window title text. */
-    textColor: string;
-    /** Background color for the window title bar. */
-    backColor: string;
+    /** A value indicating whether to use dark mode. */
+    darkMode?: boolean;
+    /** The color configuration for dark mode. */
+    colorConfigDark?: TitleColorConfig;
+    /** The color configuration for light mode. */
+    colorConfigLight?: TitleColorConfig;
 } & CommonProps;
 
 /**
@@ -94,10 +106,30 @@ const WindowTitle = ({
     );
 };
 
+const titleColorConfigDark: TitleColorConfig = {
+    titleBackground: "black",
+    textColor: "white",
+    closeButtonColor: "white",
+    minimizeButtonColor: "white",
+    maximizeButtonColor: "white",
+    iconBackground: "black",
+    buttonHoverBackground: "#02133a",
+};
+
+const titleColorConfigLight: TitleColorConfig = {
+    titleBackground: "rgb(230, 244, 255)",
+    textColor: "#00a3ff",
+    closeButtonColor: "#00a3ff",
+    minimizeButtonColor: "#00a3ff",
+    maximizeButtonColor: "#00a3ff",
+    iconBackground: "white",
+    buttonHoverBackground: "#cbe9fa",
+};
+
 const StyledTitle = styled(WindowTitle)`
     height: 32px;
-    background: ${p => p.backColor};
-    color: ${p => p.textColor};
+    background: ${p => (p.darkMode ? (p.colorConfigDark ?? titleColorConfigDark)?.titleBackground : (p.colorConfigLight ?? titleColorConfigLight)?.titleBackground)};
+    color: ${p => (p.darkMode ? (p.colorConfigDark ?? titleColorConfigDark)?.textColor : (p.colorConfigLight ?? titleColorConfigLight)?.textColor)};
     user-select: none;
     display: flex;
     flex-direction: row;
@@ -125,7 +157,7 @@ const StyledTitle = styled(WindowTitle)`
         align-items: center;
         width: 32px;
         height: 32px;
-        background: ${p => p.textColor};
+        background: ${p => (p.darkMode ? (p.colorConfigDark ?? titleColorConfigDark)?.iconBackground : (p.colorConfigLight ?? titleColorConfigLight)?.iconBackground)};
     }
     .titlebar-button {
         display: inline-flex;
@@ -135,8 +167,8 @@ const StyledTitle = styled(WindowTitle)`
         height: 32px;
     }
     .titlebar-button:hover {
-        background: ${p => p.textColor};
+        background: ${p => (p.darkMode ? (p.colorConfigDark ?? titleColorConfigDark)?.buttonHoverBackground : (p.colorConfigLight ?? titleColorConfigLight)?.buttonHoverBackground)};
     }
 `;
 
-export { StyledTitle };
+export { StyledTitle, titleColorConfigDark, titleColorConfigLight };

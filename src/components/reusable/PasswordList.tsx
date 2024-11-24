@@ -9,6 +9,7 @@ import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { generalId } from "../../misc/DataUtils";
 import { unCategorized } from "../../utilities/app/Files";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
 import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
@@ -23,6 +24,8 @@ type PasswordListProps = {
     expandedKeys: Array<string>;
     /** An identifier to added, updated or deleted data entry. */
     lastAddedDeletedId: number;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Set the identifier to added, updated or deleted data entry. */
     setLastAddedDeletedId: (value: number) => void;
     /** Set the expanded node keys. */
@@ -241,6 +244,7 @@ const StyledPasswordList = styled(PasswordList)`
         align-items: center;
         flex-flow: column;
     }
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledPasswordList };

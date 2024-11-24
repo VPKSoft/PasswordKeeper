@@ -32,6 +32,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link QueryPasswordPopup} component.
@@ -47,6 +48,8 @@ type QueryPasswordPopupProps = {
     showCloseButton?: boolean;
     /** A value indicating whether closing the popup with not accepting the popup should be disabled. E.g. The Escape key. */
     disableCloseViaKeyboard?: boolean;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /**
      * A callback when the popup is closed.
      * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
@@ -217,6 +220,7 @@ const StyledQueryPasswordPopup = styled(QueryPasswordPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .Popup-entryEditor {
         height: 100%;
     }

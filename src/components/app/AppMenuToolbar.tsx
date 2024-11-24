@@ -27,12 +27,15 @@ import classNames from "classnames";
 import { styled } from "styled-components";
 import { AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
 import { ActionNames, AppMenuProps, StyledAppMenu } from "./AppMenu";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
 
 /**
  * The props for the {@link AppMenuToolbar} component.
  */
 type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
     AppToolbarProps & {
+        /** A value indicating whether the application is in dark mode. */
+        darkMode: boolean;
         /** Occurs when the  item was clicked. */
         exitClick: () => void;
         /** Occurs when the new file item was clicked. */
@@ -58,6 +61,7 @@ const AppMenuToolbar = ({
     isNewFile,
     isfileChanged,
     searchValue,
+    darkMode,
     searchValueChanged,
     loadFileClick,
     saveFileClick,
@@ -148,6 +152,7 @@ const AppMenuToolbar = ({
                 entry={entry}
                 isNewFile={isNewFile}
                 isfileChanged={isfileChanged}
+                darkMode={darkMode}
             />
             <StyledAppToolbar //
                 entry={entry}
@@ -162,6 +167,7 @@ const AppMenuToolbar = ({
                 searchValueChanged={searchValueChanged}
                 filePreferencesClick={filePreferencesClick}
                 testClick={testClick}
+                darkMode={darkMode}
             />
         </div>
     );
@@ -173,6 +179,7 @@ const StyledAppMenuToolbar = styled(AppMenuToolbar)`
     min-height: 0px;
     margin-bottom: 10px;
     flex: none;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledAppMenuToolbar };

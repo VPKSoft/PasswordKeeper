@@ -29,6 +29,7 @@ import { Button, Modal } from "antd";
 import { DialogButtons, DialogResult, PopupType } from "../../../types/Enums";
 import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link ConfirmPopup} component.
@@ -44,6 +45,8 @@ type ConfirmPopupProps = {
     buttons: DialogButtons;
     /** An optional title to override the default, which is generated from the {@link mode} prop value. */
     overrideTitle?: string;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Occurs when the popup is closed. The result is passed as a parameter to the callback. */
     onClose: (result: DialogResult) => void;
 } & CommonProps;
@@ -159,6 +162,7 @@ const StyledConfirmPopup = styled(ConfirmPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .Popup-messageText {
         height: 100%;
     }
