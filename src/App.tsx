@@ -32,7 +32,7 @@ import { styled } from "styled-components";
 import { open } from "@tauri-apps/plugin-shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state";
 import { invoke } from "@tauri-apps/api/core";
-import { Locales, setLocale, useLocalize } from "./i18n";
+import { setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
 import { deleteEntryOrCategory, generalId, newEntry, updateDataSource } from "./misc/DataUtils";
@@ -73,7 +73,6 @@ const App = ({ className }: AppProps) => {
     // The i18next localization hooks.
     const la = useLocalize("app");
     const lm = useLocalize("messages");
-    const ls = useLocalize("settings");
 
     const { token } = useAntdToken();
 
@@ -106,6 +105,7 @@ const App = ({ className }: AppProps) => {
     const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
     const [lastAddedDeletedId, setLastAddedDeletedId] = React.useState(0);
     const [previewDarkMode, setPreviewDarkMode] = React.useState<boolean | null>(null);
+    const [listHeight, setListHeight] = React.useState<number | undefined>(undefined);
 
     const { setTheme, updateBackround } = useAntdTheme();
     const [settings, settingsLoaded, updateSettings, reloadSettings] = useSettings();
@@ -126,6 +126,13 @@ const App = ({ className }: AppProps) => {
             resetClipboard();
         });
     }, [clipboardValue, resetClipboard]);
+
+    React.useEffect(() => {
+        if (settings && setTheme) {
+            void setLocale(settings.locale);
+            setTheme(settings.dark_mode ? "dark" : "light");
+        }
+    }, [setLocale, setTheme, settings]);
 
     // Have the useTimeout hook raise a callback if the 15 seconds has elapsed to clear the clipboard.
     const [clipboardTimeOut, resetClipboardTimeOut] = useTimeout(15, clearClipboard, TimeInterval.Seconds);
@@ -600,6 +607,18 @@ const App = ({ className }: AppProps) => {
         });
     }, [reloadSettings, setTheme, settings?.dark_mode]);
 
+    // A hack to keep the scrollbar outlook consistent with the theme.
+    const onTreeResize = React.useCallback((e: Event) => {
+        let myDiv = document.getElementsByClassName("App-itemsView-list")?.[0] as HTMLDivElement;
+        setListHeight(myDiv.offsetHeight);
+    }, []);
+
+    React.useEffect(() => {
+        globalThis.addEventListener("resize", onTreeResize);
+
+        return () => globalThis.removeEventListener("resize", onTreeResize);
+    }, []);
+
     // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded || settings === null) {
         return null;
@@ -656,6 +675,7 @@ const App = ({ className }: AppProps) => {
                         lastAddedDeletedId={lastAddedDeletedId}
                         setLastAddedDeletedId={setLastAddedDeletedId}
                         darkMode={previewDarkMode ?? settings.dark_mode ?? false}
+                        height={listHeight}
                     />
                     <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
@@ -769,7 +789,8 @@ const StyledApp = styled(App)`
     }
     .App-PasswordEntryEditor {
         width: 60%;
-        margin: 10px;
+        margin-left: 6px;
+        min-height: 0px;
     }
     .App-itemsView-list {
         width: 40%;

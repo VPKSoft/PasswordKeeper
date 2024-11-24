@@ -177,7 +177,7 @@ const StyledAppMenuToolbar = styled(AppMenuToolbar)`
     display: flex;
     flex-direction: column;
     min-height: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     flex: none;
     background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;

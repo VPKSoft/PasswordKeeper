@@ -107,14 +107,13 @@ const EntryEditor = ({
     defaultUseMonospacedFont,
     useHtmlOnNotes,
     locale,
+    darkMode,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
     const [noteEditorOpen, setNoteEditorOpen] = React.useState(false);
-
-    const countDownColor = "#f05b41";
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -399,6 +398,7 @@ const EntryEditor = ({
                                         {showQrViewButton && (
                                             <Tooltip title={lu("displayQrCodeTitle")}>
                                                 <Button //
+                                                    className="OTPAuth-button"
                                                     icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
                                                     disabled={displayQrCodeDisabled}
                                                     onClick={displayQrCodeClick}
@@ -407,6 +407,7 @@ const EntryEditor = ({
                                         )}
                                         <Tooltip title={lu("readQrCodeTitle")}>
                                             <Button //
+                                                className="OTPAuth-button"
                                                 icon={<FontAwesomeIcon icon={faQrcode} />}
                                                 disabled={readOnly}
                                                 onClick={readQrCodeClick}
@@ -423,7 +424,7 @@ const EntryEditor = ({
                                     <td>
                                         <TwoFactorAuthCodeGeneratorStyled //
                                             otpAuthUrl={entry?.otpAuthKey}
-                                            countdownTimerColor={countDownColor}
+                                            darkMode={darkMode}
                                         />
                                     </td>
                                 </tr>
@@ -513,6 +514,9 @@ const StyledEntryEditor = styled(EntryEditor)`
     }
     .OTPAuth-textBox {
         width: 100%;
+        margin-right: 6px;
+    }
+    .OTPAuth-button {
         margin-right: 6px;
     }
 `;

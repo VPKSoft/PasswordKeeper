@@ -24,25 +24,14 @@ SOFTWARE.
 
 import * as React from "react";
 import ReactDOM from "react-dom/client";
-import { StyleSheetManager } from "styled-components";
-import { ConfigProvider, theme } from "antd";
 import { StyledApp } from "./App";
-
-const shouldForwardProp = () => true;
+import "./styles.css";
+import { AntdThemeProvider } from "./context/AntdThemeContext";
 
 ReactDOM.createRoot(document.querySelector("#root") as HTMLElement).render(
     <React.StrictMode>
-        <StyleSheetManager //
-            enableVendorPrefixes
-            shouldForwardProp={shouldForwardProp}
-        >
-            <ConfigProvider
-                theme={{
-                    algorithm: theme.defaultAlgorithm,
-                }}
-            >
-                <StyledApp />
-            </ConfigProvider>
-        </StyleSheetManager>
+        <AntdThemeProvider>
+            <StyledApp />
+        </AntdThemeProvider>
     </React.StrictMode>
 );
