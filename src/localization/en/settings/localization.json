@@ -10,5 +10,6 @@
     "filePreferences": "File preferences",
     "defaultUseMonoSpacedFontOnNotes": "Use mono-spaced font by default on notes",
     "defaultUseMarkdownOnNotes": "Use Markdown by default on notes",
-    "useHtmlIOnNotes": "Use HTML on notes"
+    "useHtmlIOnNotes": "Use HTML on notes",
+    "darkMode": "Dark mode"
 }
