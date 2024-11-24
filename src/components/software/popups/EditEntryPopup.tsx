@@ -31,6 +31,7 @@ import { Locales, useLocalize } from "../../../i18n";
 import { CssFont, DataEntry } from "../../../types/PasswordEntry";
 import { CommonProps } from "../../Types";
 import { StyledEntryEditor } from "../EntryEditor";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link EditEntryPopup} component.
@@ -54,6 +55,8 @@ type EditEntryPopupProps = {
     locale: Locales;
     /** An optional font definition for the notes area. */
     notesFont?: CssFont;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Occurs when the popup has been closed. */
     onClose: (userAccepted: boolean, entry?: DataEntry | undefined) => void;
 } & CommonProps;
@@ -74,6 +77,7 @@ const EditEntryPopup = ({
     notesFont,
     useHtmlOnNotes,
     locale,
+    darkMode,
     onClose,
 }: EditEntryPopupProps) => {
     const [entryInternal, setEntryInternal] = React.useState<DataEntry | undefined>();
@@ -141,6 +145,7 @@ const EditEntryPopup = ({
                     notesFont={notesFont}
                     useHtmlOnNotes={useHtmlOnNotes}
                     locale={locale}
+                    darkMode={darkMode}
                 />
                 <div className="Popup-ButtonRow">
                     <Button //
@@ -163,6 +168,7 @@ const StyledEditEntryPopup = styled(EditEntryPopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .Popup-entryEditor {
         height: 100%;
         min-height: 0px;

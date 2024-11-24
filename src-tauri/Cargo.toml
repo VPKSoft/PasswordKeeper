@@ -1,6 +1,6 @@
 [package]
 name = "password_keeper"
-version = "0.8.2"
+version = "0.9.0"
 description = "PasswordKeeper"
 authors = ["VPKSoft", "Petteri Kautonen"]
 license = "MIT"
@@ -15,7 +15,7 @@ crate-type = ["lib", "cdylib", "staticlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.0.1", features = [] }
+tauri-build = { version = "2.0.3", features = [] }
 
 [dependencies]
 serde_json = "1.0"
@@ -28,8 +28,7 @@ anyhow = "1.0.93"
 rand = "0.8.5"
 rust-argon2 = "2.1.0"
 zeroize = "1.8.1"
-confy = "0.6.1"
-serde_derive = "1.0.210"
+serde_derive = "1.0.215"
 totp-rs = { version = "5.6.0", features = ["otpauth"] }
 tauri-plugin-window-state = "=2.0.2"
 font-kit = "0.14.2"
@@ -39,6 +38,7 @@ tauri-plugin-updater = "2.0.2"
 tauri-plugin-dialog = "2.0.3"
 tauri-plugin-process = "2.0.1"
 tauri-plugin-clipboard-manager = "2.1.0-beta.7"
+tauri-plugin-os = "2.0.1"
 
 [features]
 # by default Tauri runs in production mode

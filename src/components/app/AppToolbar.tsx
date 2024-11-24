@@ -33,6 +33,7 @@ import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { SearchTextBoxValue, StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
 
 /**
  * The props for the {@link AppToolbar} component.
@@ -42,6 +43,8 @@ export type AppToolbarProps = {
     entry: DataEntry | undefined;
     /** A search value for filtering the password list. */
     searchValue: SearchTextBoxValue;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Occurs when the value of the search input has been changed. */
     searchValueChanged?: (value: SearchTextBoxValue) => void;
     /** Occurs when the save file item was clicked. */
@@ -177,6 +180,7 @@ const StyledAppToolbar = styled(AppToolbar)`
         margin-left: auto;
     }
     padding-bottom: 4px;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledAppToolbar };

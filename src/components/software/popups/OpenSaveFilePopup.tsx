@@ -31,6 +31,7 @@ import { useLocalize } from "../../../i18n";
 import { CommonProps } from "../../Types";
 import { StyledFileQueryTextBox } from "../inputs/FileQueryTextBox";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link OpenSaveFilePopup} component.
@@ -42,7 +43,8 @@ type OpenSaveFilePopupProps = {
     mode: FileQueryMode;
     /** The current existing file name of the file. This only used if the {@link mode} is set to {@link FileQueryMode.SaveAs}. */
     currentFile: string | undefined;
-
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /**
      * A callback when the popup is closed.
      * @param {boolean} userAccepted A value indicating whether the user accepted the popup.
@@ -257,6 +259,7 @@ const StyledOpenSaveFilePopup = styled(OpenSaveFilePopup)`
     display: flex;
     flex-direction: column;
     height: 100%;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .Popup-entryEditor {
         height: 100%;
     }
