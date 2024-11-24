@@ -8,6 +8,8 @@ import { DataEntry } from "../../types/PasswordEntry";
 import { CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
 import { generalId } from "../../misc/DataUtils";
+import { unCategorized } from "../../utilities/app/Files";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
 import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
@@ -22,6 +24,10 @@ type PasswordListProps = {
     expandedKeys: Array<string>;
     /** An identifier to added, updated or deleted data entry. */
     lastAddedDeletedId: number;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
+    /** The height of the {@link Tree} component. */
+    height: number | undefined;
     /** Set the identifier to added, updated or deleted data entry. */
     setLastAddedDeletedId: (value: number) => void;
     /** Set the expanded node keys. */
@@ -42,6 +48,7 @@ const PasswordList = ({
     searchValue,
     expandedKeys,
     lastAddedDeletedId,
+    height,
     setLastAddedDeletedId,
     setExpandedKeys,
     setEntry,
@@ -53,7 +60,7 @@ const PasswordList = ({
     const treeData = React.useMemo(() => {
         const generalName = lm("categoryGeneral");
         const generalNode = dataSource.find(f => f.id === generalId) ?? {
-            name: "#NO_CATEGORY#",
+            name: unCategorized,
             id: generalId,
             parentId: -1,
         };
@@ -171,6 +178,7 @@ const PasswordList = ({
             treeData={treeData}
             onSelect={onSelectionChanged}
             expandedKeys={expandedKeys}
+            height={height}
         />
     );
 };
@@ -240,6 +248,7 @@ const StyledPasswordList = styled(PasswordList)`
         align-items: center;
         flex-flow: column;
     }
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledPasswordList };

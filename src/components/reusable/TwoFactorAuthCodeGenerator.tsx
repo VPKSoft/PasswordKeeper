@@ -32,9 +32,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { Auth2Fa, CommonProps } from "../Types";
 import { useLocalize } from "../../i18n";
-import { cssRgbToHex } from "../../utilities/ColorConversion";
 import { useTimeSecond } from "../../hooks/UseTimeSecond";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
 import { useNotify } from "./Notify";
 
 /**
@@ -42,8 +42,8 @@ import { useNotify } from "./Notify";
  */
 type TwoFactorAuthCodeGeneratorProps = {
     duration?: number;
-    countdownTimerColor: ColorHex;
     otpAuthUrl: string;
+    darkMode: boolean;
 } & CommonProps;
 
 /**
@@ -54,8 +54,8 @@ type TwoFactorAuthCodeGeneratorProps = {
 const TwoFactorAuthCodeGenerator = ({
     className, //
     duration = 30,
-    countdownTimerColor,
     otpAuthUrl,
+    darkMode,
 }: TwoFactorAuthCodeGeneratorProps) => {
     const lu = useLocalize("ui");
     const [contextHolder, notification] = useNotify();
@@ -120,35 +120,37 @@ const TwoFactorAuthCodeGenerator = ({
     // A callback when the CountdownCircleTimer completes.
     const onComplete = React.useCallback(() => ({ shouldRepeat: true, delay: 1 }), []);
 
-    // The start and end color for the CountdownCircleTimer component.
-    const circleTimerColor = React.useMemo(() => {
-        return cssRgbToHex(countdownTimerColor, "#004777") as ColorHex;
-    }, [countdownTimerColor]);
+    React.useEffect(() => {
+        if (reset) {
+            void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
+                setTwoFactorResult(f);
+            });
+        }
+    }, [otpAuthUrl, reset]);
 
-    // Unmount the CountdownCircleTimer component by returning null when the reset flag is raised.
-    if (reset) {
-        void invoke<Auth2Fa>("gen_otpauth", { otpauth: otpAuthUrl }).then((f: Auth2Fa) => {
-            setTwoFactorResult(f);
-        });
-        return null;
-    }
+    const colors = React.useMemo(() => {
+        return darkMode ? ["#0bbc91", "#0bbc91"] : ["#aa00ff", "#aa00ff"];
+    }, [darkMode]);
 
     return (
         <div //
             className={classNames(TwoFactorAuthCodeGeneratorStyled.name, className)}
         >
             {contextHolder}
-            <CountdownCircleTimer //
-                isPlaying={true}
-                duration={durationStart}
-                colors={[circleTimerColor, circleTimerColor]}
-                colorsTime={[30, 0]}
-                onComplete={onComplete}
-                size={60}
-                strokeWidth={10}
-            >
-                {renderSeconds}
-            </CountdownCircleTimer>
+            {!reset && (
+                <CountdownCircleTimer //
+                    isPlaying={true}
+                    duration={durationStart}
+                    colors={[colors[0] as ColorHex, colors[1] as ColorHex]}
+                    colorsTime={[30, 0]}
+                    onComplete={onComplete}
+                    size={60}
+                    strokeWidth={10}
+                    trailColor={darkMode ? "#ffffff" : "#e4adff"}
+                >
+                    {renderSeconds}
+                </CountdownCircleTimer>
+            )}
             <div className="SpaceBetween" />
             {[0, 1, 2, 3, 4, 5].map(f => (
                 <div className="NumberBoxBorder" key={f}>
@@ -173,7 +175,7 @@ const TwoFactorAuthCodeGeneratorStyled = styled(TwoFactorAuthCodeGenerator)`
         margin: 10px;
     }
     .CountDown {
-        color: black;
+        color: ${props => (props.darkMode ? lightModeMenuBackground : darkModeMenuBackground)};
         font-weight: bolder;
     }
     .NumberBoxBorder {

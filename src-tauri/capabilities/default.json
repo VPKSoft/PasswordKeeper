@@ -26,6 +26,7 @@
     "shell:allow-open",
     "process:allow-exit",
     "shell:default",
-    "process:default"
+    "process:default",
+    "os:default"
   ]
 }

@@ -29,7 +29,7 @@ SOFTWARE.
 
 use arboard::Clipboard;
 use auth2fa::{gen_secret_otpauth, Auth2FAResult};
-use config::{get_app_config, set_app_config, AppConfig};
+use config::{get_app_config, get_config_path, set_app_config, AppConfig};
 use encryption::{decrypt_small_file, encrypt_small_file};
 use fonts::get_font_families;
 use serde::{Deserialize, Serialize};
@@ -45,6 +45,7 @@ mod fonts;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub async fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_window_state::Builder::default().build())
@@ -142,15 +143,6 @@ async fn get_font_families_data() -> StringListResult {
     result
 }
 
-/// Loads the application settings requested by the frontend.
-///
-/// # Returns
-/// Application settings.
-#[tauri::command]
-async fn load_settings() -> AppConfig {
-    get_app_config()
-}
-
 /// Generates an OTPAuth key with the specified OTPAuth URL.
 /// # Arguments
 ///
@@ -164,19 +156,6 @@ async fn load_settings() -> AppConfig {
 #[tauri::command]
 async fn gen_otpauth(otpauth: String) -> Auth2FAResult {
     gen_secret_otpauth(otpauth)
-}
-
-/// Saves the settings passed from the frontend.
-///
-/// # Arguments
-///
-/// `config` - the application configuration.
-///
-/// # Returns
-/// `true` if the settings were saved successfully; `false` otherwise.
-#[tauri::command]
-async fn save_settings(config: AppConfig) -> bool {
-    set_app_config(config)
 }
 
 /// Loads a file requested by the frontend.
@@ -226,4 +205,28 @@ async fn load_image_file(file_name: String) -> Result<Vec<u8>, String> {
             return Err(e.to_string());
         }
     }
+}
+
+/// Loads the application settings requested by the frontend.
+///
+/// # Returns
+/// Application settings.
+#[tauri::command(async)]
+async fn load_settings(app_handle: tauri::AppHandle) -> AppConfig {
+    let cfg_path: String = get_config_path(&app_handle).await;
+    get_app_config(&cfg_path).await
+}
+
+/// Saves the settings passed from the frontend.
+///
+/// # Arguments
+///
+/// `config` - the application configuration.
+///
+/// # Returns
+/// `true` if the settings were saved successfully; `false` otherwise.
+#[tauri::command(async)]
+async fn save_settings(config: AppConfig, app_handle: tauri::AppHandle) -> bool {
+    let cfg_path = get_config_path(&app_handle).await;
+    set_app_config(&cfg_path, config).await
 }

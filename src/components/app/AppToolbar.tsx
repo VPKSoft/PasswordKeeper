@@ -27,12 +27,13 @@ import { styled } from "styled-components";
 import classNames from "classnames";
 import { Button, Tooltip } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFloppyDisk, faFolderOpen, faFolderPlus, faHammer, faLock, faPen, faSliders, faSquarePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faFloppyDisk, faFolderOpen, faHammer, faLock, faPen, faSliders, faSquarePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
 import { CommonProps } from "../Types";
 import { SearchTextBoxValue, StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
 
 /**
  * The props for the {@link AppToolbar} component.
@@ -42,6 +43,8 @@ export type AppToolbarProps = {
     entry: DataEntry | undefined;
     /** A search value for filtering the password list. */
     searchValue: SearchTextBoxValue;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Occurs when the value of the search input has been changed. */
     searchValueChanged?: (value: SearchTextBoxValue) => void;
     /** Occurs when the save file item was clicked. */
@@ -50,13 +53,11 @@ export type AppToolbarProps = {
     saveFileAsClick: () => void;
     /** Occurs when the open file item was clicked. */
     loadFileClick: () => void;
-    /** Occurs when the edit category or entry item was clicked. */
+    /** Occurs when the edit entry item was clicked. */
     editClick: () => void;
     /** Occurs when the add entry item was clicked. */
     addClick: () => void;
-    /** Occurs when the add category item was clicked. */
-    addCategoryClick: () => void;
-    /** Occurs when the delete category or entry item was clicked. */
+    /** Occurs when the delete entry item was clicked. */
     deleteClick: () => void;
     /** Occurs when the lock view item was clicked. */
     lockViewClick: () => void;
@@ -81,7 +82,6 @@ const AppToolbar = ({
     saveFileAsClick,
     editClick,
     addClick,
-    addCategoryClick,
     deleteClick,
     lockViewClick,
     filePreferencesClick,
@@ -107,13 +107,6 @@ const AppToolbar = ({
                 <Button //
                     icon={<FontAwesomeIcon icon={faSquarePlus} />}
                     onClick={addClick}
-                    disabled={entry === undefined}
-                />
-            </Tooltip>
-            <Tooltip title={lm("itemAddCategory")}>
-                <Button //
-                    icon={<FontAwesomeIcon icon={faFolderPlus} />}
-                    onClick={addCategoryClick}
                 />
             </Tooltip>
             <Tooltip title={lm("itemEdit")}>
@@ -181,11 +174,13 @@ const AppToolbar = ({
 const StyledAppToolbar = styled(AppToolbar)`
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: 4px;
     .AppToolbar-searchBox {
         width: 480px;
         margin-left: auto;
     }
+    padding-bottom: 4px;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledAppToolbar };

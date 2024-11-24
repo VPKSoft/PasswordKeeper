@@ -1,6 +1,6 @@
 [package]
 name = "password_keeper"
-version = "0.8.0"
+version = "0.9.0"
 description = "PasswordKeeper"
 authors = ["VPKSoft", "Petteri Kautonen"]
 license = "MIT"
@@ -15,30 +15,30 @@ crate-type = ["lib", "cdylib", "staticlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-rc.12", features = [] }
+tauri-build = { version = "2.0.3", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "2.0.0-rc.15", features = [] }
-tokio = { version = "1.40.0", features = ["full"] }
-directories = "5.0.0"
+tauri = { version = "2.1.1", features = [] }
+tokio = { version = "1.41.1", features = ["full"] }
+directories = "5.0.1"
 aes-gcm-siv = { version = "0.11.1" }
-anyhow = "1.0.89"
+anyhow = "1.0.93"
 rand = "0.8.5"
 rust-argon2 = "2.1.0"
 zeroize = "1.8.1"
-confy = "0.6.1"
-serde_derive = "1.0.162"
+serde_derive = "1.0.215"
 totp-rs = { version = "5.6.0", features = ["otpauth"] }
-tauri-plugin-window-state = "=2.0.0-rc.5"
+tauri-plugin-window-state = "=2.0.2"
 font-kit = "0.14.2"
 arboard = "3.4.1"
 time = "0.3.36"
-tauri-plugin-updater = "2.0.0-rc.3"
-tauri-plugin-dialog = "2.0.0-rc.7"
-tauri-plugin-process = "2.0.0-rc.1"
+tauri-plugin-updater = "2.0.2"
+tauri-plugin-dialog = "2.0.3"
+tauri-plugin-process = "2.0.1"
 tauri-plugin-clipboard-manager = "2.1.0-beta.7"
+tauri-plugin-os = "2.0.1"
 
 [features]
 # by default Tauri runs in production mode
@@ -49,5 +49,5 @@ default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
 [target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
-tauri-plugin-updater = "2.0.0-rc.3"
-tauri-plugin-shell = "2.0.0-rc.3"
+tauri-plugin-updater = "2.0.2"
+tauri-plugin-shell = "2.0.2"

@@ -1,0 +1,11 @@
+{
+    "identifier": "os",
+    "description": "os plugin permissions",
+    "local": true,
+    "windows": [
+        "main"
+    ],
+    "permissions": [
+        "os:allow-os-type"
+    ]
+}

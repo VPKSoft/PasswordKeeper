@@ -28,6 +28,7 @@ import { styled } from "styled-components";
 import { Menu, MenuProps } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+    //
     faCircleInfo,
     faCircleQuestion,
     faCircleXmark,
@@ -35,7 +36,6 @@ import {
     faFile,
     faFloppyDisk,
     faFolderOpen,
-    faFolderPlus,
     faGear,
     faPen,
     faSliders,
@@ -43,12 +43,13 @@ import {
     faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
-import { MenuInfo } from "rc-menu/lib/interface";
+import { MenuInfo, MenuMode } from "rc-menu/lib/interface";
 import { CommonProps } from "../Types";
 import { DataEntry } from "../../types/PasswordEntry";
 import { useLocalize } from "../../i18n";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
 
-type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "addcategory" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
+type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
 
 const makeKey = (action: ActionNames) => {
     return `"menu":${action}`;
@@ -57,7 +58,7 @@ const makeKey = (action: ActionNames) => {
 /**
  * Creates the application menu structure with localization for the menu item names.
  * @param localize The localization function.
- * @param entry The currently selected category or item.
+ * @param entry The currently selected item.
  * @param isNewFile A value indicating whether the file is a new file.
  * @param isfileChanged A value indicating whether the file has been changed.
  * @returns A localized menu structure for the application.
@@ -115,12 +116,6 @@ const appMenuData = (localize: (entryName: string, defaultValue?: string | undef
                     label: localize("itemAdd"),
                     key: makeKey("additem"),
                     icon: <FontAwesomeIcon icon={faSquarePlus} />,
-                    disabled: entry === undefined,
-                },
-                {
-                    label: localize("itemAddCategory"),
-                    key: makeKey("addcategory"),
-                    icon: <FontAwesomeIcon icon={faFolderPlus} />,
                 },
                 {
                     label: localize("itemEdit"),
@@ -172,6 +167,10 @@ export type AppMenuProps = {
     isNewFile: boolean;
     /** A value indicating whether the current file has been changed. */
     isfileChanged: boolean;
+    /** The mode of the application menu. */
+    mode?: MenuMode;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /** Occurs when a menu item was clicked. */
     onItemClick: (action: ActionNames) => void;
 } & CommonProps;
@@ -184,9 +183,10 @@ export type AppMenuProps = {
 const AppMenu = ({
     className, //
     entry,
-    onItemClick,
     isNewFile,
     isfileChanged,
+    mode = "horizontal",
+    onItemClick,
 }: AppMenuProps) => {
     const lm = useLocalize("menu");
 
@@ -204,17 +204,22 @@ const AppMenu = ({
     );
 
     return (
-        <Menu //
-            className={classNames(AppMenu.name, className)}
-            mode="horizontal"
-            items={menuData}
-            onClick={onClick}
-        />
+        <div className={classNames(AppMenu.name, className)}>
+            <Menu //
+                mode={mode}
+                items={menuData}
+                onClick={onClick}
+            />
+        </div>
     );
 };
 
 const StyledAppMenu = styled(AppMenu)`
-    // Add style(s) here
+    display: flex;
+    flex-direction: column;
+    min-height: 0px;
+    padding-bottom: 10px;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledAppMenu };

@@ -27,12 +27,15 @@ import classNames from "classnames";
 import { styled } from "styled-components";
 import { AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
 import { ActionNames, AppMenuProps, StyledAppMenu } from "./AppMenu";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
 
 /**
  * The props for the {@link AppMenuToolbar} component.
  */
 type AppMenuToolbarProps = Omit<AppMenuProps, "onItemClick"> &
     AppToolbarProps & {
+        /** A value indicating whether the application is in dark mode. */
+        darkMode: boolean;
         /** Occurs when the  item was clicked. */
         exitClick: () => void;
         /** Occurs when the new file item was clicked. */
@@ -58,13 +61,13 @@ const AppMenuToolbar = ({
     isNewFile,
     isfileChanged,
     searchValue,
+    darkMode,
     searchValueChanged,
     loadFileClick,
     saveFileClick,
     saveFileAsClick,
     editClick,
     addClick,
-    addCategoryClick,
     exitClick,
     deleteClick,
     newFileClick,
@@ -97,10 +100,6 @@ const AppMenuToolbar = ({
                 }
                 case "additem": {
                     addClick();
-                    break;
-                }
-                case "addcategory": {
-                    addCategoryClick();
                     break;
                 }
                 case "edit": {
@@ -143,22 +142,7 @@ const AppMenuToolbar = ({
                 }
             }
         },
-        [
-            aboutShowClick,
-            addCategoryClick,
-            addClick,
-            deleteClick,
-            editClick,
-            exitClick,
-            fileCloseClick,
-            filePreferencesClick,
-            loadFileClick,
-            newFileClick,
-            onHelpClick,
-            saveFileAsClick,
-            saveFileClick,
-            settingsClick,
-        ]
+        [aboutShowClick, addClick, deleteClick, editClick, exitClick, fileCloseClick, filePreferencesClick, loadFileClick, newFileClick, onHelpClick, saveFileAsClick, saveFileClick, settingsClick]
     );
 
     return (
@@ -168,6 +152,7 @@ const AppMenuToolbar = ({
                 entry={entry}
                 isNewFile={isNewFile}
                 isfileChanged={isfileChanged}
+                darkMode={darkMode}
             />
             <StyledAppToolbar //
                 entry={entry}
@@ -176,13 +161,13 @@ const AppMenuToolbar = ({
                 loadFileClick={loadFileClick}
                 editClick={editClick}
                 addClick={addClick}
-                addCategoryClick={addCategoryClick}
                 deleteClick={deleteClick}
                 lockViewClick={lockViewClick}
                 searchValue={searchValue}
                 searchValueChanged={searchValueChanged}
                 filePreferencesClick={filePreferencesClick}
                 testClick={testClick}
+                darkMode={darkMode}
             />
         </div>
     );
@@ -192,7 +177,9 @@ const StyledAppMenuToolbar = styled(AppMenuToolbar)`
     display: flex;
     flex-direction: column;
     min-height: 0px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
+    flex: none;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
 `;
 
 export { StyledAppMenuToolbar };

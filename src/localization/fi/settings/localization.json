@@ -10,5 +10,6 @@
     "filePreferences": "Tiedoston ominaisuudet",
     "defaultUseMonoSpacedFontOnNotes": "Käytä tasavälistä fonttia oletuksena muistiinpanoissa",
     "defaultUseMarkdownOnNotes": "Käytä Markdown:ia oletuksena muistiinpanoissa",
-    "useHtmlIOnNotes": "Käytä HTML:ää muistiinpanoissa"
+    "useHtmlIOnNotes": "Käytä HTML:ää muistiinpanoissa",
+    "darkMode": "Tumma tila"
 }

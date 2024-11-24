@@ -34,16 +34,19 @@ import { CommonProps } from "../../Types";
 import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
 import { useTauriUpdater } from "../../../hooks/UseTauriUpdater";
 import { useNotify } from "../../reusable/Notify";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 /**
  * The props for the {@link AboutPopup} component.
  */
 type AboutPopupProps = {
     /** A value indicating whether this popup is visible. */
     visible: boolean;
-    /** Occurs when the popup has been closed. */
-    onClose: () => void;
     /** A  text color for highlighted text. */
     textColor: string;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
+    /** Occurs when the popup has been closed. */
+    onClose: () => void;
 } & CommonProps;
 
 const AboutPopup = ({
@@ -174,6 +177,7 @@ const StyledAboutPopup = styled(AboutPopup)`
     flex-direction: column;
     height: 100%;
     max-height: 500px;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .Popup-versionText {
         font-weight: bolder;
         margin-bottom: 10px;

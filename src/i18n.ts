@@ -94,6 +94,7 @@ const currentLocales: LocaleCodeName[] = [
  * @param locale The locale code to initialize the i18next with.
  */
 const setLocale = (locale: Locales) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     void use(initReactI18next)
         .init({
             resources,

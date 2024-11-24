@@ -32,13 +32,12 @@ import { styled } from "styled-components";
 import { open } from "@tauri-apps/plugin-shell";
 import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state";
 import { invoke } from "@tauri-apps/api/core";
-import { Locales, setLocale, useLocalize } from "./i18n";
+import { setLocale, useLocalize } from "./i18n";
 import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
 import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
-import { deleteEntryOrCategory, newEntry, updateDataSource } from "./misc/DataUtils";
+import { deleteEntryOrCategory, generalId, newEntry, updateDataSource } from "./misc/DataUtils";
 import { useSecureStorage } from "./hooks/UseSecureStorage";
 import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
-import { Settings, loadSettings, saveSettings } from "./types/Settings";
 import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
 import { CommonProps } from "./components/Types";
 import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
@@ -48,7 +47,6 @@ import { StyledAppMenuToolbar } from "./components/app/AppMenuToolbar";
 import { StyledTitle } from "./components/app/WindowTitle";
 import { StyledPasswordList } from "./components/reusable/PasswordList";
 import { StyledEntryEditor } from "./components/software/EntryEditor";
-import { StyledEditCategoryPopup } from "./components/software/popups/EditCategoryPopup";
 import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
 import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
 import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
@@ -57,6 +55,8 @@ import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPass
 import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
 import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 import { useNotify } from "./components/reusable/Notify";
+import { Settings, useSettings } from "./utilities/app/Settings";
+import { useAntdTheme, useAntdToken } from "./context/AntdThemeContext";
 const appWindow = getCurrentWebviewWindow();
 
 /**
@@ -73,14 +73,14 @@ const App = ({ className }: AppProps) => {
     // The i18next localization hooks.
     const la = useLocalize("app");
     const lm = useLocalize("messages");
-    const ls = useLocalize("settings");
+
+    const { token } = useAntdToken();
 
     const [contextHolder, notification] = useNotify();
 
     const [entry, setEntry] = React.useState<DataEntry | null>(null);
     const [editEntry, setEditEntry] = React.useState<DataEntry | null>(null);
     const [entryEditVisible, setEntryEditVisible] = React.useState(false);
-    const [categoryEditVisible, setCategoryEditVisible] = React.useState(false);
     const [filePreferencesVisible, setFilePreferencesVisible] = React.useState(false);
 
     const [dataSource, setDataSource] = React.useState<Array<DataEntry>>([]);
@@ -88,13 +88,11 @@ const App = ({ className }: AppProps) => {
     const [currentFile, setCurrentFile] = React.useState(la("newFileName"));
     const [fileChanged, setFileChanged] = React.useState(false);
     const [fileSaveOpenQueryOpen, setFileSaveOpenQueryOpen] = React.useState(false);
-    const [categoryPopupMode, setCategoryPopupMode] = React.useState<ModifyType>(ModifyType.New);
     const [filePopupMode, setFilePopupMode] = React.useState<FileQueryMode>(FileQueryMode.Open);
     const [entryEditMode, setEntryEditMode] = React.useState<ModifyType>(ModifyType.New);
     const [dialogVisible, setDialogVisible] = React.useState(false);
     const [preferencesVisible, setPreferencesVisible] = React.useState(false);
     const [aboutVisible, setAboutVisible] = React.useState(false);
-    const [settingsLoaded, setSettingsLoaded] = React.useState(false);
     const [viewLocked, setViewLocked] = React.useState(false);
     const [lockPasswordQueryVisible, setLockPasswordQueryVisible] = React.useState(false);
     const [timeOut, setTimeOut] = React.useState(10);
@@ -106,13 +104,15 @@ const App = ({ className }: AppProps) => {
     const [fileOptions, setFileOptions] = React.useState<FileOptions>();
     const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
     const [lastAddedDeletedId, setLastAddedDeletedId] = React.useState(0);
+    const [previewDarkMode, setPreviewDarkMode] = React.useState<boolean | null>(null);
+    const [listHeight, setListHeight] = React.useState<number | undefined>(undefined);
+
+    const { setTheme, updateBackround } = useAntdTheme();
+    const [settings, settingsLoaded, updateSettings, reloadSettings] = useSettings();
 
     const settingsRef = React.useRef<Settings>();
     const expandedKeysRef = React.useRef<Array<string>>([]);
     const selectedItemRef = React.useRef<DataEntry | null>(null);
-
-    const textColor = "white";
-    const backColor = "#f05b41";
 
     // Securely store the file password (to be able to save the file without querying the password) to the application local storage.
     const [setFilePassword, getFilePassword, clearFilePassword] = useSecureStorage<string>("filePassword", "");
@@ -126,6 +126,13 @@ const App = ({ className }: AppProps) => {
             resetClipboard();
         });
     }, [clipboardValue, resetClipboard]);
+
+    React.useEffect(() => {
+        if (settings && setTheme) {
+            void setLocale(settings.locale);
+            setTheme(settings.dark_mode ? "dark" : "light");
+        }
+    }, [setLocale, setTheme, settings]);
 
     // Have the useTimeout hook raise a callback if the 15 seconds has elapsed to clear the clipboard.
     const [clipboardTimeOut, resetClipboardTimeOut] = useTimeout(15, clearClipboard, TimeInterval.Seconds);
@@ -178,21 +185,8 @@ const App = ({ className }: AppProps) => {
 
         clearFilePassword();
         // Reloading the window will do the same as re-setting multiple state variables.
-        window.location.reload();
+        globalThis.location.reload();
     }, [clearFilePassword, fileChanged]);
-
-    // Applies the specified settings for the program to use. E.g. update required state variables.
-    // NOTE::For a successful theme change the window needs to be reloaded.
-    const applySettings = React.useCallback(
-        (value: Settings) => {
-            settingsRef.current = value;
-            setLocale((value.locale ?? "en") as Locales);
-            setTimeoutEnabled(value.lock_timeout > 0);
-            setTimeOut(value.lock_timeout);
-            setSettingsLoaded(true);
-        },
-        [setTimeoutEnabled]
-    );
 
     // Enable the time out hook if the view was unlocked.
     React.useEffect(() => {
@@ -200,16 +194,6 @@ const App = ({ className }: AppProps) => {
             setTimeoutEnabled(settingsRef.current.lock_timeout > 0);
         }
     }, [setTimeoutEnabled, viewLocked]);
-
-    // Load the settings from the setting file.
-    React.useEffect(() => {
-        void loadSettings().then(f => {
-            if (f) {
-                // Apply the loaded settings.
-                applySettings(f);
-            }
-        });
-    }, [applySettings]);
 
     // Save the file "as new".
     const saveFileAsCallback = React.useCallback(() => {
@@ -241,7 +225,7 @@ const App = ({ className }: AppProps) => {
                         if (fileCloseRequested) {
                             // File was requested to be closed after saving,
                             // reloading the window will do the same as re-setting multiple state variables.
-                            window.location.reload();
+                            globalThis.location.reload();
                         }
                     } else {
                         // Something went wrong with the file save. Display the error message.
@@ -320,35 +304,12 @@ const App = ({ className }: AppProps) => {
         [dataSource]
     );
 
-    // The category editor popup was closed. Handle the possible changes.
-    const onCategoryEditClose = React.useCallback(
-        (userAccepted: boolean, entry?: DataEntry | undefined) => {
-            // If the popup was accepted and there is something set in the entry...
-            if (userAccepted && entry !== undefined) {
-                // ...update the data source and re-set the state variables.
-                setDataSource(updateDataSource(dataSource, entry));
-                setLastAddedDeletedId(entry.id);
-                setFileChanged(true);
-                setEntry(entry);
-                setEditEntry(null);
-            }
-            // Hide the popup.
-            setCategoryEditVisible(false);
-        },
-        [dataSource]
-    );
-
     // The user requested to edit a selected entry or category. Set the editor visible.
     const onEditClick = React.useCallback(() => {
         if (entry) {
             setEditEntry({ ...entry });
-            if (entry?.parentId === -1) {
-                setCategoryPopupMode(ModifyType.Edit);
-                setCategoryEditVisible(true);
-            } else if (entry) {
-                setEntryEditMode(ModifyType.Edit);
-                setEntryEditVisible(true);
-            }
+            setEntryEditMode(ModifyType.Edit);
+            setEntryEditVisible(true);
         }
     }, [entry]);
 
@@ -424,7 +385,7 @@ const App = ({ className }: AppProps) => {
                             if (fileCloseRequested) {
                                 // File was requested to be closed after saving,
                                 // reloading the window will do the same as re-setting multiple state variables.
-                                window.location.reload();
+                                globalThis.location.reload();
                             }
                         } else {
                             // Some error occurred saving the file, report the save failure.
@@ -453,8 +414,10 @@ const App = ({ className }: AppProps) => {
     // The delete item was selected either for a category or an entry.
     const deleteClick = React.useCallback(() => {
         // Display the delete verification popup.
-        setDialogVisible(true);
-    }, []);
+        if (entry?.id !== generalId) {
+            setDialogVisible(true);
+        }
+    }, [entry?.id]);
 
     // The preferences was selected.
     const settingsClick = React.useCallback(() => {
@@ -467,41 +430,37 @@ const App = ({ className }: AppProps) => {
         closeFile();
     }, [closeFile]);
 
-    // A category was selected to be added. Set the editing type to new and
-    // set the edit category popup visible.
-    const addCategoryClick = React.useCallback(() => {
-        setCategoryPopupMode(ModifyType.New);
-        setEditEntry(newEntry(-1, dataSource, ""));
-        setCategoryEditVisible(true);
-    }, [dataSource]);
-
     // An entry was selected to be added. Set the editing type to new and
     // set the edit entry popup visible.
     const addItem = React.useCallback(() => {
-        if (entry) {
-            setEntryEditMode(ModifyType.New);
-            const parentId = entry.parentId === -1 ? entry.id : entry.parentId;
-            const editEntry = newEntry(parentId, dataSource, "");
-            setEditEntry(editEntry);
-            setEntryEditVisible(true);
-        }
+        setEntryEditMode(ModifyType.New);
+        const parentId = entry && entry.parentId === -1 ? entry.id : generalId;
+        const editEntry = newEntry(parentId, dataSource, "");
+        setEditEntry(editEntry);
+        setEntryEditVisible(true);
     }, [dataSource, entry]);
 
     // Memoize the delete query message based on the selected entry.
     const deleteQueryMessage = React.useMemo(() => {
-        const message = entry?.parentId === -1 ? lm("queryDeleteCategory", undefined, { category: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
+        const message = entry?.parentId === -1 ? lm("queryDeleteTag", undefined, { tag: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
         return message;
     }, [entry, lm]);
 
     // A callback for the ConfirmPopup after querying about deleting a selected category or entry.
-    const deleteCategoryOrEntry = React.useCallback(
+    const deleteEntry = React.useCallback(
         (e: DialogResult) => {
             // If the popup was accepted, delete the selected category or entry.
             if (e === DialogResult.Yes && entry) {
-                setDataSource(deleteEntryOrCategory(dataSource, entry));
+                const newDataSource = deleteEntryOrCategory(dataSource, entry);
+                setDataSource(newDataSource);
+                setFileChanged(true);
+                const newTags = generateTags(newDataSource);
+                setDataTags(f => ({ ...f, values: newTags }));
             }
             // Hide the ConfirmPopup.
             setDialogVisible(false);
+
+            setEntry(null);
         },
         [dataSource, entry]
     );
@@ -518,40 +477,10 @@ const App = ({ className }: AppProps) => {
                 setFileCloseRequested(false);
             } else {
                 // Reloading the window will do the same as re-setting multiple state variables.
-                window.location.reload();
+                globalThis.location.reload();
             }
         },
         [saveFileCallback]
-    );
-
-    // A callback for the preferences popup close whether to changes were accepted or rejected.
-    const preferencesClose = React.useCallback(
-        (userAccepted: boolean, settings?: Settings) => {
-            if (userAccepted && settings) {
-                // Save the settings as the changes were accepted.
-                void saveSettings(settings).then(f => {
-                    if (f) {
-                        // Apply the setting changes.
-                        applySettings(settings);
-                        if (fileChanged) {
-                            // If the file is changed, notify the user that the theme change
-                            // failed as it requires the window to be refreshed.
-                            notification("warning", ls("themeChangeFailFileUnsaved"), 5);
-                            notification("success", ls("saveSuccess"), 5);
-                        } else {
-                            // The theme change requires a window reload.
-                            window.location.reload();
-                            notification("success", ls("saveSuccess"), 5);
-                        }
-                    } else {
-                        // Notify of an error while trying to save the changes.
-                        notification("error", ls("saveFailed"), 5);
-                    }
-                });
-            }
-            setPreferencesVisible(false);
-        },
-        [applySettings, fileChanged, ls, notification]
     );
 
     // Display the about popup.
@@ -656,8 +585,42 @@ const App = ({ className }: AppProps) => {
         setFilePreferencesVisible(true);
     }, []);
 
+    // This effect occurs when the theme token has been changed and updates the
+    // root and body element colors to match to the new theme.
+    React.useEffect(() => {
+        updateBackround?.(token);
+    }, [token, updateBackround]);
+
+    const toggleDarkMode = React.useCallback(
+        (antdTheme: "light" | "dark") => {
+            setTheme?.(antdTheme);
+            setPreviewDarkMode(antdTheme === "dark");
+        },
+        [setTheme]
+    );
+
+    const onPreferencesClose = React.useCallback(() => {
+        setPreferencesVisible(false);
+        void reloadSettings().then(() => {
+            setPreviewDarkMode(null);
+            setTheme?.(settings?.dark_mode ? "dark" : "light");
+        });
+    }, [reloadSettings, setTheme, settings?.dark_mode]);
+
+    // A hack to keep the scrollbar outlook consistent with the theme.
+    const onTreeResize = React.useCallback((e: Event) => {
+        let myDiv = document.getElementsByClassName("App-itemsView-list")?.[0] as HTMLDivElement;
+        setListHeight(myDiv.offsetHeight);
+    }, []);
+
+    React.useEffect(() => {
+        globalThis.addEventListener("resize", onTreeResize);
+
+        return () => globalThis.removeEventListener("resize", onTreeResize);
+    }, []);
+
     // Don't render the page if the settings have not been loaded yet.
-    if (!settingsLoaded) {
+    if (!settingsLoaded || settings === null) {
         return null;
     }
 
@@ -669,8 +632,7 @@ const App = ({ className }: AppProps) => {
                 title={title}
                 onClose={fileSaveQueryAbortCloseCallback}
                 onUserInteraction={resetTimeOut}
-                textColor={textColor}
-                backColor={backColor}
+                darkMode={previewDarkMode ?? settings.dark_mode ?? false}
             />
             <StyledAppMenuToolbar //
                 entry={entry ?? undefined}
@@ -681,7 +643,6 @@ const App = ({ className }: AppProps) => {
                 loadFileClick={loadFileCallback}
                 editClick={onEditClick}
                 addClick={addItem}
-                addCategoryClick={addCategoryClick}
                 newFileClick={newClick}
                 settingsClick={settingsClick}
                 exitClick={exitClick}
@@ -693,6 +654,7 @@ const App = ({ className }: AppProps) => {
                 filePreferencesClick={filePreferencesClick}
                 isNewFile={isNewFile}
                 isfileChanged={fileChanged}
+                darkMode={previewDarkMode ?? settings.dark_mode ?? false}
             />
             <div //
                 className={classNames(App.name, className)}
@@ -712,6 +674,8 @@ const App = ({ className }: AppProps) => {
                         setExpandedKeys={setExpandedKeys}
                         lastAddedDeletedId={lastAddedDeletedId}
                         setLastAddedDeletedId={setLastAddedDeletedId}
+                        darkMode={previewDarkMode ?? settings.dark_mode ?? false}
+                        height={listHeight}
                     />
                     <StyledEntryEditor //
                         className="App-PasswordEntryEditor"
@@ -726,42 +690,36 @@ const App = ({ className }: AppProps) => {
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
                         locale={settingsRef.current?.locale ?? "en"}
+                        darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                     />
                 </div>
-                {editEntry !== null && (
-                    <StyledEditEntryPopup //
-                        entry={editEntry}
-                        mode={entryEditMode}
-                        visible={entryEditVisible}
-                        onClose={onEditClose}
-                        allTags={dataTags.values}
-                        notesFont={fileOptions?.notesFont}
-                        useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
-                        defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
-                        defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
-                        locale={settingsRef.current?.locale ?? "en"}
-                    />
-                )}
-                {editEntry !== null && (
-                    <StyledEditCategoryPopup //
-                        entry={editEntry}
-                        mode={categoryPopupMode}
-                        visible={categoryEditVisible}
-                        onClose={onCategoryEditClose}
-                    />
-                )}
+                <StyledEditEntryPopup //
+                    entry={editEntry ?? undefined}
+                    mode={entryEditMode}
+                    visible={entryEditVisible}
+                    onClose={onEditClose}
+                    allTags={dataTags.values}
+                    notesFont={fileOptions?.notesFont}
+                    useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
+                    defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
+                    defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
+                    locale={settingsRef.current?.locale ?? "en"}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
+                />
                 <StyledOpenSaveFilePopup //
                     visible={fileSaveOpenQueryOpen}
                     onClose={filePopupClose}
                     mode={filePopupMode}
                     currentFile={currentFile}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledConfirmPopup //
                     visible={dialogVisible}
                     mode={PopupType.Confirm}
                     message={deleteQueryMessage}
                     buttons={DialogButtons.Yes | DialogButtons.No}
-                    onClose={deleteCategoryOrEntry}
+                    onClose={deleteEntry}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledConfirmPopup //
                     visible={saveChangedFileQueryVisible}
@@ -769,18 +727,22 @@ const App = ({ className }: AppProps) => {
                     message={lm("fileChangedSaveQuery", undefined, { file: currentFile })}
                     buttons={DialogButtons.Yes | DialogButtons.No | DialogButtons.Cancel}
                     onClose={queryFileChangesPopupClosed}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
-                {settingsRef.current && (
+                {settings && (
                     <StyledPreferencesPopup //
                         visible={preferencesVisible}
-                        settings={settingsRef.current}
-                        onClose={preferencesClose}
+                        settings={settings}
+                        onClose={onPreferencesClose}
+                        toggleDarkMode={toggleDarkMode}
+                        updateSettings={updateSettings}
                     />
                 )}
                 <StyledAboutPopup //
                     visible={aboutVisible}
                     onClose={aboutClose}
-                    textColor={textColor}
+                    textColor="white"
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledLockScreenOverlay //
                     lockText={lm("programLockedClickToUnlock")}
@@ -795,12 +757,14 @@ const App = ({ className }: AppProps) => {
                         onClose={queryUnlockPassword}
                         visible={lockPasswordQueryVisible}
                         disableCloseViaKeyboard={true}
+                        darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                     />
                 )}
                 <FilePreferencesPopupStyled //
                     visible={filePreferencesVisible}
                     fileOptions={fileOptions}
                     onClose={fileOptionsChanged}
+                    darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
             </div>
         </>
@@ -813,6 +777,9 @@ const StyledApp = styled(App)`
     height: 100%;
     width: 100%;
     display: contents;    
+        .AppMenu {
+        overflow: hidden;
+    }
     .App-itemsView {
         display: flex;
         height: 100%;
@@ -822,7 +789,8 @@ const StyledApp = styled(App)`
     }
     .App-PasswordEntryEditor {
         width: 60%;
-        margin: 10px;
+        margin-left: 6px;
+        min-height: 0px;
     }
     .App-itemsView-list {
         width: 40%;

@@ -161,14 +161,16 @@ const loadFile = async (password: string, fileName: string) => {
             data.entries.push({
                 parentId: -1,
                 id: generalId,
-                name: "#NO_CATEGORY#",
+                name: unCategorized,
             });
+
+            // The folder seem to have been able to replicate in the previous format
+            data.entries = cleanDuplicates(data.entries);
 
             data.version = 1;
         }
 
         // The format with main tags.
-
         return {
             fileName: fileName,
             fileData: data.entries,
@@ -178,6 +180,38 @@ const loadFile = async (password: string, fileName: string) => {
             version: data.version,
         } as FileResult;
     }
+};
+
+/**
+ * Remove duplicate categories from the data by merging them into one with the lowest id.
+ * @param entries The data to clean.
+ * @returns The cleaned data.
+ */
+const cleanDuplicates = (entries: DataEntry[]) => {
+    const parentIdUpdates = new Array<[number, number]>();
+
+    // Find duplicate data.entries with same name and parentId of -1
+    for (const f of entries.filter(f => f.parentId === -1)) {
+        for (const g of entries.filter(g => g.parentId === -1 && g.name === f.name && g.id !== f.id)) {
+            if (!parentIdUpdates.some(h => h[0] === f.id && h[1] === g.id)) {
+                parentIdUpdates.push([g.id, f.id]);
+            }
+        }
+    }
+
+    // Update the parent ids from the old ids to the new ids
+    for (const [oldId, newId] of parentIdUpdates) {
+        for (const f of entries.filter(f => f.parentId === oldId)) {
+            f.parentId = newId;
+        }
+    }
+
+    // Remove the old ids from the data
+    for (const [oldId] of parentIdUpdates) {
+        entries = entries.filter(f => f.id !== oldId);
+    }
+
+    return entries;
 };
 
 /**
@@ -234,4 +268,6 @@ const generateTags = <T>(fileData: (DataEntry | GeneralEntry<T>)[]) => {
     return [...resultSet];
 };
 
-export { loadFile, saveFile, selectFileToOpen, selectFileToSave, generateTags };
+const unCategorized = "#NO_CATEGORY#";
+
+export { loadFile, saveFile, selectFileToOpen, selectFileToSave, generateTags, unCategorized };

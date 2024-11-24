@@ -36,6 +36,7 @@ import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
 import { TagBox } from "../reusable/inputs/TagBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
 import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryNotesEditorStyled } from "./EntryNotesEditor";
 import { StyledAEntryNotesEditorPopup } from "./popups/EntryNotesEditorPopup";
@@ -74,6 +75,8 @@ type EntryEditorProps = {
     locale: Locales;
     /** A value indicating whether to use HTML rich text on notes. */
     useHtmlOnNotes: boolean | undefined;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
     /**
      * Occurs when the {@link entry} prop value has been changed. The component itself is stateless.
      * @param {DataEntry} entry The value of the changed item entry.
@@ -104,14 +107,13 @@ const EntryEditor = ({
     defaultUseMonospacedFont,
     useHtmlOnNotes,
     locale,
+    darkMode,
     onEntryChanged,
     onShouldRefreshPopup,
 }: EntryEditorProps) => {
     const [qrCodeVisible, setQrCodeVisible] = React.useState(false);
     const [qrCodePopupVisible, setQrCodePopupVisible] = React.useState(false);
     const [noteEditorOpen, setNoteEditorOpen] = React.useState(false);
-
-    const countDownColor = "#f05b41";
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
@@ -396,6 +398,7 @@ const EntryEditor = ({
                                         {showQrViewButton && (
                                             <Tooltip title={lu("displayQrCodeTitle")}>
                                                 <Button //
+                                                    className="OTPAuth-button"
                                                     icon={<FontAwesomeIcon icon={faMagnifyingGlass} />}
                                                     disabled={displayQrCodeDisabled}
                                                     onClick={displayQrCodeClick}
@@ -404,6 +407,7 @@ const EntryEditor = ({
                                         )}
                                         <Tooltip title={lu("readQrCodeTitle")}>
                                             <Button //
+                                                className="OTPAuth-button"
                                                 icon={<FontAwesomeIcon icon={faQrcode} />}
                                                 disabled={readOnly}
                                                 onClick={readQrCodeClick}
@@ -420,7 +424,7 @@ const EntryEditor = ({
                                     <td>
                                         <TwoFactorAuthCodeGeneratorStyled //
                                             otpAuthUrl={entry?.otpAuthKey}
-                                            countdownTimerColor={countDownColor}
+                                            darkMode={darkMode}
                                         />
                                     </td>
                                 </tr>
@@ -488,6 +492,7 @@ const StyledEntryEditor = styled(EntryEditor)`
     display: flex;
     flex-direction: column;
     min-height: 0;
+    background-color: ${props => (props.darkMode ? darkModeMenuBackground : lightModeMenuBackground)};
     .EntryEditor-editRow {
         display: flex;
         flex-direction: row;
@@ -509,6 +514,9 @@ const StyledEntryEditor = styled(EntryEditor)`
     }
     .OTPAuth-textBox {
         width: 100%;
+        margin-right: 6px;
+    }
+    .OTPAuth-button {
         margin-right: 6px;
     }
 `;
