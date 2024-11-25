@@ -120,7 +120,11 @@ const PreferencesPopup = ({
 
     // The OK button was clicked.
     const onOkClick = React.useCallback(() => {
-        void updateSettings(settingsInternal).then(() => {
+        const updatedSettings = { ...settingsInternal };
+        updatedSettings.error ??= false;
+        updatedSettings.error_message ??= "";
+
+        void updateSettings(updatedSettings).then(() => {
             onClose();
         });
     }, [onClose, settingsInternal, updateSettings]);

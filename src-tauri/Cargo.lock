@@ -3045,7 +3045,7 @@ dependencies = [
 
 [[package]]
 name = "password_keeper"
-version = "0.9.0"
+version = "0.9.1"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
