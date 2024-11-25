@@ -105,7 +105,7 @@ const App = ({ className }: AppProps) => {
     const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
     const [lastAddedDeletedId, setLastAddedDeletedId] = React.useState(0);
     const [previewDarkMode, setPreviewDarkMode] = React.useState<boolean | null>(null);
-    const [listHeight, setListHeight] = React.useState<number | undefined>(undefined);
+    const [listHeight, setListHeight] = React.useState<number | undefined>();
 
     const { setTheme, updateBackround } = useAntdTheme();
     const [settings, settingsLoaded, updateSettings, reloadSettings] = useSettings();
@@ -126,13 +126,6 @@ const App = ({ className }: AppProps) => {
             resetClipboard();
         });
     }, [clipboardValue, resetClipboard]);
-
-    React.useEffect(() => {
-        if (settings && setTheme) {
-            void setLocale(settings.locale);
-            setTheme(settings.dark_mode ? "dark" : "light");
-        }
-    }, [setLocale, setTheme, settings]);
 
     // Have the useTimeout hook raise a callback if the 15 seconds has elapsed to clear the clipboard.
     const [clipboardTimeOut, resetClipboardTimeOut] = useTimeout(15, clearClipboard, TimeInterval.Seconds);
@@ -173,6 +166,15 @@ const App = ({ className }: AppProps) => {
     }, [lockView]);
 
     const [setTimeoutEnabled, resetTimeOut] = useTimeout(timeOut, onViewLockTimeout, TimeInterval.Minutes);
+
+    React.useEffect(() => {
+        if (settings && setTheme) {
+            void setLocale(settings.locale);
+            setTheme(settings.dark_mode ? "dark" : "light");
+            setTimeOut(settings.lock_timeout);
+            setTimeoutEnabled(settings.lock_timeout > 0);
+        }
+    }, [setTheme, setTimeoutEnabled, settings]);
 
     // The file was requested to be closed. If the file has changes display a query popup
     // for to select the action what to do with the changes, otherwise just reload the view.
@@ -609,7 +611,7 @@ const App = ({ className }: AppProps) => {
 
     // A hack to keep the scrollbar outlook consistent with the theme.
     const onTreeResize = React.useCallback((e: Event) => {
-        let myDiv = document.getElementsByClassName("App-itemsView-list")?.[0] as HTMLDivElement;
+        const myDiv = document.querySelectorAll(".App-itemsView-list")?.[0] as HTMLDivElement;
         setListHeight(myDiv.offsetHeight);
     }, []);
 

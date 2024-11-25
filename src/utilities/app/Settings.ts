@@ -81,9 +81,13 @@ const saveSettings = async (settings: Settings) => {
  * Custom hook that retrieves and manages application settings.
  *
  * @param {function} onErrorCallback - Callback function to notify of any errors.
+ * @param {function} onSettingsSavedCallback - Callback function to notify when the settings are saved.
  * @return {array} An array containing the current settings, a boolean indicating if the settings are loaded, a function to update the settings, and a function to reload the settings.
  */
-const useSettings = (onErrorCallback?: (error: Error | string | unknown) => void): [Settings | null, boolean, (settings: Settings) => Promise<void>, () => Promise<void>] => {
+const useSettings = (
+    onSettingsSavedCallback?: (setting: Settings) => void,
+    onErrorCallback?: (error: Error | string | unknown) => void
+): [Settings | null, boolean, (settings: Settings) => Promise<void>, () => Promise<void>] => {
     const [currentSettings, setCurrentSettings] = React.useState<Settings | null>(null);
 
     const reloadSettings = React.useCallback(async () => {
@@ -109,11 +113,12 @@ const useSettings = (onErrorCallback?: (error: Error | string | unknown) => void
             try {
                 await saveSettings(settings);
                 setCurrentSettings(settings);
+                onSettingsSavedCallback?.(settings);
             } catch (error) {
                 onErrorCallback?.(error);
             }
         },
-        [onErrorCallback]
+        [onErrorCallback, onSettingsSavedCallback]
     );
 
     React.useEffect(() => {
