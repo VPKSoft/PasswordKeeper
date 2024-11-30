@@ -30,6 +30,7 @@ import * as React from "react";
  * @param deps Additional dependencies for the hook state.
  */
 const useDocumentReady = (documentReadyCallback: (() => void) | null, deps?: React.DependencyList | undefined) => {
+    // biome-ignore lint/correctness/useExhaustiveDependencies: as this if an effect there can be dependencies which are hopes to trigger the effect
     React.useEffect(() => {
         if (documentReadyCallback) {
             if (document.readyState === "complete") {

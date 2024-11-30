@@ -1,16 +1,16 @@
-import * as React from "react";
-import classNames from "classnames";
-import { styled } from "styled-components";
+import { FolderOpenFilled, FolderOpenOutlined, TagsOutlined } from "@ant-design/icons";
 import type { DataNode, EventDataNode } from "antd/es/tree";
 import Tree from "antd/es/tree/Tree";
-import { FolderOpenOutlined, TagsOutlined, FolderOpenFilled } from "@ant-design/icons";
-import { DataEntry } from "../../types/PasswordEntry";
-import { CommonProps } from "../Types";
-import { useLocalize } from "../../i18n";
+import classNames from "classnames";
+import * as React from "react";
+import { styled } from "styled-components";
+import { useLocalize } from "../../I18n";
 import { generalId } from "../../misc/DataUtils";
+import type { DataEntry } from "../../types/PasswordEntry";
 import { unCategorized } from "../../utilities/app/Files";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
-import { SearchMode, SearchTextBoxValue } from "./inputs/SearchTextBox";
+import type { CommonProps } from "../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/AntdConstants";
+import { SearchMode, type SearchTextBoxValue } from "./inputs/SearchTextBox";
 
 /**
  * The props for the {@link PasswordList} component.
@@ -111,7 +111,9 @@ const PasswordList = ({
             let childData: DataEntry | undefined;
 
             for (const parents of treeData) {
-                childData = (parents.children as (DataNode & { data: DataEntry })[])?.find(f => f.data.id === lastAddedDeletedId)?.data;
+                childData = (parents.children as (DataNode & { data: DataEntry })[])?.find(
+                    f => f.data.id === lastAddedDeletedId
+                )?.data;
                 if (childData) {
                     break;
                 }
@@ -152,7 +154,8 @@ const PasswordList = ({
                 nativeEvent: MouseEvent;
             }
         ) => {
-            const selected = info.selectedNodes.length > 0 ? (info.selectedNodes[0] as DataNode & { data: DataEntry }) : null;
+            const selected =
+                info.selectedNodes.length > 0 ? (info.selectedNodes[0] as DataNode & { data: DataEntry }) : null;
             if (selected?.data) {
                 setEntry(selected?.data);
                 setSelectedKey(selected?.data.id.toString());
@@ -198,7 +201,9 @@ const createNode = (value: DataEntry, values: DataEntry[], generalName: string) 
         title: value.id === generalId ? generalName : value.name,
         key: value.id.toString(),
         icon: icon,
-        children: isGroup(value) ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values, generalName)) : undefined,
+        children: isGroup(value)
+            ? values.filter(f => f.parentId === value.id).map(f => createNode(f, values, generalName))
+            : undefined,
         selectable: true,
         data: value,
     };
@@ -222,7 +227,8 @@ const filterAnd = (value: DataEntry, search: string) => {
     }
 
     let result = true;
-    const searchLower = `${value.address} ${value.domain} ${value.name} ${value.notes} ${value.otpAuthKey} ${value.password} ${value.tags} ${value.userName}`.toLowerCase();
+    const searchLower =
+        `${value.address} ${value.domain} ${value.name} ${value.notes} ${value.otpAuthKey} ${value.password} ${value.tags} ${value.userName}`.toLowerCase();
     for (const searchPart of findStrings) {
         if (searchLower.includes(searchPart)) {
             continue;
@@ -238,7 +244,8 @@ const filterAnd = (value: DataEntry, search: string) => {
 const filterOr = (value: DataEntry, search: string) => {
     const findStrings = search.split(" ").map(f => f.trim().toLowerCase());
 
-    const searchLower = `${value.address} ${value.domain} ${value.name} ${value.notes} ${value.otpAuthKey} ${value.password} ${value.tags} ${value.userName}`.toLowerCase();
+    const searchLower =
+        `${value.address} ${value.domain} ${value.name} ${value.notes} ${value.otpAuthKey} ${value.password} ${value.tags} ${value.userName}`.toLowerCase();
     return findStrings.some(f => searchLower.includes(f));
 };
 

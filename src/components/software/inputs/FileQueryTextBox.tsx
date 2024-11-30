@@ -22,16 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Input, Tooltip } from "antd";
 import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import { Button, Input, Tooltip } from "antd";
-import { faFolderOpen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocalize } from "../../../i18n";
-import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
+import { useLocalize } from "../../../I18n";
 import { FileQueryMode } from "../../../types/Enums";
-import { CommonProps } from "../../Types";
+import { selectFileToOpen, selectFileToSave } from "../../../utilities/app/Files";
+import type { CommonProps } from "../../Types";
 
 /**
  * The props for the {@link FileQueryTextBox} component.

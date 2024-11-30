@@ -1,10 +1,10 @@
-import * as React from "react";
-import { styled } from "styled-components";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import classNames from "classnames";
-import { useLocalize } from "../../i18n";
-import { CommonProps } from "../Types";
+import * as React from "react";
+import { styled } from "styled-components";
+import { useLocalize } from "../../I18n";
 import { AppIcon, MdiClose, MdiWindowMaximize, MdiWindowMinimize } from "../../utilities/app/Images";
+import type { CommonProps } from "../Types";
 const appWindow = getCurrentWebviewWindow();
 
 type TitleColorConfig = {
@@ -95,11 +95,25 @@ const WindowTitle = ({
                 {displayTitle}
             </div>
             <div className="titlebar-buttonContainer">
-                <div className="titlebar-button" id="titlebar-minimize" onClick={minimizeClick} title={lu("minimize", "Minimize")}>
-                    {windowMinimize(darkMode ? colorConfigDark.minimizeButtonColor : colorConfigLight.minimizeButtonColor)}
+                <div
+                    className="titlebar-button"
+                    id="titlebar-minimize"
+                    onClick={minimizeClick}
+                    title={lu("minimize", "Minimize")}
+                >
+                    {windowMinimize(
+                        darkMode ? colorConfigDark.minimizeButtonColor : colorConfigLight.minimizeButtonColor
+                    )}
                 </div>
-                <div className="titlebar-button" id="titlebar-maximize" onClick={maximizeClick} title={lu("maximize", "Maximize")}>
-                    {windowMaximize(darkMode ? colorConfigDark.maximizeButtonColor : colorConfigLight.maximizeButtonColor)}
+                <div
+                    className="titlebar-button"
+                    id="titlebar-maximize"
+                    onClick={maximizeClick}
+                    title={lu("maximize", "Maximize")}
+                >
+                    {windowMaximize(
+                        darkMode ? colorConfigDark.maximizeButtonColor : colorConfigLight.maximizeButtonColor
+                    )}
                 </div>
                 <div className="titlebar-button" id="titlebar-close" onClick={closeClick} title={lu("close", "Close")}>
                     {window_close(darkMode ? colorConfigDark.closeButtonColor : colorConfigLight.closeButtonColor)}

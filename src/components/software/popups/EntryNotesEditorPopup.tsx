@@ -22,13 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import classNames from "classnames";
-import { styled } from "styled-components";
 import { Button, Modal } from "antd";
-import { Locales, useLocalize } from "../../../i18n";
-import { CommonProps } from "../../Types";
-import { DataEntry } from "../../../types/PasswordEntry";
+import classNames from "classnames";
+import * as React from "react";
+import { styled } from "styled-components";
+import { type Locales, useLocalize } from "../../../I18n";
+import type { DataEntry } from "../../../types/PasswordEntry";
+import type { CommonProps } from "../../Types";
 import { EntryNotesEditorStyled } from "../EntryNotesEditor";
 
 /**

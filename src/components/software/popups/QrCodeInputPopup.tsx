@@ -22,16 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { invoke } from "@tauri-apps/api/core";
+import { Button, Modal } from "antd";
+import classNames from "classnames";
+import { decodeMigrationUriData, makeOtpAuthKey } from "gauth-decode";
+import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
-import { invoke } from "@tauri-apps/api/core";
-import { decodeMigrationUriData, makeOtpAuthKey } from "gauth-decode";
-import { Button, Modal } from "antd";
-import { Auth2Fa, CommonProps } from "../../Types";
+import { useLocalize } from "../../../I18n";
+import type { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
-import { useLocalize } from "../../../i18n";
 import { useNotify } from "../../reusable/Notify";
 
 /**

@@ -24,39 +24,39 @@ SOFTWARE.
 
 import * as React from "react";
 import "./App.css";
-import classNames from "classnames";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import { exit } from "@tauri-apps/plugin-process";
-import { ask } from "@tauri-apps/plugin-dialog";
-import { styled } from "styled-components";
-import { open } from "@tauri-apps/plugin-shell";
-import { saveWindowState, StateFlags, restoreStateCurrent } from "tauri-plugin-window-state";
 import { invoke } from "@tauri-apps/api/core";
-import { setLocale, useLocalize } from "./i18n";
-import { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
-import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
-import { deleteEntryOrCategory, generalId, newEntry, updateDataSource } from "./misc/DataUtils";
-import { useSecureStorage } from "./hooks/UseSecureStorage";
-import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
-import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
-import { CommonProps } from "./components/Types";
-import { SearchMode, SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
-import { StyledOpenSaveFilePopup } from "./components/software/popups/OpenSaveFilePopup";
-import { StyledEditEntryPopup } from "./components/software/popups/EditEntryPopup";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { ask } from "@tauri-apps/plugin-dialog";
+import { exit } from "@tauri-apps/plugin-process";
+import { open } from "@tauri-apps/plugin-shell";
+import classNames from "classnames";
+import { styled } from "styled-components";
+import { StateFlags, restoreStateCurrent, saveWindowState } from "tauri-plugin-window-state";
+import { setLocale, useLocalize } from "./I18n";
+import type { CommonProps } from "./components/Types";
 import { StyledAppMenuToolbar } from "./components/app/AppMenuToolbar";
 import { StyledTitle } from "./components/app/WindowTitle";
-import { StyledPasswordList } from "./components/reusable/PasswordList";
-import { StyledEntryEditor } from "./components/software/EntryEditor";
-import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
-import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
-import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
 import { StyledLockScreenOverlay } from "./components/reusable/LockScreenOverlay";
-import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
-import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
-import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
 import { useNotify } from "./components/reusable/Notify";
-import { Settings, useSettings } from "./utilities/app/Settings";
+import { StyledPasswordList } from "./components/reusable/PasswordList";
+import { SearchMode, type SearchTextBoxValue } from "./components/reusable/inputs/SearchTextBox";
+import { StyledEntryEditor } from "./components/software/EntryEditor";
+import { StyledAboutPopup } from "./components/software/popups/AboutPopup";
+import { StyledConfirmPopup } from "./components/software/popups/ConfirmPopup";
+import { StyledEditEntryPopup } from "./components/software/popups/EditEntryPopup";
+import { FilePreferencesPopupStyled } from "./components/software/popups/FilePreferencesPopup";
+import { StyledOpenSaveFilePopup } from "./components/software/popups/OpenSaveFilePopup";
+import { StyledPreferencesPopup } from "./components/software/popups/PreferencesPopup";
+import { StyledQueryPasswordPopup } from "./components/software/popups/QueryPasswordPopup";
 import { useAntdTheme, useAntdToken } from "./context/AntdThemeContext";
+import { useCaptureClipboardCopy } from "./hooks/UseCaptureClipboardCopy";
+import { useSecureStorage } from "./hooks/UseSecureStorage";
+import { TimeInterval, useTimeout } from "./hooks/UseTimeout";
+import { deleteEntryOrCategory, generalId, newEntry, updateDataSource } from "./misc/DataUtils";
+import { DialogButtons, DialogResult, FileQueryMode, ModifyType, PopupType } from "./types/Enums";
+import type { DataEntry, FileData, FileOptions, GeneralEntry } from "./types/PasswordEntry";
+import { generateTags, loadFile, saveFile } from "./utilities/app/Files";
+import { type Settings, useSettings } from "./utilities/app/Settings";
 const appWindow = getCurrentWebviewWindow();
 
 /**
@@ -110,7 +110,6 @@ const App = ({ className }: AppProps) => {
     const { setTheme, updateBackround } = useAntdTheme();
     const [settings, settingsLoaded, updateSettings, reloadSettings] = useSettings();
 
-    const settingsRef = React.useRef<Settings>();
     const expandedKeysRef = React.useRef<Array<string>>([]);
     const selectedItemRef = React.useRef<DataEntry | null>(null);
 
@@ -192,10 +191,10 @@ const App = ({ className }: AppProps) => {
 
     // Enable the time out hook if the view was unlocked.
     React.useEffect(() => {
-        if (settingsRef.current && !viewLocked) {
-            setTimeoutEnabled(settingsRef.current.lock_timeout > 0);
+        if (settings && !viewLocked) {
+            setTimeoutEnabled(settings.lock_timeout > 0);
         }
-    }, [setTimeoutEnabled, viewLocked]);
+    }, [setTimeoutEnabled, viewLocked, settings]);
 
     // Save the file "as new".
     const saveFileAsCallback = React.useCallback(() => {
@@ -236,19 +235,32 @@ const App = ({ className }: AppProps) => {
                 });
             }
         }
-    }, [currentFile, dataSource, dataTags, fileCloseRequested, fileOptions, getFilePassword, isNewFile, lm, notification, saveFileAsCallback]);
+    }, [
+        currentFile,
+        dataSource,
+        dataTags,
+        fileCloseRequested,
+        fileOptions,
+        getFilePassword,
+        isNewFile,
+        lm,
+        notification,
+        saveFileAsCallback,
+    ]);
 
     // A callback to query the user wether to save the file before the application is closed.
     const fileSaveQueryAbortCloseCallback = React.useCallback(async () => {
         if (fileChanged) {
             let result = false;
-            const dialogResult = await ask(lm("fileChangedSaveQuery", undefined, { file: currentFile }), { title: lm("fileChangedTitle") });
+            const dialogResult = await ask(lm("fileChangedSaveQuery", undefined, { file: currentFile }), {
+                title: lm("fileChangedTitle"),
+            });
             if (dialogResult) {
                 void saveFileCallback();
                 result = true; // True for abort close
             } else {
                 // Save the window state.
-                if (settingsRef.current?.save_window_state === true) {
+                if (settings?.save_window_state === true) {
                     await saveWindowState(StateFlags.ALL);
                 }
             }
@@ -256,12 +268,12 @@ const App = ({ className }: AppProps) => {
             return result;
         } else {
             // Save the window state.
-            if (settingsRef.current?.save_window_state === true) {
+            if (settings?.save_window_state === true) {
                 await saveWindowState(StateFlags.ALL);
             }
             return false;
         }
-    }, [currentFile, fileChanged, lm, saveFileCallback]);
+    }, [currentFile, fileChanged, lm, saveFileCallback, settings]);
 
     // Open an existing file. E.g. set the file open popup to visible.
     const loadFileCallback = React.useCallback(() => {
@@ -325,13 +337,13 @@ const App = ({ className }: AppProps) => {
     // if the failed password counter reached its predefined limit.
     const increaseFileLockFail = React.useCallback(() => {
         // If the setting is disabled, do nothing.
-        if ((settingsRef.current?.failed_unlock_attempts ?? 0) === 0) {
+        if ((settings?.failed_unlock_attempts ?? 0) === 0) {
             return;
         }
 
         const failed = passwordFailedCount + 1;
         setPasswordFailedCount(failed);
-        const lockAfter = (settingsRef.current?.failed_unlock_attempts ?? 0) - failed;
+        const lockAfter = (settings?.failed_unlock_attempts ?? 0) - failed;
         if (lockAfter > 0) {
             // Notify about the erroneous password.
             notification("warning", lm("passwordFailLockWarning", undefined, { lockAfter: lockAfter }), 5);
@@ -339,7 +351,7 @@ const App = ({ className }: AppProps) => {
             // The count exceeded, exit the software.
             void exit(0);
         }
-    }, [lm, notification, passwordFailedCount]);
+    }, [lm, notification, passwordFailedCount, settings]);
 
     // The file popup was closed. If the user accepted the popup.
     // Depending on the popup mode and user input either open an existing file or save new file.
@@ -398,7 +410,16 @@ const App = ({ className }: AppProps) => {
             }
             setFileSaveOpenQueryOpen(false);
         },
-        [dataSource, dataTags, fileCloseRequested, filePopupMode, increaseFileLockFail, lm, notification, setFilePassword]
+        [
+            dataSource,
+            dataTags,
+            fileCloseRequested,
+            filePopupMode,
+            increaseFileLockFail,
+            lm,
+            notification,
+            setFilePassword,
+        ]
     );
 
     // The exit application menu was chosen.
@@ -444,7 +465,10 @@ const App = ({ className }: AppProps) => {
 
     // Memoize the delete query message based on the selected entry.
     const deleteQueryMessage = React.useMemo(() => {
-        const message = entry?.parentId === -1 ? lm("queryDeleteTag", undefined, { tag: entry?.name }) : lm("queryDeleteEntry", undefined, { entry: entry?.name });
+        const message =
+            entry?.parentId === -1
+                ? lm("queryDeleteTag", undefined, { tag: entry?.name })
+                : lm("queryDeleteEntry", undefined, { entry: entry?.name });
         return message;
     }, [entry, lm]);
 
@@ -568,10 +592,10 @@ const App = ({ className }: AppProps) => {
 
     // Restore the window state when the settings have been loaded.
     React.useEffect(() => {
-        if (settingsLoaded && settingsRef.current?.save_window_state === true) {
+        if (settingsLoaded && settings?.save_window_state === true) {
             void restoreStateCurrent(StateFlags.ALL);
         }
-    }, [settingsLoaded]);
+    }, [settingsLoaded, settings]);
 
     // File options were changed. Apply the changes and set the file changed flag.
     const fileOptionsChanged = React.useCallback((userAccepted: boolean, fileOptions?: FileOptions) => {
@@ -610,7 +634,7 @@ const App = ({ className }: AppProps) => {
     }, [reloadSettings, setTheme, settings?.dark_mode]);
 
     // A hack to keep the scrollbar outlook consistent with the theme.
-    const onTreeResize = React.useCallback((e: Event) => {
+    const onTreeResize = React.useCallback(() => {
         const myDiv = document.querySelectorAll(".App-itemsView-list")?.[0] as HTMLDivElement;
         setListHeight(myDiv.offsetHeight);
     }, []);
@@ -619,7 +643,7 @@ const App = ({ className }: AppProps) => {
         globalThis.addEventListener("resize", onTreeResize);
 
         return () => globalThis.removeEventListener("resize", onTreeResize);
-    }, []);
+    }, [onTreeResize]);
 
     // Don't render the page if the settings have not been loaded yet.
     if (!settingsLoaded || settings === null) {
@@ -691,7 +715,7 @@ const App = ({ className }: AppProps) => {
                         useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                         defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                         defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
-                        locale={settingsRef.current?.locale ?? "en"}
+                        locale={settings?.locale ?? "en"}
                         darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                     />
                 </div>
@@ -705,7 +729,7 @@ const App = ({ className }: AppProps) => {
                     useHtmlOnNotes={fileOptions?.useHtmlOnNotes}
                     defaultUseMarkdown={fileOptions?.useMarkdownOnNotes}
                     defaultUseMonospacedFont={fileOptions?.useMonospacedFont}
-                    locale={settingsRef.current?.locale ?? "en"}
+                    locale={settings?.locale ?? "en"}
                     darkMode={previewDarkMode ?? settings.dark_mode ?? false}
                 />
                 <StyledOpenSaveFilePopup //

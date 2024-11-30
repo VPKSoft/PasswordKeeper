@@ -1,13 +1,13 @@
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { CommonProps } from "../Types";
-import { DataEntry } from "../../types/PasswordEntry";
+import type { Locales } from "../../I18n";
+import type { DataEntry } from "../../types/PasswordEntry";
+import type { CommonProps } from "../Types";
+import { HtmlEditorStyled } from "../reusable/HtmlEditor";
+import { HtmlViewStyled } from "../reusable/HtmlView";
 import { MarkDownViewStyled } from "../reusable/MarkDownView";
 import { MarkdownTextEditorStyled } from "../reusable/MarkdownTextEditor";
-import { HtmlViewStyled } from "../reusable/HtmlView";
-import { HtmlEditorStyled } from "../reusable/HtmlEditor";
-import { Locales } from "../../i18n";
 import { EntryEditorTextAreaStyled } from "./EntryEditorTextArea";
 
 /**
@@ -108,7 +108,19 @@ const EntryNotesEditor = ({
                 monospacedFont={monoSpacedFont}
             />
         );
-    }, [defaultUseHtml, entry?.useMarkdown, entry?.notes, defaultUseMarkdown, readOnly, onNotesChangedCallback, monoSpacedFont, onNotesChanged, height, locale, imagePasteEnabled]);
+    }, [
+        defaultUseHtml,
+        entry?.useMarkdown,
+        entry?.notes,
+        defaultUseMarkdown,
+        readOnly,
+        onNotesChangedCallback,
+        monoSpacedFont,
+        onNotesChanged,
+        height,
+        locale,
+        imagePasteEnabled,
+    ]);
 
     return (
         <div //

@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { CommonProps } from "../Types";
-import { DragDropEvent, DragDropState, useTauriDragAndDrop } from "../../hooks/useTauriDragAndDrop";
+import { type DragDropEvent, DragDropState, useTauriDragAndDrop } from "../../hooks/UseTauriDragAndDrop";
 import { loadImageFile } from "../../utilities/app/TauriBackend";
+import type { CommonProps } from "../Types";
 
 /**
  * The props for the {@link DragDropFile} component.
@@ -101,10 +101,12 @@ const DragDropFile = ({
     const onPasteImage = React.useCallback(
         (e: ClipboardEvent) => {
             const clipboardItems = e.clipboardData?.items;
-            const items: DataTransferItem[] = Array.prototype.slice.call(clipboardItems).filter((item: DataTransferItem) => {
-                // Filter the image items only
-                return item.type.includes("image");
-            });
+            const items: DataTransferItem[] = Array.prototype.slice
+                .call(clipboardItems)
+                .filter((item: DataTransferItem) => {
+                    // Filter the image items only
+                    return item.type.includes("image");
+                });
 
             if (items.length === 0) {
                 return;

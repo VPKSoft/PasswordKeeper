@@ -121,7 +121,7 @@ const useTimeout = (
         const interval = setInterval(timeOutInternal, milliSecondResolution);
 
         return () => clearInterval(interval);
-    }, [timeOutInternal, intervalInternal]);
+    }, [timeOutInternal]);
 
     return [setEnabled, reset];
 };

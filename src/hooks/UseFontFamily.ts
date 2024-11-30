@@ -46,7 +46,16 @@ const useFontFamily = (): [Array<string>] => {
     return [fontFamilies];
 };
 
-const fallbackFamilies = ["Arial", "Courier New", "Georgia", "Impact", "Lucida Console", "Tahoma", "Times New Roman", "Verdana"];
+const fallbackFamilies = [
+    "Arial",
+    "Courier New",
+    "Georgia",
+    "Impact",
+    "Lucida Console",
+    "Tahoma",
+    "Times New Roman",
+    "Verdana",
+];
 
 type StringListResult = {
     value: Array<string>;

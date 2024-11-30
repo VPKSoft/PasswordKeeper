@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { open } from "@tauri-apps/plugin-shell";
+import classNames from "classnames";
+import DOMPurify from "dompurify";
+import parse from "html-react-parser";
+import { marked } from "marked";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { marked } from "marked";
-import parse from "html-react-parser";
-import DOMPurify from "dompurify";
-import { open } from "@tauri-apps/plugin-shell";
-import { CommonProps } from "../Types";
+import type { CommonProps } from "../Types";
 
 /**
  * The props for the {@link MarkDownView} component.
@@ -72,7 +72,7 @@ const MarkDownView = ({
                 anchor.removeEventListener("click", linkClickToBrowser);
             }
         };
-    }, [markDownContent]);
+    }, []);
 
     return (
         <div //

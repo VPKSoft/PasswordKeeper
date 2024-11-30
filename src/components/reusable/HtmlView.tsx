@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import { styled } from "styled-components";
 import classNames from "classnames";
 import DOMPurify from "dompurify";
 import parse from "html-react-parser";
-import { CommonProps } from "../Types";
+import * as React from "react";
+import { styled } from "styled-components";
+import type { CommonProps } from "../Types";
 
 /**
  * The props for the {@link HtmlView} component.

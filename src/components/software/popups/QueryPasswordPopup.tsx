@@ -22,17 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import { styled } from "styled-components";
-import classNames from "classnames";
-import { Button, InputRef, Modal } from "antd";
-import { exit } from "@tauri-apps/plugin-process";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useLocalize } from "../../../i18n";
-import { CommonProps } from "../../Types";
+import { exit } from "@tauri-apps/plugin-process";
+import { Button, type InputRef, Modal } from "antd";
+import classNames from "classnames";
+import * as React from "react";
+import { styled } from "styled-components";
+import { useLocalize } from "../../../I18n";
+import type { CommonProps } from "../../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/AntdConstants";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link QueryPasswordPopup} component.
