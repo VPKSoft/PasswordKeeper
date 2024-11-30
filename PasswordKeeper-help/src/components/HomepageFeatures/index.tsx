@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import clsx from "clsx";
 import Translate, { translate } from "@docusaurus/Translate";
 import Link from "@docusaurus/Link";
