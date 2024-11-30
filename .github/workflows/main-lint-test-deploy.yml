@@ -20,6 +20,11 @@ jobs:
     runs-on: ${{ matrix.platform }}
 
     steps:
+      - name: Git configuration
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
