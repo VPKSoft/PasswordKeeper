@@ -22,24 +22,24 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import classNames from "classnames";
-import { styled } from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faPen, faQrcode } from "@fortawesome/free-solid-svg-icons";
-import { Button, Checkbox, Input, InputRef, Tooltip } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { CssFont, DataEntry } from "../../types/PasswordEntry";
-import { Locales, useLocalize } from "../../i18n";
-import { CommonProps } from "../Types";
-import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
-import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Checkbox, Input, type InputRef, Tooltip } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import classNames from "classnames";
+import * as React from "react";
+import { styled } from "styled-components";
+import { type Locales, useLocalize } from "../../I18n";
+import type { CssFont, DataEntry } from "../../types/PasswordEntry";
+import type { CommonProps } from "../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/AntdConstants";
 import { DisplayQrCodePopupStyled } from "../reusable/DisplayQrCodePopup";
+import { TwoFactorAuthCodeGeneratorStyled } from "../reusable/TwoFactorAuthCodeGenerator";
+import { StyledPasswordTextBox } from "../reusable/inputs/PasswordTextBox";
 import { TagBox } from "../reusable/inputs/TagBox";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
-import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 import { EntryNotesEditorStyled } from "./EntryNotesEditor";
 import { StyledAEntryNotesEditorPopup } from "./popups/EntryNotesEditorPopup";
+import { QrCodeInputPopupStyled } from "./popups/QrCodeInputPopup";
 
 /**
  * The props for the {@link EntryEditor} component.
@@ -278,7 +278,7 @@ const EntryEditor = ({
     // If the entry changes, hide the QR code popup,
     React.useEffect(() => {
         setQrCodePopupVisible(false);
-    }, [entry]);
+    }, []);
 
     // Memoize the current file-wide tags usable in entry tag box.
     const tags = React.useMemo(() => {
@@ -307,7 +307,10 @@ const EntryEditor = ({
     );
 
     // Memoize the disabled value for the view QR code button.
-    const displayQrCodeDisabled = React.useMemo(() => !(entry?.otpAuthKey ?? "").startsWith("otpauth"), [entry?.otpAuthKey]);
+    const displayQrCodeDisabled = React.useMemo(
+        () => !(entry?.otpAuthKey ?? "").startsWith("otpauth"),
+        [entry?.otpAuthKey]
+    );
 
     return (
         <>
@@ -458,7 +461,9 @@ const EntryEditor = ({
                         onNotesChanged={setMarkDown}
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
-                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen}
+                        imagePasteEnabled={
+                            !(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && !noteEditorOpen
+                        }
                         readOnly={readOnly}
                         defaultUseHtml={useHtmlOnNotes}
                         locale={locale}
@@ -478,7 +483,9 @@ const EntryEditor = ({
                         defaultUseMarkdown={entry?.useMarkdown ?? defaultUseMarkdown}
                         defaultUseMonospacedFont={monoSpacedFont}
                         defaultUseHtml={useHtmlOnNotes}
-                        imagePasteEnabled={!(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen}
+                        imagePasteEnabled={
+                            !(qrCodeVisible && !hideQrAuthPopup) && !qrCodePopupVisible && noteEditorOpen
+                        }
                         onClose={onNotesEditorClose}
                         locale={locale}
                     />

@@ -38,10 +38,12 @@ const usePasteImageMarkdown = (element: HTMLTextAreaElement | null, enabled: boo
             }
 
             const clipboardItems = e.clipboardData?.items;
-            const items: DataTransferItem[] = Array.prototype.slice.call(clipboardItems).filter((item: DataTransferItem) => {
-                // Filter the image items only
-                return item.type.includes("image");
-            });
+            const items: DataTransferItem[] = Array.prototype.slice
+                .call(clipboardItems)
+                .filter((item: DataTransferItem) => {
+                    // Filter the image items only
+                    return item.type.includes("image");
+                });
 
             if (items.length === 0) {
                 return;

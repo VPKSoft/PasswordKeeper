@@ -22,16 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { Button, type InputRef, Modal } from "antd";
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { Button, InputRef, Modal } from "antd";
+import { type Locales, useLocalize } from "../../../I18n";
 import { ModifyType } from "../../../types/Enums";
-import { Locales, useLocalize } from "../../../i18n";
-import { CssFont, DataEntry } from "../../../types/PasswordEntry";
-import { CommonProps } from "../../Types";
+import type { CssFont, DataEntry } from "../../../types/PasswordEntry";
+import type { CommonProps } from "../../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/AntdConstants";
 import { StyledEntryEditor } from "../EntryEditor";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 
 /**
  * The props for the {@link EditEntryPopup} component.
@@ -88,7 +88,13 @@ const EditEntryPopup = ({
     const lu = useLocalize("ui");
 
     // Memoize the title for the popup based on the mode.
-    const title = React.useMemo(() => (mode === ModifyType.New ? le("newEntry", "New entry") : le("modifyEntry", "Modify entry: {{entry.name}}", { entry }, false)), [entry, le, mode]);
+    const title = React.useMemo(
+        () =>
+            mode === ModifyType.New
+                ? le("newEntry", "New entry")
+                : le("modifyEntry", "Modify entry: {{entry.name}}", { entry }, false),
+        [entry, le, mode]
+    );
 
     // Set the internal state entry.
     React.useEffect(() => {

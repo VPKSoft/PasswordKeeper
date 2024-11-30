@@ -22,11 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import { Select, SelectProps, Space, Tag } from "antd";
+import { Select, type SelectProps, Space, Tag } from "antd";
 import classNames from "classnames";
+import * as React from "react";
 import { styled } from "styled-components";
-import { CommonProps } from "../../Types";
+import type { CommonProps } from "../../Types";
 
 /**
  * The props for the {@link TagBoxComponent} component.
@@ -85,7 +85,9 @@ const TagBoxComponent = ({
     if (readOnly) {
         return (
             <Space size={[0, 8]} wrap>
-                {value?.map(f => <Tag key={f}>{f}</Tag>)}
+                {value?.map(f => (
+                    <Tag key={f}>{f}</Tag>
+                ))}
             </Space>
         );
     }

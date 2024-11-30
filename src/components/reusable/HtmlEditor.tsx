@@ -22,15 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import { styled } from "styled-components";
 import classNames from "classnames";
 import JoditEditor from "jodit-react";
 import { Jodit } from "jodit/esm/jodit";
-import { CommonProps } from "../Types";
+import * as React from "react";
+import { styled } from "styled-components";
+import type { Locales } from "../../I18n";
 import { useFontFamily } from "../../hooks/UseFontFamily";
-import { Locales } from "../../i18n";
-import { jodit_fi } from "./jodit_fi/fi";
+import type { CommonProps } from "../Types";
 
 /**
  * The props for the {@link HtmlEditor} component.
@@ -92,16 +91,8 @@ const HtmlEditor = ({
             buttons: joditButtons,
             // Disable the floating toolbar.
             toolbarInline: false,
+            language: locale,
         };
-
-        if (locale === "fi") {
-            Object.assign(result, {
-                i18n: {
-                    fi: jodit_fi,
-                },
-                language: "fi",
-            });
-        }
 
         return result;
     }, [fontsObject, height, locale]);
@@ -119,7 +110,6 @@ const HtmlEditor = ({
                 // For some reason the useCallBack function doesn't work in this case, need to use function that is regenerated on each render.
                 // eslint-disable-next-line react/jsx-no-bind
                 onBlur={onChangeCallback} // preferred to use only this option to update the content for performance reasons
-                onChange={emptyFunc}
             />
         </div>
     );
@@ -145,8 +135,6 @@ const joditButtons = [
     "indent",
     "outdent",
 ];
-
-const emptyFunc = () => {};
 
 const HtmlEditorStyled = styled(HtmlEditor)`
     width: 100%;

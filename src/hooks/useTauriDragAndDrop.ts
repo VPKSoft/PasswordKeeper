@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { TauriEvent, listen } from "@tauri-apps/api/event";
 import * as React from "react";
-import { listen, TauriEvent } from "@tauri-apps/api/event";
 
 type TauriDragAndDropPayload = {
     paths: string[];
@@ -37,7 +37,8 @@ type TauriDragAndDropPayload = {
  * @param elementIdMatchStart The element id start to match.
  * @returns A value indicating whether the element id matches the specified element id start.
  **/
-const elementIdMatches = (element: Element, elementIdMatchStart: string) => element.id.startsWith(elementIdMatchStart) || element.id === elementIdMatchStart;
+const elementIdMatches = (element: Element, elementIdMatchStart: string) =>
+    element.id.startsWith(elementIdMatchStart) || element.id === elementIdMatchStart;
 
 /**
  * Enumerates the element parents.
@@ -63,13 +64,18 @@ const enumerateElementParents = (element: Element | null | undefined, depth: num
  * @param elementIdMatchStart The element id start to match.
  * @returns A value indicating whether any of the elements matches the specified element id start.
  **/
-const foundAnyMatchingElement = (elements: (Element[] | null | undefined) | Element | null | undefined, elementIdMatchStart: string): boolean => {
+const foundAnyMatchingElement = (
+    elements: (Element[] | null | undefined) | Element | null | undefined,
+    elementIdMatchStart: string
+): boolean => {
     if (!elements) {
         return false;
     }
 
     if (Array.isArray(elements)) {
-        const element = elements.filter(f => f !== null && f !== undefined).find(element => elementIdMatches(element, elementIdMatchStart));
+        const element = elements
+            .filter(f => f !== null && f !== undefined)
+            .find(element => elementIdMatches(element, elementIdMatchStart));
         return element !== undefined && element !== null;
     } else {
         return elementIdMatches(elements, elementIdMatchStart);
@@ -99,7 +105,14 @@ enum DragDropState {
 
 type DragDropEvent = (state: DragDropState, files?: string[] | undefined) => void;
 
-const useTauriDragAndDrop = (listening: boolean, singleFileOnly: boolean, elementIdMatchStart: string, lookupDepth: number, onDragChange: DragDropEvent, onError?: (error: Error) => void) => {
+const useTauriDragAndDrop = (
+    listening: boolean,
+    singleFileOnly: boolean,
+    elementIdMatchStart: string,
+    lookupDepth: number,
+    onDragChange: DragDropEvent,
+    onError?: (error: Error) => void
+) => {
     React.useEffect(() => {
         const unlistenPromise = listen<TauriDragAndDropPayload>(TauriEvent.DRAG_ENTER, event => {
             if (!listening) {
@@ -120,7 +133,7 @@ const useTauriDragAndDrop = (listening: boolean, singleFileOnly: boolean, elemen
                     onError?.(error);
                 });
         };
-    }, [elementIdMatchStart, listening, lookupDepth, onDragChange, onError, singleFileOnly]);
+    }, [elementIdMatchStart, lookupDepth, onDragChange, onError, listening]);
 
     React.useEffect(() => {
         const unlistenPromise = listen<TauriDragAndDropPayload>(TauriEvent.DRAG_LEAVE, () => {
@@ -138,7 +151,7 @@ const useTauriDragAndDrop = (listening: boolean, singleFileOnly: boolean, elemen
                     onError?.(error);
                 });
         };
-    }, [elementIdMatchStart, listening, lookupDepth, onDragChange, onError, singleFileOnly]);
+    }, [listening, onDragChange, onError]);
 
     React.useEffect(() => {
         const unlistenPromise = listen<TauriDragAndDropPayload>(TauriEvent.DRAG_OVER, event => {
@@ -161,7 +174,7 @@ const useTauriDragAndDrop = (listening: boolean, singleFileOnly: boolean, elemen
                     onError?.(error);
                 });
         };
-    }, [elementIdMatchStart, listening, lookupDepth, onDragChange, onError, singleFileOnly]);
+    }, [elementIdMatchStart, listening, lookupDepth, onDragChange, onError]);
 
     // Drop, this also causes the leave event
     React.useEffect(() => {

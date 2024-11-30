@@ -22,18 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
+import {
+    faFloppyDisk,
+    faFolderOpen,
+    faHammer,
+    faLock,
+    faPen,
+    faSliders,
+    faSquarePlus,
+    faTrashCan,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Tooltip } from "antd";
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { Button, Tooltip } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFloppyDisk, faFolderOpen, faHammer, faLock, faPen, faSliders, faSquarePlus, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
-import { DataEntry } from "../../types/PasswordEntry";
-import { useLocalize } from "../../i18n";
-import { CommonProps } from "../Types";
-import { SearchTextBoxValue, StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
-import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
+import { useLocalize } from "../../I18n";
+import type { DataEntry } from "../../types/PasswordEntry";
+import type { CommonProps } from "../Types";
+import { type SearchTextBoxValue, StyledSearchTextBox } from "../reusable/inputs/SearchTextBox";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./AntdConstants";
 
 /**
  * The props for the {@link AppToolbar} component.

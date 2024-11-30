@@ -22,11 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import classNames from "classnames";
-import { styled } from "styled-components";
-import { Menu, MenuProps } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
 import {
     //
     faCircleInfo,
@@ -42,14 +38,31 @@ import {
     faSquarePlus,
     faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { faFloppyDisk as faFloppyDiskSave } from "@fortawesome/free-regular-svg-icons";
-import { MenuInfo, MenuMode } from "rc-menu/lib/interface";
-import { CommonProps } from "../Types";
-import { DataEntry } from "../../types/PasswordEntry";
-import { useLocalize } from "../../i18n";
-import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Menu, type MenuProps } from "antd";
+import classNames from "classnames";
+import type { MenuInfo, MenuMode } from "rc-menu/lib/interface";
+import * as React from "react";
+import { styled } from "styled-components";
+import { useLocalize } from "../../I18n";
+import type { DataEntry } from "../../types/PasswordEntry";
+import type { CommonProps } from "../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./AntdConstants";
 
-type ActionNames = "new" | "open" | "save" | "saveas" | "exit" | "additem" | "edit" | "delete" | "settings" | "about" | "close" | "help" | "file_preferences";
+type ActionNames =
+    | "new"
+    | "open"
+    | "save"
+    | "saveas"
+    | "exit"
+    | "additem"
+    | "edit"
+    | "delete"
+    | "settings"
+    | "about"
+    | "close"
+    | "help"
+    | "file_preferences";
 
 const makeKey = (action: ActionNames) => {
     return `"menu":${action}`;
@@ -63,7 +76,11 @@ const makeKey = (action: ActionNames) => {
  * @param isfileChanged A value indicating whether the file has been changed.
  * @returns A localized menu structure for the application.
  */
-const appMenuData = (localize: (entryName: string, defaultValue?: string | undefined) => string, entry: DataEntry | undefined, isNewFile: boolean, isfileChanged: boolean): MenuProps["items"] => {
+const appMenuData = (
+    localize: (entryName: string, defaultValue?: string | undefined) => string,
+    entry: DataEntry | undefined,
+    isfileChanged: boolean
+): MenuProps["items"] => {
     const result: MenuProps["items"] = [
         {
             label: localize("menuFile"),
@@ -183,7 +200,6 @@ export type AppMenuProps = {
 const AppMenu = ({
     className, //
     entry,
-    isNewFile,
     isfileChanged,
     mode = "horizontal",
     onItemClick,
@@ -192,8 +208,8 @@ const AppMenu = ({
 
     // Memoize the menu to prevent re-rendering all the time.
     const menuData = React.useMemo(() => {
-        return appMenuData(lm, entry, isNewFile, isfileChanged);
-    }, [entry, isNewFile, isfileChanged, lm]);
+        return appMenuData(lm, entry, isfileChanged);
+    }, [entry, isfileChanged, lm]);
 
     const onClick: MenuProps["onClick"] = React.useCallback(
         (e: MenuInfo) => {
