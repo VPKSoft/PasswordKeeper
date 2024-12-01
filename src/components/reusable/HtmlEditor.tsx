@@ -28,9 +28,9 @@ import { Jodit } from "jodit/esm/jodit";
 import * as React from "react";
 import { styled } from "styled-components";
 import type { Locales } from "../../I18n";
+import { useAntdTheme } from "../../context/AntdThemeContext";
 import { useFontFamily } from "../../hooks/UseFontFamily";
 import type { CommonProps } from "../Types";
-import { useAntdTheme } from "../../context/AntdThemeContext";
 
 /**
  * The props for the {@link HtmlEditor} component.
