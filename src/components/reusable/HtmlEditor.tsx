@@ -103,7 +103,7 @@ const HtmlEditor = ({
         }
 
         return result;
-    }, [fontsObject, height, locale]);
+    }, [fontsObject, height, locale, antdTheme]);
 
     const onChangeCallback = (value: string) => {
         onChange(value);
