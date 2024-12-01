@@ -30,6 +30,7 @@ import { Html5Qrcode } from "html5-qrcode/esm/html5-qrcode";
 import * as React from "react";
 import { styled } from "styled-components";
 import { useLocalize } from "../../../I18n";
+import { useAntdTheme } from "../../../context/AntdThemeContext";
 import type { Auth2Fa, CommonProps } from "../../Types";
 import { DragDropFileStyled } from "../../reusable/DragDropFile";
 import { useNotify } from "../../reusable/Notify";
@@ -55,6 +56,7 @@ const QrCodeInputPopup = ({
 }: QrCodeInputPopupProps) => {
     const [otpAuthPath, setOtpAuthPath] = React.useState("");
     const [contextHolder, notification] = useNotify();
+    const { antdTheme } = useAntdTheme();
 
     const lm = useLocalize("messages");
     const lu = useLocalize("ui");
@@ -137,6 +139,7 @@ const QrCodeInputPopup = ({
                         dragDropFileHereText={lm("dragDropFilesHere")}
                         pasteFileText={lm("pasteFromClipboard")}
                         uploadFileText={lm("uploadFile")}
+                        darkMode={antdTheme === "dark"}
                     />
                 )}
                 <div className="Popup-ButtonRow">
