@@ -28,6 +28,7 @@ import { Jodit } from "jodit/esm/jodit";
 import * as React from "react";
 import { styled } from "styled-components";
 import type { Locales } from "../../I18n";
+import { useAntdTheme } from "../../context/AntdThemeContext";
 import { useFontFamily } from "../../hooks/UseFontFamily";
 import type { CommonProps } from "../Types";
 
@@ -59,6 +60,7 @@ const HtmlEditor = ({
 }: HtmlEditorProps) => {
     const editor = React.useRef<Jodit>(null);
     const [fontFamilies] = useFontFamily();
+    const { antdTheme } = useAntdTheme();
 
     const fontsObject = React.useMemo(() => {
         const joditFamilies: { [key: string]: string } = {};
@@ -94,8 +96,14 @@ const HtmlEditor = ({
             language: locale,
         };
 
+        if (antdTheme === "dark") {
+            Object.assign(result, {
+                theme: "dark",
+            });
+        }
+
         return result;
-    }, [fontsObject, height, locale]);
+    }, [fontsObject, height, locale, antdTheme]);
 
     const onChangeCallback = (value: string) => {
         onChange(value);

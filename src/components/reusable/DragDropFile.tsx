@@ -43,6 +43,8 @@ type DragDropFileProps = {
     pasteFileText?: string;
     /** The text for the "Upload a file" for localization. The mentioned text is the default value. */
     uploadFileText?: string;
+    /** A value indicating whether to use dark mode with the application. */
+    darkMode: boolean;
 } & CommonProps;
 
 // Based on the code at Codemzy, see: https://www.codemzy.com/blog/react-drag-drop-file-upload 🙏
@@ -209,21 +211,22 @@ const DragDropFileStyled = styled(DragDropFile)`
         border-width: 2px;
         border-radius: 1rem;
         border-style: dashed;
-        border-color: #cbd5e1;
+        border-color: ${props => (props.darkMode ? "#5e5e5e" : "#cbd5e1")};
         background-color: #f8fafc;
     }
 
     #label-file-upload.drag-active {
-        background-color: #ffffff;
+        background-color: ${props => (props.darkMode ? "#1a1a1a" : "#ffffff")};
     }
 
     .upload-button {
         cursor: pointer;
         padding: 0.25rem;
-        font-size: 1rem;
+        font-size: 14px;
         border: none;
         font-family: "Oswald", sans-serif;
         background-color: transparent;
+        color: ${props => (props.darkMode ? "rgba(255, 255, 255, 0.85)" : "rgba(0, 0, 0, 0.88)")};
     }
 
     .upload-button:hover {
