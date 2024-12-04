@@ -22,12 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
 import classNames from "classnames";
+import * as React from "react";
 import { styled } from "styled-components";
-import { AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
-import { ActionNames, AppMenuProps, StyledAppMenu } from "./AppMenu";
-import { darkModeMenuBackground, lightModeMenuBackground } from "./antd-constants";
+import { darkModeMenuBackground, lightModeMenuBackground } from "./AntdConstants";
+import { type ActionNames, type AppMenuProps, StyledAppMenu } from "./AppMenu";
+import { type AppToolbarProps, StyledAppToolbar } from "./AppToolbar";
 
 /**
  * The props for the {@link AppMenuToolbar} component.
@@ -142,7 +142,21 @@ const AppMenuToolbar = ({
                 }
             }
         },
-        [aboutShowClick, addClick, deleteClick, editClick, exitClick, fileCloseClick, filePreferencesClick, loadFileClick, newFileClick, onHelpClick, saveFileAsClick, saveFileClick, settingsClick]
+        [
+            aboutShowClick,
+            addClick,
+            deleteClick,
+            editClick,
+            exitClick,
+            fileCloseClick,
+            filePreferencesClick,
+            loadFileClick,
+            newFileClick,
+            onHelpClick,
+            saveFileAsClick,
+            saveFileClick,
+            settingsClick,
+        ]
     );
 
     return (

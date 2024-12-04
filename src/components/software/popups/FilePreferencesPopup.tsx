@@ -22,15 +22,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { Button, Checkbox, Modal } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { Button, Modal, Checkbox } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { CommonProps } from "../../Types";
-import { FileOptions } from "../../../types/PasswordEntry";
-import { useLocalize } from "../../../i18n";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
+import { useLocalize } from "../../../I18n";
+import type { FileOptions } from "../../../types/PasswordEntry";
+import type { CommonProps } from "../../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/AntdConstants";
 
 /**
  * The props for the {@link FilePreferencesPopup} component.

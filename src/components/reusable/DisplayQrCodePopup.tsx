@@ -1,11 +1,11 @@
-import * as React from "react";
-import { styled } from "styled-components";
+import { Modal } from "antd";
 import classNames from "classnames";
 import QRCode from "qrcode";
-import { Modal } from "antd";
-import { CommonProps } from "../Types";
-import { useLocalize } from "../../i18n";
+import * as React from "react";
+import { styled } from "styled-components";
+import { useLocalize } from "../../I18n";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
+import type { CommonProps } from "../Types";
 import { useNotify } from "./Notify";
 
 /**
@@ -58,7 +58,7 @@ const DisplayQrCodePopup = ({
                 QRCode.toCanvas(canvas, qrUrl, { width: qrSize ?? 180 }, qrCodeError);
             }
         }
-    }, [qrCodeError, qrUrl, visible, qrSize]);
+    }, [qrCodeError, qrUrl, qrSize]);
 
     const width = React.useMemo(() => (qrSize ?? 180) + 60, [qrSize]);
 

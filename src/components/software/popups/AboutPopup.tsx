@@ -22,19 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import classNames from "classnames";
+import { DownloadOutlined, ReloadOutlined } from "@ant-design/icons";
 import { getName, getVersion } from "@tauri-apps/api/app";
-import { styled } from "styled-components";
 import { open } from "@tauri-apps/plugin-shell";
 import { Button, Modal, Tooltip } from "antd";
-import { ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
-import { useLocalize } from "../../../i18n";
-import { CommonProps } from "../../Types";
-import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
+import classNames from "classnames";
+import * as React from "react";
+import { styled } from "styled-components";
+import { useLocalize } from "../../../I18n";
 import { useTauriUpdater } from "../../../hooks/UseTauriUpdater";
+import { GithubLogo, LogoImage } from "../../../utilities/app/Images";
+import type { CommonProps } from "../../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/AntdConstants";
 import { useNotify } from "../../reusable/Notify";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
 /**
  * The props for the {@link AboutPopup} component.
  */
@@ -73,9 +73,9 @@ const AboutPopup = ({
         });
     }, []);
 
-    // Open the www.vpksoft.net URL when the corresponding component is clicked.
+    // Open my GitHub profilet  URL when the corresponding component is clicked.
     const openVPKSoftUrl = React.useCallback(() => {
-        void open("https://www.vpksoft.net");
+        void open("https://github.com/VPKSoft");
     }, []);
 
     // Open the github.com URL when the corresponding component is clicked.
@@ -141,7 +141,9 @@ SOFTWARE."
                     className="Popup-UpdateNotify" //
                 >
                     {shouldUpdate ? (
-                        <div className={classNames("Popup-UpdateNotify-text", "Popup-UpdateNotify-text-updates")}>{ud("newVersionAvailable")}</div>
+                        <div className={classNames("Popup-UpdateNotify-text", "Popup-UpdateNotify-text-updates")}>
+                            {ud("newVersionAvailable")}
+                        </div>
                     ) : (
                         <div className="Popup-UpdateNotify-text">{ud("versionUpToDate")}</div>
                     )}
@@ -149,10 +151,19 @@ SOFTWARE."
                     <div className="Popup-UpdateNotify-text">{`v.${manifest?.version ?? appVersion}`}</div>
                     <div>
                         <Tooltip title={ud("buttonRefresh")}>
-                            <Button className="Popup-UpdateNotify-button" icon={<ReloadOutlined />} onClick={reCheck}></Button>
+                            <Button
+                                className="Popup-UpdateNotify-button"
+                                icon={<ReloadOutlined />}
+                                onClick={reCheck}
+                            ></Button>
                         </Tooltip>
                         <Tooltip title={ud("updateButton")}>
-                            <Button className="Popup-UpdateNotify-button" icon={<DownloadOutlined />} onClick={update} disabled={!shouldUpdate}></Button>
+                            <Button
+                                className="Popup-UpdateNotify-button"
+                                icon={<DownloadOutlined />}
+                                onClick={update}
+                                disabled={!shouldUpdate}
+                            ></Button>
                         </Tooltip>
                         <Button className="Popup-UpdateNotify-button" onClick={manualDownloadClick}>
                             {ud("manualDownload")}

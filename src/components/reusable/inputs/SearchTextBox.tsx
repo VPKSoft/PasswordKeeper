@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, Input, Tooltip } from "antd";
 import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import { Button, Input, Tooltip } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { useLocalize } from "../../../i18n";
-import { CommonProps } from "../../Types";
+import { useLocalize } from "../../../I18n";
+import type { CommonProps } from "../../Types";
 
 export enum SearchMode {
     Or,

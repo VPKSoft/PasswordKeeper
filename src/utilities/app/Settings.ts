@@ -22,9 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { Locales } from "../../i18n";
+import * as React from "react";
+import type { Locales } from "../../I18n";
 
 /**
  * The software settings returned by the Tauri app.

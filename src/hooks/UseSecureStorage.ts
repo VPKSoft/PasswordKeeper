@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import secureLocalStorage from "react-secure-storage";
 import * as React from "react";
+import secureLocalStorage from "react-secure-storage";
 
 /**
  * A custom hook to get, set and clear a secure value from the secureLocalStorage.
@@ -31,7 +31,10 @@ import * as React from "react";
  * @param emptyValue An optional empty value used as a fallback in case the store value doesn't exist.
  * @returns Functions to set, get and clear the value in question.
  */
-const useSecureStorage = <T extends string | number | boolean | object>(valueName: string, emptyValue?: T): [(value: T) => void, () => T | null, () => void] => {
+const useSecureStorage = <T extends string | number | boolean | object>(
+    valueName: string,
+    emptyValue?: T
+): [(value: T) => void, () => T | null, () => void] => {
     const setValue = React.useCallback(
         (value: T) => {
             secureLocalStorage.setItem(valueName, value);

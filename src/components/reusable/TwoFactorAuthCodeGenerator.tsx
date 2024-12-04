@@ -22,19 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import * as React from "react";
-import { styled } from "styled-components";
-import classNames from "classnames";
-import { ColorHex, CountdownCircleTimer, TimeProps } from "react-countdown-circle-timer";
+import { faCopy } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { invoke } from "@tauri-apps/api/core";
 import { Button, Tooltip } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCopy } from "@fortawesome/free-solid-svg-icons";
-import { Auth2Fa, CommonProps } from "../Types";
-import { useLocalize } from "../../i18n";
-import { useTimeSecond } from "../../hooks/UseTimeSecond";
+import classNames from "classnames";
+import * as React from "react";
+import { type ColorHex, CountdownCircleTimer, type TimeProps } from "react-countdown-circle-timer";
+import { styled } from "styled-components";
+import { useLocalize } from "../../I18n";
 import { clipboardNotifyOther } from "../../hooks/UseCaptureClipboardCopy";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../app/antd-constants";
+import { useTimeSecond } from "../../hooks/UseTimeSecond";
+import type { Auth2Fa, CommonProps } from "../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../app/AntdConstants";
 import { useNotify } from "./Notify";
 
 /**

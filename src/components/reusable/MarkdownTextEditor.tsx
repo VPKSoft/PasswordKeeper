@@ -22,14 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { Input, type InputRef, Tabs, type TabsProps } from "antd";
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { Input, InputRef, Tabs, TabsProps } from "antd";
-import { CommonProps } from "../Types";
-import { useLocalize } from "../../i18n";
-import { usePasteImageMarkdown } from "../../hooks/UsePasteImageMarkdown";
+import { useLocalize } from "../../I18n";
 import { useDocumentReady } from "../../hooks/UseDocumentReady";
+import { usePasteImageMarkdown } from "../../hooks/UsePasteImageMarkdown";
+import type { CommonProps } from "../Types";
 import { MarkDownViewStyled } from "./MarkDownView";
 
 /**

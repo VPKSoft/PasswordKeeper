@@ -22,10 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { save, open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
-import { DataEntry, FileData, FileOptions, GeneralEntry, isDataEntry, isGeneralEntry } from "../../types/PasswordEntry";
+import { open, save } from "@tauri-apps/plugin-dialog";
 import { generalId } from "../../misc/DataUtils";
+import {
+    type DataEntry,
+    type FileData,
+    type FileOptions,
+    type GeneralEntry,
+    isDataEntry,
+    isGeneralEntry,
+} from "../../types/PasswordEntry";
 
 /**
  * A result type for the {@link loadFile} and {@link saveFile} functions.
@@ -126,7 +133,9 @@ const loadFile = async (password: string, fileName: string) => {
 
     // In the old file "format" everything was in same array with different types.
     if (Array.isArray(items)) {
-        const itemsGeneral: GeneralEntry<string>[] = items.filter((f: DataEntry | GeneralEntry<string>) => isGeneralEntry(f)) as GeneralEntry<string>[];
+        const itemsGeneral: GeneralEntry<string>[] = items.filter((f: DataEntry | GeneralEntry<string>) =>
+            isGeneralEntry(f)
+        ) as GeneralEntry<string>[];
         const itemTag = itemsGeneral.filter(f => f.type === "tags");
 
         return {
@@ -224,7 +233,11 @@ const saveFile = async (fileData: FileData, password: string, fileName: string) 
     const saveData = JSON.stringify(fileData);
 
     try {
-        const saved: boolean = await invoke("save_file", { jsonData: saveData, fileName: fileName, password: password });
+        const saved: boolean = await invoke("save_file", {
+            jsonData: saveData,
+            fileName: fileName,
+            password: password,
+        });
         return {
             fileName: fileName,
             fileData: [],

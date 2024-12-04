@@ -22,16 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+import { Button, type InputRef, Modal } from "antd";
+import classNames from "classnames";
 import * as React from "react";
 import { styled } from "styled-components";
-import classNames from "classnames";
-import { Button, InputRef, Modal } from "antd";
+import { useLocalize } from "../../../I18n";
 import { FileQueryMode } from "../../../types/Enums";
-import { useLocalize } from "../../../i18n";
-import { CommonProps } from "../../Types";
-import { StyledFileQueryTextBox } from "../inputs/FileQueryTextBox";
+import type { CommonProps } from "../../Types";
+import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/AntdConstants";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
-import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/antd-constants";
+import { StyledFileQueryTextBox } from "../inputs/FileQueryTextBox";
 
 /**
  * The props for the {@link OpenSaveFilePopup} component.
@@ -78,7 +78,7 @@ const OpenSaveFilePopup = ({
         if (mode === FileQueryMode.SaveAs && currentFile !== undefined) {
             setFileName(currentFile);
         }
-    }, [currentFile, mode, visible]);
+    }, [currentFile, mode]);
 
     const le = useLocalize("entries");
     const lu = useLocalize("ui");
