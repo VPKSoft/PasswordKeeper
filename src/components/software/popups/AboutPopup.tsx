@@ -73,9 +73,9 @@ const AboutPopup = ({
         });
     }, []);
 
-    // Open the www.vpksoft.net URL when the corresponding component is clicked.
+    // Open my GitHub profilet  URL when the corresponding component is clicked.
     const openVPKSoftUrl = React.useCallback(() => {
-        void open("https://www.vpksoft.net");
+        void open("https://github.com/VPKSoft");
     }, []);
 
     // Open the github.com URL when the corresponding component is clicked.

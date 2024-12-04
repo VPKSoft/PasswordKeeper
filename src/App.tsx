@@ -774,6 +774,9 @@ const App = ({ className }: AppProps) => {
                     lockText={lm("programLockedClickToUnlock")}
                     onClick={lockOverlayClick}
                     visible={viewLocked}
+                    backgroundColor={settings?.dark_mode ? "#000000" : "#ffffff"}
+                    foreColor={settings?.dark_mode ? "#FFFFFF" : "#000000"}
+                    backgroundOpacity={1}
                 />
                 {lockPasswordQueryVisible && (
                     <StyledQueryPasswordPopup //
