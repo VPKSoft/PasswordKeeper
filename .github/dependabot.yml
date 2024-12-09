@@ -26,6 +26,9 @@ updates:
         dependency-type: "production"
       development-dependencies:
         dependency-type: "development"    
+    ignore:
+    - dependency-name: "react*"
+      versions: [ ">=19.0.0" ]        
 
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/webdriver/webdriverio" # Location of package manifests
