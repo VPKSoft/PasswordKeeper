@@ -30,15 +30,15 @@ rust-argon2 = "2.1.0"
 zeroize = "1.8.1"
 serde_derive = "1.0.215"
 totp-rs = { version = "5.6.0", features = ["otpauth"] }
-tauri-plugin-window-state = "=2.0.2"
+tauri-plugin-window-state = "=2.2.0"
 font-kit = "0.14.2"
 arboard = "3.4.1"
 time = "0.3.37"
-tauri-plugin-updater = "2.1.0"
-tauri-plugin-dialog = "2.0.4"
-tauri-plugin-process = "2.0.1"
-tauri-plugin-clipboard-manager = "2.1.0-beta.7"
-tauri-plugin-os = "2.0.1"
+tauri-plugin-updater = "2.3.0"
+tauri-plugin-dialog = "2.2.0"
+tauri-plugin-process = "2.2.0"
+tauri-plugin-clipboard-manager = "2.2.0"
+tauri-plugin-os = "2.2.0"
 
 [features]
 # by default Tauri runs in production mode
@@ -49,5 +49,5 @@ default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
 [target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
-tauri-plugin-updater = "2.1.0"
-tauri-plugin-shell = "2.0.2"
+tauri-plugin-updater = "2.3.0"
+tauri-plugin-shell = "2.2.0"
