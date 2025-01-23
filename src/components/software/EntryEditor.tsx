@@ -58,7 +58,7 @@ type EntryEditorProps = {
     /** A value indicating whether the copy password to clipboard is visible. */
     showCopyButton?: boolean;
     /** A ref to the item name text box. */
-    nameTextBoxRef?: React.RefObject<InputRef>;
+    nameTextBoxRef?: React.RefObject<InputRef | null>;
     /** A value indicating if the 2FA QR-code popup should be hidden. */
     hideQrAuthPopup: boolean;
     /** All the tags contained within the current file. */
