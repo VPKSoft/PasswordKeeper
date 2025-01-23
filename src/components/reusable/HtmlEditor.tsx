@@ -58,7 +58,6 @@ const HtmlEditor = ({
     locale,
     onChange,
 }: HtmlEditorProps) => {
-    const editor = React.useRef<Jodit>(null);
     const [fontFamilies] = useFontFamily();
     const { antdTheme } = useAntdTheme();
 
@@ -112,7 +111,6 @@ const HtmlEditor = ({
     return (
         <div className={classNames(HtmlEditor.name, className)}>
             <JoditEditor
-                ref={editor}
                 value={value ?? ""}
                 config={joditConfig}
                 // For some reason the useCallBack function doesn't work in this case, need to use function that is regenerated on each render.
