@@ -27,7 +27,7 @@ use aes_gcm_siv::{
     Aes256GcmSiv,
 };
 use anyhow::anyhow;
-use rand::{rngs::OsRng, RngCore};
+use rand::{rng, RngCore};
 use std::str;
 use std::{
     fs::File,
@@ -57,8 +57,10 @@ pub fn encrypt_small_file(
 
     let mut salt = [0u8; 32];
     let mut nonce = [0u8; 12];
-    OsRng.fill_bytes(&mut salt);
-    OsRng.fill_bytes(&mut nonce);
+
+    let mut rng = rng();
+    rng.fill_bytes(&mut salt);
+    rng.fill_bytes(&mut nonce);
 
     let mut key = argon2::hash_raw(password.as_bytes(), &salt, &argon2_config)?;
 
