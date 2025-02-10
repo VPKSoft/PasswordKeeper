@@ -34,7 +34,7 @@
 		"html5-qrcode": "^2.3.8",
 		"i18next": "^24.2.2",
 		"jodit-react": "^5.2.5",
-		"marked": "^15.0.6",
+		"marked": "^15.0.7",
 		"qrcode": "^1.5.4",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
