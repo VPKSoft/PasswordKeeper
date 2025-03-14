@@ -26,7 +26,7 @@
 		"@tauri-apps/plugin-shell": "^2.2.0",
 		"@tauri-apps/plugin-updater": "^2.5.1",
 		"@vitejs/plugin-react": "^4.3.4",
-		"antd": "^5.24.2",
+		"antd": "^5.24.3",
 		"classnames": "^2.5.1",
 		"dompurify": "^3.2.4",
 		"gauth-decode": "^0.1.1",
