@@ -4,7 +4,7 @@ A software to store login information into an encrypted file.
 [![Lint & Test deployment package](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml/badge.svg)](https://github.com/VPKSoft/PasswordKeeper/actions/workflows/main-lint-test-deploy.yml) [![Crowdin](https://badges.crowdin.net/passwordkeeper/localized.svg)](https://crowdin.com/project/passwordkeeper)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FVPKSoft%2FPasswordKeeper?ref=badge_shield)
 
-![image](https://github.com/VPKSoft/PasswordKeeper/assets/40712699/d9f97198-c4fd-44f1-a1d6-cdb2735f748e)
+![image](https://github.com/user-attachments/assets/e3444679-6b38-4a3a-9bde-44b788e72fa8)
 
 For instructions, see: [Help](https://vpksoft.github.io/PasswordKeeper/).
 
@@ -83,6 +83,9 @@ sudo apt-get install libsoup2.4
 
 * Debug with <kbd>F5</kbd>
 
+# Hosted store
+A backend is also under development and it is comming when ready, see: [PasswordKeeperServer](https://github.com/VPKSoftOrg/PasswordKeeperServer)
+
 # Why this software
 I know there are a million password managers available already. The current solution I'm using is [VeraCrypt](https://www.veracrypt.fr/code/VeraCrypt/) virtual disk with an encrypted [LibreOffice](https://www.libreoffice.org) Calc file inside the disk. This is challenging to open for a quick review and I always forget to close the file or unmount the virtual disk - feel free to use the tip though 😄
 Well, that was background noise - the reasons:
@@ -90,7 +93,6 @@ Well, that was background noise - the reasons:
 2. I want to learn [rust](https://www.rust-lang.org)
 3. To have the code base working fully cross platform
 4. Have a simple structure with strong encryption for the file the data is stored into.
-5. Programming is a nice hobby 🤓
 
 # Thanks to
 [Tauri](https://tauri.app), [Node.js](https://nodejs.org), [React](https://react.dev), [Font Awesome *Free*](https://fontawesome.com/search?o=r&m=free), [Weblate](https://weblate.org), [i18next](https://www.i18next.com), [React Countdown Circle Timer](https://www.npmjs.com/package/react-countdown-circle-timer), [Html5-QRCode](https://www.npmjs.com/package/html5-qrcode), [totp-rs](https://crates.io/crates/totp-rs), [qrcode](https://www.npmjs.com/package/qrcode), [google-authenticator-exporter](https://github.com/krissrex/google-authenticator-exporter), [protobufjs](https://www.npmjs.com/package/protobufjs), [html-react-parser](https://www.npmjs.com/package/html-react-parser), [DOMPurify](https://www.npmjs.com/package/dompurify), [Marked](https://www.npmjs.com/package/marked), [Jodit](https://github.com/xdan/jodit) and [React Jodit WYSIWYG Editor](https://github.com/jodit/jodit-react)
