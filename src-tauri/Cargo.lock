@@ -3100,7 +3100,6 @@ dependencies = [
  "tauri-plugin-shell",
  "tauri-plugin-updater",
  "tauri-plugin-window-state",
- "time",
  "tokio",
  "totp-rs",
  "zeroize",
