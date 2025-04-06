@@ -17,5 +17,10 @@
     "updateCheckFailed": "Päivityksen tarkistus epäonnistui virheellä '{{error}}'.",
     "updateCheckError": "Päivityksen tarkistusvirhe",
     "categoryGeneral": "Yleiset",
-    "queryDeleteTag": "Poistetaanko tunniste '{{tag}}'? Kaikki tunnisteeseen liitetyt merkinnät siirretään uusien tunnisteiden alle."
+    "queryDeleteTag": "Poistetaanko tunniste '{{tag}}'? Kaikki tunnisteeseen liitetyt merkinnät siirretään uusien tunnisteiden alle.",
+    "passwordMustBe8Characters": "Salasanan pitää olla vähintään 8 merkkiä pitkä",
+    "passwordMustContainUppercase": "Salasanassa pitää olla vähintään yksi iso kirjain",
+    "passwordMustContainLowercase": "Salasanassa pitää olla vähintään yksi pieni kirjain",
+    "passwordMustContainNumber": "Salasanassa pitää olla vähintään yksi numero",
+    "passwordMustContainSpecialCharacter": "Salasanassa pitää olla vähintään yksi erikoismerkki"
 }
