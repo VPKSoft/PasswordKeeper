@@ -14,10 +14,10 @@
     "darkMode": "Tumma tila",
     "serverAddress": "Palvelimen osoite",
     "serverUserFullName": "Palvelimen käyttäjän koko nimi",
-    "serverUsername": "Palvelimen käyttäjän nimi",
     "serverPassword": "Palvelimen salasana",
     "serverAdminUsername": "Palvelimen ylläpitäjän kayttajänimi",
     "serverAdminPassword": "Palvelimen ylläpitäjän salasana",
     "userCollectionToken": "Käyttäjän kokoelman avain",
-    "sharedCollectionToken": "Julkisen kokoelman avain"
+    "sharedCollectionToken": "Julkisen kokoelman avain",
+    "serverUsername": "Palvelimen käyttäjän nimi"
 }

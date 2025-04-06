@@ -14,10 +14,10 @@
     "darkMode": "Dark mode",
     "serverAddress": "Server address",
     "serverUserFullName": "Server user full name",
-    "serverUsername": "Server username",
     "serverPassword": "Server password",
     "serverAdminUsername": "Server admin username",
     "serverAdminPassword": "Server admin password",
     "userCollectionToken": "User collection token",
-    "sharedCollectionToken": "Shared collection token"    
+    "sharedCollectionToken": "Shared collection token",
+    "serverUsername": "Server username"
 }
