@@ -1,4 +1,5 @@
 {
     "passwordKeeperDataFile": "Password Keeper datatiedosto",
-    "newFileName": "uusi_tietokanta.pkd"
+    "newFileName": "uusi_tietokanta.pkd",
+    "passwordMustContainUppercase": "Password must contain at least one uppercase letter"
 }
