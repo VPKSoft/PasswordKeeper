@@ -1,4 +1,5 @@
 {
     "passwordKeeperDataFile": "Password Keeper Data File",
-    "newFileName": "new_database.pkd"
+    "newFileName": "new_database.pkd",
+    "passwordMustContainUppercase": "Password must contain at least one uppercase letter"
 }
