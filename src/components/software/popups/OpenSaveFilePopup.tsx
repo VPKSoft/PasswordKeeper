@@ -28,6 +28,7 @@ import * as React from "react";
 import { styled } from "styled-components";
 import { useLocalize } from "../../../I18n";
 import { FileQueryMode } from "../../../types/Enums";
+import { validatePassword } from "../../../utilities/app/Passwords";
 import type { CommonProps } from "../../Types";
 import { darkModeMenuBackground, lightModeMenuBackground } from "../../app/AntdConstants";
 import { StyledPasswordTextBox } from "../../reusable/inputs/PasswordTextBox";
@@ -213,6 +214,7 @@ const OpenSaveFilePopup = ({
                                         initialShowPassword={false}
                                         onKeyDown={onKeyDown}
                                         inputRef={inputRef}
+                                        validatePassword={validatePassword}
                                     />
                                 </div>
                             </td>

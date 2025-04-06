@@ -46,6 +46,17 @@ export type Settings = {
     error_message: string;
 };
 
+export type ServerSettings = {
+    user_id: number;
+    server_address: string;
+    server_username: string;
+    server_password: string;
+    user_collection_token: string;
+    shared_collection_token: string;
+    admin_username: string | null;
+    admin_password: string | null;
+};
+
 /**
  * Loads the application settings from the settings file.
  * Also the local storage is updated with the setting data so it can be used without a reload.

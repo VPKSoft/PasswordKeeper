@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { faCopy, faEye, faEyeSlash, faRotate } from "@fortawesome/free-solid-svg-icons";
+import Icon from "@ant-design/icons";
+import { faCopy, faEye, faEyeSlash, faRotate, faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Input, type InputRef, Tooltip } from "antd";
 import classNames from "classnames";
@@ -49,12 +50,15 @@ type PasswordTextBoxProps = {
     showCopyButton?: boolean;
     /** An initial value to indicate whether the password should be visible as plain text. */
     initialShowPassword?: boolean;
+    /** A ref top the actual input element. */
+    inputRef?: React.Ref<InputRef>;
+    notValidPasswordText?: string;
     /** Occurs when the {@link TextBox} value has been changed. */
     onValueChanged?: (e: string) => void;
     /** Occurs when a key was pressed on the {@link TextBox}. */
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-    /** A ref top the actual input element. */
-    inputRef?: React.Ref<InputRef>;
+    /** A function to validate the password. */
+    validatePassword?: (password: string) => boolean;
 } & CommonProps;
 
 /**
@@ -71,6 +75,8 @@ const PasswordTextBox = ({
     showCopyButton,
     initialShowPassword,
     inputRef,
+    notValidPasswordText,
+    validatePassword,
     onValueChanged,
     onKeyDown,
 }: PasswordTextBoxProps) => {
@@ -135,6 +141,13 @@ const PasswordTextBox = ({
         [onValueChanged]
     );
 
+    const validPassword = React.useMemo(() => {
+        if (value === undefined) {
+            return false;
+        }
+        return validatePassword?.(value) ?? false;
+    }, [validatePassword, value]);
+
     return (
         <div className={classNames(PasswordTextBox.name, className)}>
             {contextHolder}
@@ -183,6 +196,11 @@ const PasswordTextBox = ({
                     />
                 </Tooltip>
             )}
+            {validatePassword && !validPassword && (
+                <Tooltip title={lu("passwordNotValid")}>
+                    <FontAwesomeIcon icon={faTriangleExclamation} className="PasswordTextBox-icon" />
+                </Tooltip>
+            )}
         </div>
     );
 };
@@ -214,6 +232,9 @@ const StyledPasswordTextBox = styled(PasswordTextBox)`
     .PasswordTextBox-button {
         margin-left: 6px;
     }
+        .PasswordTextBox-icon {
+            align-self: center;
+        }
 `;
 
 export { StyledPasswordTextBox };

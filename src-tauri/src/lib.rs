@@ -29,7 +29,10 @@ SOFTWARE.
 
 use arboard::Clipboard;
 use auth2fa::{gen_secret_otpauth, Auth2FAResult};
-use config::{get_app_config, get_config_path, set_app_config, AppConfig};
+use config::{
+    get_app_config, get_config_path, get_server_settings, set_app_config, set_server_settings,
+    AppConfig, ServerSettings, ServerSettingsError,
+};
 use encryption::{decrypt_small_file, encrypt_small_file};
 use fonts::get_font_families;
 use serde::{Deserialize, Serialize};
@@ -60,6 +63,8 @@ pub async fn run() {
             gen_otpauth,
             clear_clipboard,
             load_image_file,
+            load_server_settings,
+            save_server_settings,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -181,6 +186,42 @@ async fn load_file(file_name: String, password: String) -> StringResult {
     result
 }
 
+/// Loads the server settings requested by the frontend.
+/// # Arguments
+///
+/// * `app_handle` - the Tauri application handle.
+/// * `password` - the password to use for decryption.
+///
+/// # Returns
+/// A `Result<ServerSettings, ServerSettingsError>` indicating success or failure with the server settings.
+#[tauri::command]
+async fn load_server_settings(
+    app_handle: tauri::AppHandle,
+    password: String,
+) -> Result<ServerSettings, ServerSettingsError> {
+    let cfg_path: String = get_config_path(&app_handle, "server_settings.json").await;
+    get_server_settings(&cfg_path, &password)
+}
+
+/// Saves the server settings requested by the frontend.
+/// # Arguments
+///
+/// * `app_handle` - the Tauri application handle.
+/// * `server_settings` - the server settings to save.
+/// * `password` - the password to use for encryption.
+///
+/// # Returns
+/// A `Result<ServerSettingsError, ServerSettingsError>` indicating success or failure.
+#[tauri::command]
+async fn save_server_settings(
+    app_handle: tauri::AppHandle,
+    server_settings: ServerSettings,
+    password: String,
+) -> Result<ServerSettingsError, ServerSettingsError> {
+    let cfg_path: String = get_config_path(&app_handle, "server_settings.json").await;
+    set_server_settings(&cfg_path, server_settings, &password)
+}
+
 /// Loads an image file requested by the frontend.
 /// # Arguments
 ///
@@ -213,7 +254,7 @@ async fn load_image_file(file_name: String) -> Result<Vec<u8>, String> {
 /// Application settings.
 #[tauri::command(async)]
 async fn load_settings(app_handle: tauri::AppHandle) -> AppConfig {
-    let cfg_path: String = get_config_path(&app_handle).await;
+    let cfg_path: String = get_config_path(&app_handle, "config.json").await;
     get_app_config(&cfg_path).await
 }
 
@@ -227,6 +268,6 @@ async fn load_settings(app_handle: tauri::AppHandle) -> AppConfig {
 /// `true` if the settings were saved successfully; `false` otherwise.
 #[tauri::command(async)]
 async fn save_settings(config: AppConfig, app_handle: tauri::AppHandle) -> bool {
-    let cfg_path = get_config_path(&app_handle).await;
+    let cfg_path = get_config_path(&app_handle, "config.json").await;
     set_app_config(&cfg_path, config).await
 }
