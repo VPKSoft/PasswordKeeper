@@ -11,5 +11,13 @@
     "defaultUseMonoSpacedFontOnNotes": "Käytä tasavälistä fonttia oletuksena muistiinpanoissa",
     "defaultUseMarkdownOnNotes": "Käytä Markdown:ia oletuksena muistiinpanoissa",
     "useHtmlIOnNotes": "Käytä HTML:ää muistiinpanoissa",
-    "darkMode": "Tumma tila"
+    "darkMode": "Tumma tila",
+    "serverAddress": "Palvelimen osoite",
+    "serverUserFullName": "Palvelimen käyttäjän koko nimi",
+    "serverPassword": "Palvelimen salasana",
+    "serverAdminUsername": "Palvelimen ylläpitäjän kayttajänimi",
+    "serverAdminPassword": "Palvelimen ylläpitäjän salasana",
+    "userCollectionToken": "Käyttäjän kokoelman avain",
+    "sharedCollectionToken": "Julkisen kokoelman avain",
+    "serverUsername": "Palvelimen käyttäjän nimi"
 }

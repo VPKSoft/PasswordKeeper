@@ -11,5 +11,13 @@
     "defaultUseMonoSpacedFontOnNotes": "Use mono-spaced font by default on notes",
     "defaultUseMarkdownOnNotes": "Use Markdown by default on notes",
     "useHtmlIOnNotes": "Use HTML on notes",
-    "darkMode": "Dark mode"
+    "darkMode": "Dark mode",
+    "serverAddress": "Server address",
+    "serverUserFullName": "Server user full name",
+    "serverPassword": "Server password",
+    "serverAdminUsername": "Server admin username",
+    "serverAdminPassword": "Server admin password",
+    "userCollectionToken": "User collection token",
+    "sharedCollectionToken": "Shared collection token",
+    "serverUsername": "Server username"
 }
