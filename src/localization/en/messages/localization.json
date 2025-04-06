@@ -17,5 +17,10 @@
     "updateCheckFailed": "Update check failed with error '{{error}}'.",
     "updateCheckError": "Update check error",
     "categoryGeneral": "General",
-    "queryDeleteTag": "Delete the tag '{{tag}}'? All the entries will be assigned to a new tag."
+    "queryDeleteTag": "Delete the tag '{{tag}}'? All the entries will be assigned to a new tag.",
+    "passwordMustBe8Characters": "Password must be at least 8 characters long",
+    "passwordMustContainUppercase": "Password must contain at least one uppercase letter",
+    "passwordMustContainLowercase": "Password must contain at least one lowercase letter",
+    "passwordMustContainNumber": "Password must contain at least one number",
+    "passwordMustContainSpecialCharacter": "Password must contain at least one special character"
 }
